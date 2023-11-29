@@ -5,7 +5,12 @@ import java.util.BitSet;
 public interface IRecord {
     public boolean equals(IRecord other);
     public BitSet getHash();
+
+    /**
+     *
+     * @return Velkost v bytoch
+     */
     public int getSize();
-    public byte[] toByteArray(char[] array);
-    public char[] fromByteArray(byte[] bytes);
+    public byte[] toByteArray();
+    public void fromByteArray(byte[] bytes);
 }

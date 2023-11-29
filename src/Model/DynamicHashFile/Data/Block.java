@@ -1,13 +1,20 @@
 package Model.DynamicHashFile.Data;
 
-public class Block {
-    private IRecord[] records;
+import java.util.ArrayList;
+
+public class Block<T extends IRecord> {
+    private ArrayList<IRecord> records;
+    private int size;
+
+    public Block(int size) {
+        this.size = size;
+    }
 
     public int getSize(){
-        return 0;
+        return this.size;
     }
 
     public int getValidCount() {
-        return 0;
+        return this.records.size();
     }
 }

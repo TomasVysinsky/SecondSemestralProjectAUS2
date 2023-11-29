@@ -1,9 +1,7 @@
 package Generator;
 
 import Model.QuadTree.Coordinates.Coordinate;
-import Model.QuadTree.Data.Parcel;
-
-import java.util.ArrayList;
+import Model.Data.Parcel;
 
 public class ParcelGenerator extends dataGenerator<Parcel> {
 

@@ -1,8 +1,8 @@
 import Model.QuadTree.Coordinates.Length;
 import Model.QuadTree.Coordinates.Width;
-import Model.QuadTree.Data.Building;
-import Model.QuadTree.Data.Log;
-import Model.QuadTree.Data.Parcel;
+import Model.Data.Building;
+import Model.Data.Log;
+import Model.Data.Parcel;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;

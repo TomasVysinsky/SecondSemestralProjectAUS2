@@ -4,13 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="df963b7d-2346-4567-b4d9-bdccb337eaa4" name="Changes" comment="Posledna verzia po obhajobe">
-      <change afterPath="$PROJECT_DIR$/src/Model/DynamicHashFile/Data/Block.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Model/DynamicHashFile/Data/IRecord.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFile.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFileNode.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFileNodeExternal.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFileNodeInternal.java" afterDir="false" />
+    <list default="true" id="df963b7d-2346-4567-b4d9-bdccb337eaa4" name="Changes" comment="First classes defined">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Generator/BuildingGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Generator/BuildingGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Generator/ParcelGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Generator/ParcelGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/DynamicHashFile/Data/Block.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/DynamicHashFile/Data/Block.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/DynamicHashFile/Data/IRecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/DynamicHashFile/Data/IRecord.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/Model.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Model.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/QuadTree/Coordinates/Coordinate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/QuadTree/Coordinates/Coordinate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/QuadTree/Data/Building.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Data/Building.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/QuadTree/Data/IData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/QuadTree/Data/IData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/QuadTree/Data/Log.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Data/Log.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/QuadTree/Data/Parcel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Data/Parcel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Tests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Tests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/View.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,7 +101,7 @@
       <workItem from="1700858167091" duration="968000" />
       <workItem from="1700859784524" duration="85000" />
       <workItem from="1700860000180" duration="322000" />
-      <workItem from="1700860378472" duration="3389000" />
+      <workItem from="1700860378472" duration="27409000" />
     </task>
     <task id="LOCAL-00001" summary="Proper find finished">
       <option name="closed" value="true" />
@@ -253,7 +263,15 @@
       <option name="project" value="LOCAL" />
       <updated>1700858402316</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="First classes defined">
+      <option name="closed" value="true" />
+      <created>1701072356036</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1701072356036</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -295,9 +313,19 @@
     <MESSAGE value="Find All Properties done" />
     <MESSAGE value="Jar included" />
     <MESSAGE value="Posledna verzia po obhajobe" />
-    <option name="LAST_COMMIT_MESSAGE" value="Posledna verzia po obhajobe" />
+    <MESSAGE value="First classes defined" />
+    <option name="LAST_COMMIT_MESSAGE" value="First classes defined" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/Tests.java</url>
+          <line>75</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="Model.QuadTree.QuadTree" memberName="nodesOnEachDepth" />

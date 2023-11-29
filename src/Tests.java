@@ -1,8 +1,9 @@
 import Generator.ParcelGenerator;
+import Model.Data.Building;
 import Model.QuadTree.Coordinates.Coordinate;
 import Model.QuadTree.Coordinates.CoordinateComputer;
 import Model.QuadTree.Data.IData;
-import Model.QuadTree.Data.Parcel;
+import Model.Data.Parcel;
 import Model.QuadTree.QuadTree;
 import Model.QuadTree.Coordinates.Width;
 import Model.QuadTree.Coordinates.Length;
@@ -46,6 +47,33 @@ public class Tests {
 
         this.searchedArea = new Coordinate[] {new Coordinate(Width.N, 40, Length.W, 40),
                 new Coordinate(Width.S, 40, Length.E, 40)};
+    }
+
+    public boolean testIRecordByteConversions() {
+        Parcel parcel = new Parcel(1, 20, "Abcde", this.searchedArea[0], this.searchedArea[1]);
+        Building building = new Building(2, 30, "Fghij", this.searchedArea[0], this.searchedArea[1]);
+        parcel.addProperty(building);
+        building.addProperty(parcel);
+
+        byte[] byteBuilding = building.toByteArray();
+        byte[] byteParcel = parcel.toByteArray();
+        Parcel newParcel = new Parcel();
+        Building newBuilding = new Building();
+        System.out.println("Parcel: " + newParcel.getSize() + " & " + byteParcel.length);
+        System.out.println("Building: " + newBuilding.getSize() + " & " + byteBuilding.length);
+        newParcel.fromByteArray(byteParcel);
+        newBuilding.fromByteArray(byteBuilding);
+
+        if (!parcel.equals(newParcel))
+            System.out.println("Parcel equals nevysiel.");
+        if (!parcel.getDescription().equals(newParcel.getDescription()))
+            System.out.println("Parcel description nevysiel.");
+        if (!building.equals(newBuilding))
+            System.out.println("Building equals nevysiel.");
+        if (!building.getDescription().equals(newBuilding.getDescription()))
+            System.out.println("Building description nevysiel.");
+
+        return true;
     }
 
     public boolean testInsert(){

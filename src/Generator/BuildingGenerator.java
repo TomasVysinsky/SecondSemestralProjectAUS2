@@ -1,7 +1,7 @@
 package Generator;
 
 import Model.QuadTree.Coordinates.Coordinate;
-import Model.QuadTree.Data.Building;
+import Model.Data.Building;
 
 public class BuildingGenerator extends dataGenerator<Building> {
 

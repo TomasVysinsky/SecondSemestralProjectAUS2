@@ -1,12 +1,20 @@
 package Model.QuadTree.Coordinates;
 
 import java.lang.*;
+import java.nio.ByteBuffer;
 
 public class Coordinate {
     private Width width;
     private double widthPosition;
     private Length length;
     private double lengthPosition;
+
+    public Coordinate() {
+        this.width = Width.N;
+        this.widthPosition = 0;
+        this.length = Length.W;
+        this.widthPosition = 0;
+    }
 
     public Coordinate(Width width, double widthPosition, Length length, double lengthPosition) {
         if (widthPosition < 0) {
@@ -35,6 +43,11 @@ public class Coordinate {
     public Width getWidth() {
         return width;
     }
+    public char getWidthAsChar() {
+        if (width == Width.N)
+            return 'N';
+        return 'S';
+    }
 
     public double getWidthPosition() {
         return widthPosition;
@@ -43,10 +56,17 @@ public class Coordinate {
     public Length getLength() {
         return length;
     }
+    public char getLengthAsChar() {
+        if (length == Length.E)
+            return 'E';
+        return 'W';
+    }
 
     public double getLengthPosition() {
         return lengthPosition;
     }
+
+    public static int getSize() { return Character.BYTES * 2 + Double.BYTES * 2; }
 
     /**
      *
@@ -220,5 +240,50 @@ public class Coordinate {
      */
     public double[] getVectorPosition(){
         return new double[]{this.getEastLengthPosition(), this.getNorthWidthPosition()};
+    }
+
+    private boolean charToWidth(char width) {
+        if (width == 'N') {
+            this.width = Width.N;
+            return true;
+        } else if (width == 'S') {
+            this.width = Width.S;
+            return true;
+        }
+        return false;
+    }
+
+    private boolean charToLength(char length) {
+        if (length == 'E') {
+            this.length = Length.E;
+            return true;
+        } else if (length == 'W') {
+            this.length = Length.W;
+            return true;
+        }
+        return false;
+    }
+
+    public byte[] toByteArray() {
+        ByteBuffer byteBuffer = ByteBuffer.allocate(Coordinate.getSize());
+        byteBuffer.putChar(this.getWidthAsChar());
+        byteBuffer.putDouble(this.widthPosition);
+        byteBuffer.putChar(this.getLengthAsChar());
+        byteBuffer.putDouble(this.lengthPosition);
+        return byteBuffer.array();
+    }
+
+    public void fromByteArray(byte[] array) {
+        if (array.length == Coordinate.getSize()) {
+            ByteBuffer byteBuffer = ByteBuffer.wrap(array);
+            if (!this.charToWidth(byteBuffer.getChar()))
+                throw new RuntimeException("Nespravne data pri nacitani sirky");
+            this.widthPosition = byteBuffer.getDouble();
+            if (!this.charToLength(byteBuffer.getChar()))
+                throw new RuntimeException("Nespravne data pri nacitani dlzky");
+            this.lengthPosition = byteBuffer.getDouble();
+            return;
+        }
+        throw new ArrayIndexOutOfBoundsException("Pole ma inu dlzku");
     }
 }

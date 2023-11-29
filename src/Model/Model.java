@@ -6,10 +6,10 @@ import Model.QuadTree.Coordinates.Coordinate;
 import Model.QuadTree.Coordinates.CoordinateComputer;
 import Model.QuadTree.Coordinates.Length;
 import Model.QuadTree.Coordinates.Width;
-import Model.QuadTree.Data.Building;
+import Model.Data.Building;
 import Model.QuadTree.Data.IData;
-import Model.QuadTree.Data.Log;
-import Model.QuadTree.Data.Parcel;
+import Model.Data.Log;
+import Model.Data.Parcel;
 import Model.QuadTree.QuadTree;
 
 import java.io.BufferedReader;
@@ -17,7 +17,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class Model {
     private QuadTree buildings, parcels, allProperties;
@@ -284,6 +283,8 @@ public class Model {
         }
         return true;
     }
+
+    //TODO odlahcit to o tieto metody
 
     private char widthToChar(Width width) {
         if (width == Width.N)

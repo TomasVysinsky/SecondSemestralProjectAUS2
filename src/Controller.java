@@ -2,9 +2,9 @@ import Model.Model;
 import Model.QuadTree.Coordinates.Coordinate;
 import Model.QuadTree.Coordinates.Length;
 import Model.QuadTree.Coordinates.Width;
-import Model.QuadTree.Data.Building;
-import Model.QuadTree.Data.Log;
-import Model.QuadTree.Data.Parcel;
+import Model.Data.Building;
+import Model.Data.Log;
+import Model.Data.Parcel;
 
 import java.util.ArrayList;
 
