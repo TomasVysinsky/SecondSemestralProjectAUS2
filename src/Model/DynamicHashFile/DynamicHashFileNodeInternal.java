@@ -13,6 +13,14 @@ public class DynamicHashFileNodeInternal extends DynamicHashFileNode {
         this.rightSon.setParent(this);
     }
 
+    public DynamicHashFileNode getLeftSon() {
+        return leftSon;
+    }
+
+    public DynamicHashFileNode getRightSon() {
+        return rightSon;
+    }
+
     public DynamicHashFileNode getNextNode(BitSet hash) {
         if (hash.get(this.depth)) {
             return this.rightSon;

@@ -2,7 +2,7 @@ package Model.DynamicHashFile;
 
 import Model.DynamicHashFile.Data.IRecord;
 
-public class DynamicHashFileNodeExternal <T extends IRecord> extends DynamicHashFileNode {
+public class DynamicHashFileNodeExternal extends DynamicHashFileNode {
     private int count;
     private int address;
 
@@ -21,9 +21,4 @@ public class DynamicHashFileNodeExternal <T extends IRecord> extends DynamicHash
     public int getAddress() { return address; }
 
     public int getCount() { return count; }
-
-    public boolean insert(T record) {
-//        if ()
-        return false;
-    }
 }

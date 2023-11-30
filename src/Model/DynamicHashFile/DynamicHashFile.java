@@ -30,7 +30,7 @@ public class DynamicHashFile <T extends IRecord> {
         } catch (Exception e) {
             return;
         }
-        this.root = new DynamicHashFileNodeExternal<T>(0, 0, null);
+        this.root = new DynamicHashFileNodeExternal(0, 0, null);
         this.firstFreeBlock = -1;
     }
 
@@ -40,7 +40,7 @@ public class DynamicHashFile <T extends IRecord> {
             while (current instanceof DynamicHashFileNodeInternal) {
                 current = ((DynamicHashFileNodeInternal) current).getNextNode(record.getHash());
             }
-            DynamicHashFileNodeExternal<T> external = (DynamicHashFileNodeExternal<T>) current;
+            DynamicHashFileNodeExternal external = (DynamicHashFileNodeExternal) current;
 
             if (external.getAddress() == -1) {
                 //Vetva v pripade ze externy node nema alokovany block
@@ -74,8 +74,8 @@ public class DynamicHashFile <T extends IRecord> {
                         //TODO reorganizacia stromu
 
 
-                        DynamicHashFileNodeExternal<T> leftSon = new DynamicHashFileNodeExternal<T>(0, external.getDepth() + 1, null);
-                        DynamicHashFileNodeExternal<T> rightSon = new DynamicHashFileNodeExternal<T>(0, external.getDepth() + 1, null);
+                        DynamicHashFileNodeExternal leftSon = new DynamicHashFileNodeExternal(0, external.getDepth() + 1, null);
+                        DynamicHashFileNodeExternal rightSon = new DynamicHashFileNodeExternal(0, external.getDepth() + 1, null);
                         DynamicHashFileNodeInternal newInternal = new DynamicHashFileNodeInternal(external.getDepth(), external.getParent(), leftSon, rightSon);
                         Block<T> leftSonBlock = new Block<T>(this.blockFactor, this.type);
                         Block<T> rigthSonBlock = new Block<T>(this.blockFactor, this.type);
@@ -88,7 +88,7 @@ public class DynamicHashFile <T extends IRecord> {
                         IRecord[] originalArray = originalBlock.getRecords();
 
                         for (IRecord currentRecord : originalArray) {
-                            DynamicHashFileNodeExternal<T> nextNode = (DynamicHashFileNodeExternal<T>) newInternal.getNextNode(currentRecord.getHash());
+                            DynamicHashFileNodeExternal nextNode = (DynamicHashFileNodeExternal) newInternal.getNextNode(currentRecord.getHash());
                             if (nextNode.getAddress() == -1) {
                                 if (this.getFreeBlock() == -1) {
                                     try {
@@ -112,7 +112,7 @@ public class DynamicHashFile <T extends IRecord> {
                             nextNode.setCount(nextNode.getCount() + 1);
                         }
 
-                        external = (DynamicHashFileNodeExternal<T>) newInternal.getNextNode(record.getHash());
+                        external = (DynamicHashFileNodeExternal) newInternal.getNextNode(record.getHash());
                         if (external.getCount() < this.blockFactor) {
                             if (external == leftSon) {
                                 leftSonBlock.insert((T) record);
@@ -168,7 +168,7 @@ public class DynamicHashFile <T extends IRecord> {
         while (current instanceof DynamicHashFileNodeInternal) {
             current = ((DynamicHashFileNodeInternal) current).getNextNode(record.getHash());
         }
-        DynamicHashFileNodeExternal<T> external = (DynamicHashFileNodeExternal<T>) current;
+        DynamicHashFileNodeExternal external = (DynamicHashFileNodeExternal) current;
 
         return this.readBlock(external.getAddress(), file).find(record);
     }
@@ -223,5 +223,14 @@ public class DynamicHashFile <T extends IRecord> {
         }
 
         return blocks;
+    }
+
+    @Override
+    protected void finalize(){
+        try {
+            this.file.close();
+        } catch (IOException e) {
+            System.out.println(e);
+        }
     }
 }

@@ -1,6 +1,13 @@
+import Generator.BuildingGenerator;
 import Generator.ParcelGenerator;
 import Model.Data.Building;
+import Model.Data.Log;
+import Model.DynamicHashFile.Data.Block;
+import Model.DynamicHashFile.Data.IRecord;
 import Model.DynamicHashFile.DynamicHashFile;
+import Model.DynamicHashFile.DynamicHashFileNode;
+import Model.DynamicHashFile.DynamicHashFileNodeExternal;
+import Model.DynamicHashFile.DynamicHashFileNodeInternal;
 import Model.QuadTree.Coordinates.Coordinate;
 import Model.QuadTree.Coordinates.CoordinateComputer;
 import Model.QuadTree.Data.IData;
@@ -12,22 +19,25 @@ import Model.QuadTree.Coordinates.Length;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
 
 
 public class Tests {
     private ParcelGenerator pGenerator;
+    private BuildingGenerator bGenerator;
     private QuadTree testTree;
     private Width[] width = new Width[2];
     private double[] widthPositions = new double[2], lengthPositions = new double[2];
     private Length[] lengths = new Length[2];
     private Coordinate[] coordinates, searchedArea;
-    private ArrayList<Parcel> dataList;
+    private ArrayList<Parcel> parcelList;
+    private ArrayList<Building> buildingList;
     private ArrayList<IData> dataToFind = new ArrayList<>();
     private int id, numberOfInstances, maxDepth;
-    private DynamicHashFile<Parcel> parcelHashFile;
-    private DynamicHashFile<Building> buildingHashFile;
     public Tests() {
         this.pGenerator = new ParcelGenerator();
+        this.bGenerator = new BuildingGenerator();
         this.width[0] = Width.N;
         this.widthPositions[0] = 90;
         this.lengths[0] = Length.E;
@@ -46,13 +56,10 @@ public class Tests {
         this.testTree = new QuadTree(this.maxDepth, this.width[0], this.widthPositions[0], this.lengths[0], this.lengthPositions[0],
                 this.width[1], this.widthPositions[1], this.lengths[1], this.lengthPositions[1]);
 
-        this.dataList = this.pGenerator.generateData(this.coordinates[0], this.coordinates[1], this.numberOfInstances, this.id);
+        this.parcelList = this.pGenerator.generateData(this.coordinates[0], this.coordinates[1], this.numberOfInstances, this.id);
 
         this.searchedArea = new Coordinate[] {new Coordinate(Width.N, 40, Length.W, 40),
                 new Coordinate(Width.S, 40, Length.E, 40)};
-
-        this.parcelHashFile = new DynamicHashFile<Parcel>(3, 3, "parcely", Parcel.class);
-        this.buildingHashFile = new DynamicHashFile<Building>(3, 3, "budovy", Building.class);
     }
 
     public boolean testIRecordByteConversions() {
@@ -118,7 +125,7 @@ public class Tests {
 
     public boolean bruteForceTestInsert() {
         // Insert bruteForce Test
-        for (Parcel data : this.dataList) {
+        for (Parcel data : this.parcelList) {
             ArrayList<Coordinate> dataCoordinates = new ArrayList<>();
             dataCoordinates.addAll(Arrays.asList(data.getCoordinates()));
             dataCoordinates.addAll(Arrays.asList(CoordinateComputer.invertCoordinates(data.getCoordinates()[0], data.getCoordinates()[1])));
@@ -166,7 +173,7 @@ public class Tests {
     }
 
     public boolean bruteForceTestDelete() {
-        for (Parcel data : this.dataList)
+        for (Parcel data : this.parcelList)
             this.testTree.delete(data);
 
         return this.testTree.isEmpty();
@@ -190,12 +197,12 @@ public class Tests {
 
         QuadTree regularTree, optimisedTree;
         for (int i = 0; i < numberOfExperiments; i++) {
-            this.dataList = this.pGenerator.generateData(this.coordinates[0], this.coordinates[1], this.numberOfInstances, this.id);
+            this.parcelList = this.pGenerator.generateData(this.coordinates[0], this.coordinates[1], this.numberOfInstances, this.id);
             regularTree = new QuadTree(this.maxDepth, this.width[0], this.widthPositions[0], this.lengths[0], this.lengthPositions[0],
                     this.width[1], this.widthPositions[1], this.lengths[1], this.lengthPositions[1]);
             optimisedTree = new QuadTree(this.maxDepth, this.width[0], this.widthPositions[0], this.lengths[0], this.lengthPositions[0],
                     this.width[1], this.widthPositions[1], this.lengths[1], this.lengthPositions[1]);
-            for (Parcel data : this.dataList) {
+            for (Parcel data : this.parcelList) {
                 if (!regularTree.insert(data) || !optimisedTree.insert(data)) {
                     System.out.println("Probem pri inicializacnom vkladani");
                     return;
@@ -205,7 +212,7 @@ public class Tests {
             //ArrayList<Parcel> newDataListForOptimised = this.pGenerator.generateData(optimisedTree.getCoordinates()[0], optimisedTree.getCoordinates()[1], this.numberOfInstances, this.id);
             //ArrayList<Parcel> newDataListForRegular = this.pGenerator.generateData(this.coordinates[0], this.coordinates[1], this.numberOfInstances, this.id);
 
-            for (Parcel data : this.dataList) {
+            for (Parcel data : this.parcelList) {
                 regularTree.delete(data);
                 optimisedTree.delete(data);
             }
@@ -218,7 +225,7 @@ public class Tests {
             //Testy insertov
             long timeOptimised = 0, timeRegular = 0;
             double improvement = 0;
-            for (Parcel data : this.dataList) {
+            for (Parcel data : this.parcelList) {
                 long start = System.nanoTime();
                 if (!optimisedTree.insert(data)) {
                     System.out.println("Problem pri optimalizovanom teste insert");
@@ -250,7 +257,7 @@ public class Tests {
             //Testy Find
             timeOptimised = 0;
             timeRegular = 0;
-            for (Parcel data : this.dataList) {
+            for (Parcel data : this.parcelList) {
                 long start = System.nanoTime();
                 optimisedTree.find(this.searchedArea[0], this.searchedArea[1]);
                 timeOptimised += System.nanoTime() - start;
@@ -277,7 +284,7 @@ public class Tests {
             //Testy delete
             timeOptimised = 0;
             timeRegular = 0;
-            for (Parcel data : this.dataList) {
+            for (Parcel data : this.parcelList) {
                 long start = System.nanoTime();
                 if (optimisedTree.delete(data) != data) {
                     System.out.println("Problem pri optimalnom delete.");
@@ -322,5 +329,86 @@ public class Tests {
                 bestDeleteImprovement + "%\n Najhorsie zlepsenie bolo: " + worstDeleteImprovement + "%\n");
     }
 
-    public void testHashFile(){}
+    public void testHashFile(){
+        DynamicHashFile<Parcel> parcelHashFile = new DynamicHashFile<Parcel>(3, 3, "parcely", Parcel.class);
+        DynamicHashFile<Building> buildingHashFile = new DynamicHashFile<Building>(3, 3, "budovy", Building.class);
+        this.parcelList = pGenerator.generateData(this.coordinates[0], this.coordinates[1], 9, 0);
+        this.buildingList = bGenerator.generateData(this.coordinates[0], this.coordinates[1], 9, 0);
+        for (Building building : buildingList) {
+            buildingHashFile.insert(building);
+            this.printBuildingHashFile(buildingHashFile);
+        }
+
+        for (Parcel parcel : parcelList) {
+            parcelHashFile.insert(parcel);
+            this.printParcelHashFile(parcelHashFile);
+        }
+
+        for (int i = 0; i < 3; i++) {
+            if (!this.parcelList.get(i).equals(parcelHashFile.find(this.parcelList.get(i))))
+                System.out.println("Find Parcel test N.o.: " + i + " failure");
+            if (!this.buildingList.get(i).equals(buildingHashFile.find(this.buildingList.get(i))))
+                System.out.println("Find Building test N.o.: " + i + " failure");
+        }
+    }
+
+    public void printParcelHashFile(DynamicHashFile<Parcel> file) {
+        Queue<DynamicHashFileNode> nodeQueue = new LinkedList<>();
+        nodeQueue.add(file.getRoot());
+        boolean allDone = false;
+
+        while (!allDone) {
+            DynamicHashFileNode currentNode = nodeQueue.remove();
+            if (currentNode instanceof DynamicHashFileNodeExternal) {
+                DynamicHashFileNodeExternal externalNode = (DynamicHashFileNodeExternal)currentNode;
+                System.out.println("External node, Depth: " + currentNode.getDepth() + " Address: " + externalNode.getAddress() + " Count: " + externalNode.getCount());
+            } else {
+                System.out.println("Internal Node, Depth: " + currentNode.getDepth());
+                nodeQueue.add(((DynamicHashFileNodeInternal)currentNode).getLeftSon());
+                nodeQueue.add(((DynamicHashFileNodeInternal)currentNode).getRightSon());
+            }
+
+            if (nodeQueue.isEmpty())
+                allDone = true;
+        }
+
+        ArrayList<Block<Parcel>> blocks = file.getAllBlocks();
+        for (int i = 0; i < blocks.size(); i++) {
+            System.out.println("Block " + i + " Valid Count: " + blocks.get(i).getValidCount());
+            IRecord[] records = blocks.get(i).getRecords();
+            for (IRecord record : records) {
+                System.out.println(((Log)record).getFullDescription());
+            }
+        }
+    }
+
+    public void printBuildingHashFile(DynamicHashFile<Building> file) {
+        Queue<DynamicHashFileNode> nodeQueue = new LinkedList<>();
+        nodeQueue.add(file.getRoot());
+        boolean allDone = false;
+
+        while (!allDone) {
+            DynamicHashFileNode currentNode = nodeQueue.remove();
+            if (currentNode instanceof DynamicHashFileNodeExternal) {
+                DynamicHashFileNodeExternal externalNode = (DynamicHashFileNodeExternal)currentNode;
+                System.out.println("External node, Depth: " + currentNode.getDepth() + " Address: " + externalNode.getAddress() + " Count: " + externalNode.getCount());
+            } else {
+                System.out.println("Internal Node, Depth: " + currentNode.getDepth());
+                nodeQueue.add(((DynamicHashFileNodeInternal)currentNode).getLeftSon());
+                nodeQueue.add(((DynamicHashFileNodeInternal)currentNode).getRightSon());
+            }
+
+            if (nodeQueue.isEmpty())
+                allDone = true;
+        }
+
+        ArrayList<Block<Building>> blocks = file.getAllBlocks();
+        for (int i = 0; i < blocks.size(); i++) {
+            System.out.println("Block " + i + " Valid Count: " + blocks.get(i).getValidCount());
+            IRecord[] records = blocks.get(i).getRecords();
+            for (IRecord record : records) {
+                System.out.println(((Log)record).getFullDescription());
+            }
+        }
+    }
 }
