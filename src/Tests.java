@@ -1,5 +1,6 @@
 import Generator.ParcelGenerator;
 import Model.Data.Building;
+import Model.DynamicHashFile.DynamicHashFile;
 import Model.QuadTree.Coordinates.Coordinate;
 import Model.QuadTree.Coordinates.CoordinateComputer;
 import Model.QuadTree.Data.IData;
@@ -21,8 +22,10 @@ public class Tests {
     private Length[] lengths = new Length[2];
     private Coordinate[] coordinates, searchedArea;
     private ArrayList<Parcel> dataList;
-    ArrayList<IData> dataToFind = new ArrayList<>();
+    private ArrayList<IData> dataToFind = new ArrayList<>();
     private int id, numberOfInstances, maxDepth;
+    private DynamicHashFile<Parcel> parcelHashFile;
+    private DynamicHashFile<Building> buildingHashFile;
     public Tests() {
         this.pGenerator = new ParcelGenerator();
         this.width[0] = Width.N;
@@ -47,6 +50,9 @@ public class Tests {
 
         this.searchedArea = new Coordinate[] {new Coordinate(Width.N, 40, Length.W, 40),
                 new Coordinate(Width.S, 40, Length.E, 40)};
+
+        this.parcelHashFile = new DynamicHashFile<Parcel>(3, 3, "parcely", Parcel.class);
+        this.buildingHashFile = new DynamicHashFile<Building>(3, 3, "budovy", Building.class);
     }
 
     public boolean testIRecordByteConversions() {
@@ -315,4 +321,6 @@ public class Tests {
         System.out.println("Priemerne zlepsenie delete bolo: " + averageDeleteImprovement + "%\n Najlepsie zrychlenie bolo: " +
                 bestDeleteImprovement + "%\n Najhorsie zlepsenie bolo: " + worstDeleteImprovement + "%\n");
     }
+
+    public void testHashFile(){}
 }

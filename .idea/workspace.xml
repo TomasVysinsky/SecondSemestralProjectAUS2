@@ -4,15 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="df963b7d-2346-4567-b4d9-bdccb337eaa4" name="Changes" comment="IRecord ready">
-      <change beforePath="$PROJECT_DIR$/src/Model/Data/Building.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Data/Building.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Data/Log.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Data/Log.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Data/Parcel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Data/Parcel.java" afterDir="false" />
+    <list default="true" id="df963b7d-2346-4567-b4d9-bdccb337eaa4" name="Changes" comment="Insert buildnuty neotestovany">
       <change beforePath="$PROJECT_DIR$/src/Model/DynamicHashFile/Data/Block.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/DynamicHashFile/Data/Block.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFileNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFileNode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFileNodeExternal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFileNodeExternal.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFileNodeInternal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFileNodeInternal.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Tests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Tests.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -93,7 +88,7 @@
       <workItem from="1700858167091" duration="968000" />
       <workItem from="1700859784524" duration="85000" />
       <workItem from="1700860000180" duration="322000" />
-      <workItem from="1700860378472" duration="67297000" />
+      <workItem from="1700860378472" duration="70294000" />
     </task>
     <task id="LOCAL-00001" summary="Proper find finished">
       <option name="closed" value="true" />
@@ -271,7 +266,15 @@
       <option name="project" value="LOCAL" />
       <updated>1701279078437</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="Insert buildnuty neotestovany">
+      <option name="closed" value="true" />
+      <created>1701376083599</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1701376083599</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -315,7 +318,8 @@
     <MESSAGE value="Posledna verzia po obhajobe" />
     <MESSAGE value="First classes defined" />
     <MESSAGE value="IRecord ready" />
-    <option name="LAST_COMMIT_MESSAGE" value="IRecord ready" />
+    <MESSAGE value="Insert buildnuty neotestovany" />
+    <option name="LAST_COMMIT_MESSAGE" value="Insert buildnuty neotestovany" />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>

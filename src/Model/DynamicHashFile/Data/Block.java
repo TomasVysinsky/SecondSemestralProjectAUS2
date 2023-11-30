@@ -29,6 +29,13 @@ public class Block <T extends IRecord> {
         return false;
     }
 
+    public T find(IRecord keyRecord) {
+        for (int i = 0; i < this.validCount; i++)
+            if (this.records[i].getHash().equals(keyRecord.getHash()))
+                return (T)this.records[i];
+        return null;
+    }
+
     public IRecord delete(T record) {
         IRecord deleted = null;
         for (int i = 0; i < this.validCount; i++) {
@@ -98,6 +105,4 @@ public class Block <T extends IRecord> {
         }
         throw new ArrayIndexOutOfBoundsException("Pole ma inu dlzku");
     }
-
-//    public abstract T getInstance();
 }

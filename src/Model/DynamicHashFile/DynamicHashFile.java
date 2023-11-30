@@ -5,6 +5,7 @@ import Model.DynamicHashFile.Data.IRecord;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 
 public class DynamicHashFile <T extends IRecord> {
     private DynamicHashFileNode root;
@@ -161,7 +162,16 @@ public class DynamicHashFile <T extends IRecord> {
         }
         return false;
     }
-    public void find() {}
+    public T find(IRecord record) {
+        // TODO spravit z tohoto kusku samostatnu metodu
+        DynamicHashFileNode current = this.root;
+        while (current instanceof DynamicHashFileNodeInternal) {
+            current = ((DynamicHashFileNodeInternal) current).getNextNode(record.getHash());
+        }
+        DynamicHashFileNodeExternal<T> external = (DynamicHashFileNodeExternal<T>) current;
+
+        return this.readBlock(external.getAddress(), file).find(record);
+    }
     public boolean delete() { return false; }
 
 
@@ -191,9 +201,27 @@ public class DynamicHashFile <T extends IRecord> {
         this.firstFreeBlock = address;
     }
 
-    //    /**
-//     * Metoda na vytvorenie noveho blocku ktora v potomkovi implementuje vytvorenie prislusneho blocku
-//     * @return
-//     */
-//    public abstract Block<T> createBlock();
+    public DynamicHashFileNode getRoot() {
+        return root;
+    }
+
+    public ArrayList<Block<T>> getAllBlocks() {
+        ArrayList<Block<T>> blocks = new ArrayList<Block<T>>();
+        int currentAddress = 0;
+        Block<T> block = new Block<T>(this.blockFactor, this.type);
+        long fileSize = 0;
+        try {
+            fileSize = this.file.length();
+        } catch (Exception e) {
+            System.out.println(e);
+            return blocks;
+        }
+
+        while ((long) block.getSize() * currentAddress < fileSize) {
+            blocks.add(this.readBlock(currentAddress, file));
+            currentAddress++;
+        }
+
+        return blocks;
+    }
 }
