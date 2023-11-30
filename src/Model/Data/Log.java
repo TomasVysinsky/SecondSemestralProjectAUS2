@@ -13,6 +13,7 @@ public abstract class Log implements IData {
     protected char[] description;
     protected int numberOfValidChars;
     protected Coordinate[] coordinates;
+    //protected static final int coordinateArraySize = 2;
 
     public Log(long id, String newDescription, int descriptionSize, Coordinate minCoordinate, Coordinate maxCoordinate) {
         this.id = id;

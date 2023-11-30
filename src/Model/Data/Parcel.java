@@ -100,8 +100,8 @@ public class Parcel extends Log {
     public byte[] toByteArray() {
         ByteBuffer byteBuffer = ByteBuffer.allocate(this.getSize());
         byteBuffer.putLong(this.id);
-        for (int i = 0; i < this.description.length; i++) {
-            byteBuffer.putChar(this.description[i]);
+        for (char c : this.description) {
+            byteBuffer.putChar(c);
         }
         byteBuffer.putInt(this.numberOfValidChars);
         for (Coordinate coordnate : this.coordinates) {

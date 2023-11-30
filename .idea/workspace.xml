@@ -4,23 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="df963b7d-2346-4567-b4d9-bdccb337eaa4" name="Changes" comment="First classes defined">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Generator/BuildingGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Generator/BuildingGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Generator/ParcelGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Generator/ParcelGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+    <list default="true" id="df963b7d-2346-4567-b4d9-bdccb337eaa4" name="Changes" comment="IRecord ready">
+      <change beforePath="$PROJECT_DIR$/src/Model/Data/Building.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Data/Building.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/Data/Log.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Data/Log.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/Data/Parcel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Data/Parcel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Model/DynamicHashFile/Data/Block.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/DynamicHashFile/Data/Block.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/DynamicHashFile/Data/IRecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/DynamicHashFile/Data/IRecord.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Model.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Model.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/QuadTree/Coordinates/Coordinate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/QuadTree/Coordinates/Coordinate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/QuadTree/Data/Building.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Data/Building.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/QuadTree/Data/IData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/QuadTree/Data/IData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/QuadTree/Data/Log.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Data/Log.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/QuadTree/Data/Parcel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Data/Parcel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Tests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Tests.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/View.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFileNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFileNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFileNodeExternal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFileNodeExternal.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFileNodeInternal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFileNodeInternal.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -101,7 +93,7 @@
       <workItem from="1700858167091" duration="968000" />
       <workItem from="1700859784524" duration="85000" />
       <workItem from="1700860000180" duration="322000" />
-      <workItem from="1700860378472" duration="27409000" />
+      <workItem from="1700860378472" duration="67297000" />
     </task>
     <task id="LOCAL-00001" summary="Proper find finished">
       <option name="closed" value="true" />
@@ -271,7 +263,15 @@
       <option name="project" value="LOCAL" />
       <updated>1701072356036</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="IRecord ready">
+      <option name="closed" value="true" />
+      <created>1701279078436</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1701279078437</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -314,18 +314,10 @@
     <MESSAGE value="Jar included" />
     <MESSAGE value="Posledna verzia po obhajobe" />
     <MESSAGE value="First classes defined" />
-    <option name="LAST_COMMIT_MESSAGE" value="First classes defined" />
+    <MESSAGE value="IRecord ready" />
+    <option name="LAST_COMMIT_MESSAGE" value="IRecord ready" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/Tests.java</url>
-          <line>75</line>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="Model.QuadTree.QuadTree" memberName="nodesOnEachDepth" />

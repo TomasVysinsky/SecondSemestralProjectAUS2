@@ -12,6 +12,7 @@ import java.util.Arrays;
 public class Building extends Log {
     private long[] parcels;
     private int supisneCislo, validParcels;
+    //private static final int descriptionSize = 15, parcelArraySize = 6;
 
     public Building() {
         super(0, "", 15, new Coordinate(), new Coordinate());
