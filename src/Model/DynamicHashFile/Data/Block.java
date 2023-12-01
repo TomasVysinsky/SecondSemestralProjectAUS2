@@ -89,7 +89,13 @@ public class Block <T extends IRecord> {
             this.validCount = byteBuffer.getInt();
             this.nextBlock = byteBuffer.getInt();
             for (int i = 0; i < this.validCount; i++) {
-                byte[] newArray = new byte[records[0].getSize()];
+                byte[] newArray;
+                try {
+                    newArray = new byte[this.type.newInstance().getSize()];
+                } catch (Exception e) {
+                    System.out.println(e);
+                    return;
+                }
                 for (int j = 0; j < newArray.length; j++) {
                     newArray[j] = byteBuffer.get();
                 }

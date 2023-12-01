@@ -49,7 +49,7 @@ public class DynamicHashFile <T extends IRecord> {
                 if (this.firstFreeBlock == -1) {
                     try {
                         this.file.setLength(this.file.length() + newBlock.getSize());
-                        external.setAddress((int)(this.file.length() / newBlock.getSize()));
+                        external.setAddress((int)(this.file.length() / newBlock.getSize()) - 1);
                     } catch (Exception e) {
                         System.out.println(e);
                         return false;
@@ -71,12 +71,23 @@ public class DynamicHashFile <T extends IRecord> {
                 while (!inserted) {
                     if (external.getCount() == this.blockFactor && external.getDepth() < this.maxDepth) {
                         // Vetva v pripade ze je externy node naplneny
-                        //TODO reorganizacia stromu
 
 
                         DynamicHashFileNodeExternal leftSon = new DynamicHashFileNodeExternal(0, external.getDepth() + 1, null);
                         DynamicHashFileNodeExternal rightSon = new DynamicHashFileNodeExternal(0, external.getDepth() + 1, null);
                         DynamicHashFileNodeInternal newInternal = new DynamicHashFileNodeInternal(external.getDepth(), external.getParent(), leftSon, rightSon);
+                        if (this.root == external) {
+                            this.root = newInternal;
+                        } else {
+                            if (external.getParent() instanceof DynamicHashFileNodeInternal) {
+                                DynamicHashFileNodeInternal parent = (DynamicHashFileNodeInternal) external.getParent();
+                                if (parent.getLeftSon() == external) {
+                                    parent.setLeftSon(newInternal);
+                                } else {
+                                    parent.setRightSon(newInternal);
+                                }
+                            }
+                        }
                         Block<T> leftSonBlock = new Block<T>(this.blockFactor, this.type);
                         Block<T> rigthSonBlock = new Block<T>(this.blockFactor, this.type);
                         Block<T> originalBlock = this.readBlock(external.getAddress(), file);
@@ -121,16 +132,20 @@ public class DynamicHashFile <T extends IRecord> {
                             }
                             external.setCount(external.getCount() + 1);
                             try {
-                                this.writeBlock(leftSon.getAddress(), this.file, leftSonBlock);
-                                this.writeBlock(rightSon.getAddress(), this.file, rigthSonBlock);
+                                if (leftSon.getAddress() != -1)
+                                    this.writeBlock(leftSon.getAddress(), this.file, leftSonBlock);
+                                if (rightSon.getAddress() != -1)
+                                    this.writeBlock(rightSon.getAddress(), this.file, rigthSonBlock);
                             } catch (IOException e) {
                                 System.out.println(e);
                             }
                             inserted = true;
                         } else {
                             try {
-                                this.writeBlock(leftSon.getAddress(), this.file, leftSonBlock);
-                                this.writeBlock(rightSon.getAddress(), this.file, rigthSonBlock);
+                                if (leftSon.getAddress() != -1)
+                                    this.writeBlock(leftSon.getAddress(), this.file, leftSonBlock);
+                                if (rightSon.getAddress() != -1)
+                                    this.writeBlock(rightSon.getAddress(), this.file, rigthSonBlock);
                             } catch (IOException e) {
                                 System.out.println(e);
                             }
@@ -179,6 +194,8 @@ public class DynamicHashFile <T extends IRecord> {
         Block<T> newBlock = new Block<T>(this.blockFactor, this.type);
         byte[] byteArray = new byte[newBlock.getSize()];
         try {
+            file.seek((long) address * byteArray.length);
+//            file.read(byteArray, address * byteArray.length, byteArray.length);
             file.read(byteArray, address * byteArray.length, byteArray.length);
         } catch (Exception e) {
             System.out.println(e);
@@ -189,7 +206,8 @@ public class DynamicHashFile <T extends IRecord> {
     }
 
     private void writeBlock(int address, RandomAccessFile file, Block<T> block) throws IOException {
-        file.write(block.toByteArray(), address * block.getSize(), block.getSize());
+        file.seek((long) address * block.getSize());
+        file.write(block.toByteArray());
     }
 
     public int getFreeBlock() {

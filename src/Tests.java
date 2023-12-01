@@ -335,11 +335,13 @@ public class Tests {
         this.parcelList = pGenerator.generateData(this.coordinates[0], this.coordinates[1], 9, 0);
         this.buildingList = bGenerator.generateData(this.coordinates[0], this.coordinates[1], 9, 0);
         for (Building building : buildingList) {
+            System.out.println("\n" + building.getFullDescription());
             buildingHashFile.insert(building);
             this.printBuildingHashFile(buildingHashFile);
         }
 
         for (Parcel parcel : parcelList) {
+            System.out.println("\n" + parcel.getFullDescription());
             parcelHashFile.insert(parcel);
             this.printParcelHashFile(parcelHashFile);
         }
@@ -376,8 +378,8 @@ public class Tests {
         for (int i = 0; i < blocks.size(); i++) {
             System.out.println("Block " + i + " Valid Count: " + blocks.get(i).getValidCount());
             IRecord[] records = blocks.get(i).getRecords();
-            for (IRecord record : records) {
-                System.out.println(((Log)record).getFullDescription());
+            for (int j = 0; j < blocks.get(i).getValidCount(); j++) {
+                System.out.println(((Log)records[j]).getFullDescription());
             }
         }
     }
@@ -406,8 +408,8 @@ public class Tests {
         for (int i = 0; i < blocks.size(); i++) {
             System.out.println("Block " + i + " Valid Count: " + blocks.get(i).getValidCount());
             IRecord[] records = blocks.get(i).getRecords();
-            for (IRecord record : records) {
-                System.out.println(((Log)record).getFullDescription());
+            for (int j = 0; j < blocks.get(i).getValidCount(); j++) {
+                System.out.println(((Log)records[j]).getFullDescription());
             }
         }
     }
