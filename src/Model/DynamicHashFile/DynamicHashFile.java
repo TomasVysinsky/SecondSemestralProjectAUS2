@@ -3,16 +3,20 @@ package Model.DynamicHashFile;
 import Model.DynamicHashFile.Data.Block;
 import Model.DynamicHashFile.Data.IRecord;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class DynamicHashFile <T extends IRecord> {
     private DynamicHashFileNode root;
-    private int blockFactor;
+    private int blockFactor, overflowBlockFactor;
     private int maxDepth;
     private int firstFreeBlock;
     private RandomAccessFile file, overflowFile;
+    private String fileName;
     private Class<T> type;
 
     /**
@@ -21,17 +25,28 @@ public class DynamicHashFile <T extends IRecord> {
      * @param maxDepth
      * @param fileName String, adresa binarneho suboru bez suffixu
      */
-    public DynamicHashFile(int blockFactor, int maxDepth, String fileName, Class<T> type) {
+    public DynamicHashFile(int blockFactor, int overflowBlockFactor, int maxDepth, String fileName, Class<T> type) {
         this.blockFactor = blockFactor;
+        this.overflowBlockFactor = overflowBlockFactor;
         this.maxDepth = maxDepth;
         this.type = type;
         try {
             this.file = new RandomAccessFile(fileName + ".bin", "rw");
+            this.overflowFile = new RandomAccessFile(fileName + "Overflow.bin", "rw");
         } catch (Exception e) {
             return;
         }
         this.root = new DynamicHashFileNodeExternal(0, 0, null);
         this.firstFreeBlock = -1;
+        this.fileName = fileName;
+
+
+        File backup = new File(this.fileName + ".txt");
+        if (backup.exists()) {
+            System.out.println("Subor existuje");
+        } else {
+            System.out.println("Subor neexistuje");
+        }
     }
 
     public boolean insert(T record) {
@@ -43,7 +58,7 @@ public class DynamicHashFile <T extends IRecord> {
             DynamicHashFileNodeExternal external = (DynamicHashFileNodeExternal) current;
 
             if (external.getAddress() == -1) {
-                //Vetva v pripade ze externy node nema alokovany block
+                // Vetva v pripade ze externy node nema alokovany block
 
                 Block<T> newBlock = new Block<T>(this.blockFactor, this.type);
                 if (this.firstFreeBlock == -1) {
@@ -151,13 +166,14 @@ public class DynamicHashFile <T extends IRecord> {
                             }
                         }
                     } else {
-                        //TODO vlozenie do aktualneho blocku
+                        // Vlozenie do aktualneho blocku
                         if (external.getCount() < this.blockFactor) {
                             Block<T> currentBlock = this.readBlock(external.getAddress(), this.file);
                             if (currentBlock == null) {
                                 System.out.println("Chyba pri nacitani blocku v inserte");
                                 return false;
                             }
+                            // TODO kontrola ci sa moze vlozit do blocku (nesmie tam vyjst equals true)
                             currentBlock.insert(record);
                             external.setCount(external.getCount() + 1);
                             try {
@@ -215,7 +231,7 @@ public class DynamicHashFile <T extends IRecord> {
     }
 
     public void freeTheBlock(int address) {
-        // TODO freeTheBolck
+        // TODO freeTheBlock
         this.firstFreeBlock = address;
     }
 
@@ -243,6 +259,32 @@ public class DynamicHashFile <T extends IRecord> {
         return blocks;
     }
 
+    public String getTrieAsString() {
+        Queue<DynamicHashFileNode> nodeQueue = new LinkedList<>();
+        nodeQueue.add(this.root);
+        boolean allDone = false;
+        String result = "";
+
+        while (!allDone) {
+            DynamicHashFileNode currentNode = nodeQueue.remove();
+            if (currentNode instanceof DynamicHashFileNodeExternal) {
+                DynamicHashFileNodeExternal externalNode = (DynamicHashFileNodeExternal)currentNode;
+                result = result + "\nExternal node, Depth: " + currentNode.getDepth() +
+                        " Address: " + externalNode.getAddress() + " Count: " + externalNode.getCount();
+//                System.out.println("External node, Depth: " + currentNode.getDepth() + " Address: " + externalNode.getAddress() + " Count: " + externalNode.getCount());
+            } else {
+                result = result + "\nInternal Node, Depth: " + currentNode.getDepth();
+//                System.out.println("Internal Node, Depth: " + currentNode.getDepth());
+                nodeQueue.add(((DynamicHashFileNodeInternal)currentNode).getLeftSon());
+                nodeQueue.add(((DynamicHashFileNodeInternal)currentNode).getRightSon());
+            }
+
+            if (nodeQueue.isEmpty())
+                allDone = true;
+        }
+        return result;
+    }
+
     @Override
     protected void finalize(){
         try {
@@ -250,5 +292,6 @@ public class DynamicHashFile <T extends IRecord> {
         } catch (IOException e) {
             System.out.println(e);
         }
+
     }
 }

@@ -1,16 +1,16 @@
 package Model.DynamicHashFile.Data;
 
-import Model.QuadTree.Coordinates.Coordinate;
-
 import java.nio.ByteBuffer;
 
 public class Block <T extends IRecord> {
+    boolean active;
     private IRecord[] records;
     private int validCount;
     private int nextBlock;
     private Class<T> type;
 
     public Block(int blockFactor, Class<T> type) {
+        this.active = false;
         this.type = type;
         this.validCount = 0;
         this.records = new IRecord[blockFactor];
@@ -21,7 +21,7 @@ public class Block <T extends IRecord> {
     }
 
     public boolean insert(T record) {
-        if (this.validCount < this.records.length) {
+        if (this.active && this.validCount < this.records.length) {
             this.records[this.validCount] = record;
             this.validCount++;
             return true;
@@ -49,12 +49,53 @@ public class Block <T extends IRecord> {
         return deleted;
     }
 
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     public void setNextBlock(int nextBlock) {
         this.nextBlock = nextBlock;
     }
 
+    /**
+     * Ak je block neplatny, nastavi predchadzajuci block do atributu validCount.
+     * V opacnom pripade nespravi nic
+     * @param previousBlock
+     */
+    public void setPreviousBlockIfInactive(int previousBlock ) {
+        if (!this.active) {
+            this.validCount = previousBlock;
+        }
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    /**
+     *
+     * @return Ak je block platny vrati pocet platnych blockov. Ak nie, vrati 0.
+     */
     public int getValidCount(){
-        return this.validCount;
+        if (this.active) {
+            return this.validCount;
+        }
+        return 0;
+    }
+
+    /**
+     *
+     * @return Ak je block neplatny vrati poziciu predchadzajuceho blocku. Ak nie, vrati -1.
+     */
+    public int getPreviousBlockIfInactive() {
+        if (!this.active) {
+            return this.validCount;
+        }
+        return -1;
+    }
+
+    public int getNextBlock() {
+        return nextBlock;
     }
 
     public IRecord[] getRecords() {
@@ -67,7 +108,8 @@ public class Block <T extends IRecord> {
      */
     public int getSize() {
         try {
-            return Integer.BYTES * 2 + this.type.newInstance().getSize() * this.records.length;
+            // active + nextBlock + validCount + records size
+            return Character.BYTES + Integer.BYTES * 2 + this.type.newInstance().getSize() * this.records.length;
         } catch (Exception e) {
             System.out.println(e);
             return -1;
@@ -76,6 +118,11 @@ public class Block <T extends IRecord> {
 
     public byte[] toByteArray() {
         ByteBuffer byteBuffer = ByteBuffer.allocate(this.getSize());
+        if (this.active) {
+            byteBuffer.putChar('T');
+        } else {
+            byteBuffer.putChar('F');
+        }
         byteBuffer.putInt(this.validCount);
         byteBuffer.putInt(this.nextBlock);
         for (int i = 0; i < this.validCount; i++) {
@@ -86,6 +133,7 @@ public class Block <T extends IRecord> {
     public void fromByteArray(byte[] bytes) {
         if (bytes.length == this.getSize()) {
             ByteBuffer byteBuffer = ByteBuffer.wrap(bytes);
+            this.active = (byteBuffer.getChar() == 'T');
             this.validCount = byteBuffer.getInt();
             this.nextBlock = byteBuffer.getInt();
             for (int i = 0; i < this.validCount; i++) {

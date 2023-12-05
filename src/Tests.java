@@ -330,8 +330,8 @@ public class Tests {
     }
 
     public void testHashFile(){
-        DynamicHashFile<Parcel> parcelHashFile = new DynamicHashFile<Parcel>(3, 3, "parcely", Parcel.class);
-        DynamicHashFile<Building> buildingHashFile = new DynamicHashFile<Building>(3, 3, "budovy", Building.class);
+        DynamicHashFile<Parcel> parcelHashFile = new DynamicHashFile<Parcel>(3, 4, 3, "parcely", Parcel.class);
+        DynamicHashFile<Building> buildingHashFile = new DynamicHashFile<Building>(3, 4, 3, "budovy", Building.class);
         this.parcelList = pGenerator.generateData(this.coordinates[0], this.coordinates[1], 9, 0);
         this.buildingList = bGenerator.generateData(this.coordinates[0], this.coordinates[1], 9, 0);
         for (Building building : buildingList) {
@@ -355,7 +355,8 @@ public class Tests {
     }
 
     public void printParcelHashFile(DynamicHashFile<Parcel> file) {
-        Queue<DynamicHashFileNode> nodeQueue = new LinkedList<>();
+        System.out.println(file.getTrieAsString());
+        /*Queue<DynamicHashFileNode> nodeQueue = new LinkedList<>();
         nodeQueue.add(file.getRoot());
         boolean allDone = false;
 
@@ -372,7 +373,7 @@ public class Tests {
 
             if (nodeQueue.isEmpty())
                 allDone = true;
-        }
+        }*/
 
         ArrayList<Block<Parcel>> blocks = file.getAllBlocks();
         for (int i = 0; i < blocks.size(); i++) {
@@ -385,7 +386,8 @@ public class Tests {
     }
 
     public void printBuildingHashFile(DynamicHashFile<Building> file) {
-        Queue<DynamicHashFileNode> nodeQueue = new LinkedList<>();
+        System.out.println(file.getTrieAsString());
+        /*Queue<DynamicHashFileNode> nodeQueue = new LinkedList<>();
         nodeQueue.add(file.getRoot());
         boolean allDone = false;
 
@@ -402,7 +404,7 @@ public class Tests {
 
             if (nodeQueue.isEmpty())
                 allDone = true;
-        }
+        }*/
 
         ArrayList<Block<Building>> blocks = file.getAllBlocks();
         for (int i = 0; i < blocks.size(); i++) {

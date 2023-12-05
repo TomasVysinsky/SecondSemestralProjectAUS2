@@ -1,0 +1,186 @@
+package Model.DynamicHashFile;
+
+import Model.DynamicHashFile.Data.Block;
+import Model.DynamicHashFile.Data.IRecord;
+
+import java.io.IOException;
+import java.io.RandomAccessFile;
+
+public class FileManager<T extends IRecord> {
+    private int blockFactor;
+    private RandomAccessFile file;
+    private Class<T> type;
+    private int firstFreeBlock;
+
+    /**
+     *
+     * @param fileName String, adresa binarneho suboru bez suffixu
+     */
+    public FileManager(int blockFactor, String fileName, Class<T> type) {
+        this.blockFactor = blockFactor;
+        this.type = type;
+        this.firstFreeBlock = -1;
+        try {
+            this.file = new RandomAccessFile(fileName + ".bin", "rw");
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    public Block<T> readBlock(int address) {
+        Block<T> newBlock = new Block<T>(this.blockFactor, this.type);
+        byte[] byteArray = new byte[newBlock.getSize()];
+        try {
+            this.file.seek((long) address * byteArray.length);
+            this.file.read(byteArray, address * byteArray.length, byteArray.length);
+        } catch (Exception e) {
+            System.out.println(e);
+            return null;
+        }
+        newBlock.fromByteArray(byteArray);
+        return newBlock;
+    }
+
+    public void writeBlock(int address, Block<T> block) throws IOException {
+        this.file.seek((long) address * block.getSize());
+        this.file.write(block.toByteArray());
+    }
+
+    /**
+     * Odoberie prvy volny block zo zoznamu volnych blockov a da jeho adresu ako navratovu hodnotu.
+     * Ak je zoznam volnych blockov prazdny, alokuje v subore nove miesto na block a vrati jeho adresu.
+     * @return
+     */
+    public int getRemovedFreeBlock() {
+        if (this.firstFreeBlock == -1) {
+            // Vetva v pripade, ze je zoznam prazdnych blockov prazdny
+            Block<T> newBlock = new Block<T>(this.blockFactor, this.type);
+            try {
+                this.file.setLength(this.file.length() + newBlock.getSize());
+                return this.getLastBlockAddress();
+            } catch (Exception e) {
+                System.out.println(e);
+                return -1;
+            }
+        }
+
+        int freeBlock = this.firstFreeBlock;
+        if (this.removeFreeBlock(freeBlock))
+            return freeBlock;
+        return -1;
+    }
+
+    /**
+     * Ak je block uprostred suboru, nastavi block ako prvy v poradovniku volnych blockov.
+     * Ak je block na konci, skrati subor tak, aby na konci ostal platny block
+     * @param address
+     */
+    public void freeTheBlock(int address) {
+        Block<T> blockToSetFree = this.readBlock(address);
+        int lastBlockAddress = this.getLastBlockAddress();
+
+        if(address < lastBlockAddress) {
+            blockToSetFree.setActive(false);
+            blockToSetFree.setNextBlock(this.firstFreeBlock);
+
+            // Skontroluje ci uz tam nejaky block bol ulozeny, ak nie tak len nastavi prvy volny block, ak ano tak nastavi na nasledujucemu blocku predchodcu
+            if (this.firstFreeBlock != -1) {
+                Block<T> nextBlock = this.readBlock(this.firstFreeBlock);
+                nextBlock.setPreviousBlockIfInactive(address);
+                try {
+                    this.writeBlock(this.firstFreeBlock, nextBlock);
+                } catch (Exception e) {
+                    System.out.println(e);
+                    return;
+                }
+            }
+            this.firstFreeBlock = address;
+
+        } else if (address == lastBlockAddress) {
+            // Cast ktora skracuje subor
+            // Najprv oddstrani posledny subor
+            try {
+                this.file.setLength(this.file.length() - blockToSetFree.getSize());
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+
+            // Potom spusti while cyklus, ktory funguje dokym na konci nie je platny block alebo dokym nie je subor prazdny
+            boolean fileCutted = false;
+            while (!fileCutted) {
+                lastBlockAddress = this.getLastBlockAddress();
+                if (lastBlockAddress == -1) {
+                    // Cast ak je subor prazdny
+                    fileCutted = true;
+                } else {
+                    if (this.removeFreeBlock(lastBlockAddress)) {
+                        // Ak sa podarilo odstranit posledny block zo zoznamu neplatnych blockov (lebo sa v nom nachadzal)
+                        // skrati subor o velkost jedneho blocku
+                        try {
+                            this.file.setLength(this.file.length() - blockToSetFree.getSize());
+                        } catch (Exception e) {
+                            System.out.println(e);
+                        }
+                    } else {
+                        // Ak sa posledny block odstranit nepodarilo, znamena to ze je aktivny takze subor uz netreba skracovat
+                        fileCutted = true;
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     *
+     * @param address
+     * @return true ak block uspesne uvolni, false ak dojde k pokusu o uvolnenie platneho blocku
+     */
+    private boolean removeFreeBlock(int address) {
+        Block<T> blockToRemove = this.readBlock(address);
+        if (blockToRemove.isActive())
+            return false;
+
+        // Ak ma nasledovnika, nastavi mu addresu predchodcu na svojho predchodcu
+        if (blockToRemove.getNextBlock() != -1) {
+            Block<T> nextBlock = this.readBlock(blockToRemove.getNextBlock());
+            nextBlock.setPreviousBlockIfInactive(blockToRemove.getPreviousBlockIfInactive());
+            try {
+                this.writeBlock(blockToRemove.getNextBlock(), nextBlock);
+            } catch (Exception e) {
+                System.out.println(e);
+                return false;
+            }
+        }
+
+        // Ak nema predchodcu, nastavi korenu svojho nasledovnika
+        if (blockToRemove.getPreviousBlockIfInactive() == -2) {
+            this.firstFreeBlock = blockToRemove.getNextBlock();
+        } else {
+            // Ak ma predchodcu tak mu nastavi nasledovnika na svojho nasledovnika
+            Block<T> previousBlock = this.readBlock(blockToRemove.getPreviousBlockIfInactive());
+            previousBlock.setNextBlock(blockToRemove.getNextBlock());
+            try {
+                this.writeBlock(blockToRemove.getPreviousBlockIfInactive(), previousBlock);
+            } catch (Exception e) {
+                System.out.println(e);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Vrati index posledneho blocku v subore.
+     * Vrati -1 ak subor neobsahuje ziadne blocky
+     * @return
+     */
+    private int getLastBlockAddress() {
+        try {
+            Block<T> newBlock = new Block<T>(this.blockFactor, this.type);
+            return (int)(this.file.length() / newBlock.getSize()) - 1;
+        } catch (Exception e) {
+            System.out.println(e);
+            return -3;
+        }
+    }
+}
