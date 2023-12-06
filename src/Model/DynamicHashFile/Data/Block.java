@@ -68,6 +68,12 @@ public class Block <T extends IRecord> {
         }
     }
 
+    public void setValidCount(int validCount) {
+        if (!this.active) {
+            this.validCount = validCount;
+        }
+    }
+
     public boolean isActive() {
         return active;
     }

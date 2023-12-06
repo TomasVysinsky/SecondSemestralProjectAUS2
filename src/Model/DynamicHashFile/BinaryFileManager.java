@@ -5,8 +5,9 @@ import Model.DynamicHashFile.Data.IRecord;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 
-public class FileManager<T extends IRecord> {
+public class BinaryFileManager<T extends IRecord> {
     private int blockFactor;
     private RandomAccessFile file;
     private Class<T> type;
@@ -16,7 +17,7 @@ public class FileManager<T extends IRecord> {
      *
      * @param fileName String, adresa binarneho suboru bez suffixu
      */
-    public FileManager(int blockFactor, String fileName, Class<T> type) {
+    public BinaryFileManager(int blockFactor, String fileName, Class<T> type) {
         this.blockFactor = blockFactor;
         this.type = type;
         this.firstFreeBlock = -1;
@@ -25,6 +26,10 @@ public class FileManager<T extends IRecord> {
         } catch (Exception e) {
             System.out.println(e);
         }
+    }
+
+    public int getBlockFactor() {
+        return blockFactor;
     }
 
     public Block<T> readBlock(int address) {
@@ -49,15 +54,19 @@ public class FileManager<T extends IRecord> {
     /**
      * Odoberie prvy volny block zo zoznamu volnych blockov a da jeho adresu ako navratovu hodnotu.
      * Ak je zoznam volnych blockov prazdny, alokuje v subore nove miesto na block a vrati jeho adresu.
+     * Ak pri vytvarani volneho blocku dojde k chybe, vrati -1
      * @return
      */
     public int getRemovedFreeBlock() {
         if (this.firstFreeBlock == -1) {
             // Vetva v pripade, ze je zoznam prazdnych blockov prazdny
             Block<T> newBlock = new Block<T>(this.blockFactor, this.type);
+            newBlock.setActive(true);
             try {
                 this.file.setLength(this.file.length() + newBlock.getSize());
-                return this.getLastBlockAddress();
+                int address = this.getLastBlockAddress();
+                this.writeBlock(address, newBlock);
+                return address;
             } catch (Exception e) {
                 System.out.println(e);
                 return -1;
@@ -130,6 +139,27 @@ public class FileManager<T extends IRecord> {
         }
     }
 
+    public ArrayList<Block<T>> getAllBlocks() {
+        ArrayList<Block<T>> blocks = new ArrayList<Block<T>>();
+        int currentAddress = 0;
+        Block<T> block = new Block<T>(this.blockFactor, this.type);
+        long fileSize = 0;
+        try {
+            fileSize = this.file.length();
+        } catch (Exception e) {
+            System.out.println(e);
+            return blocks;
+        }
+
+        // Precitanie vsetkych blockovjedneho po druhom
+        while ((long) block.getSize() * currentAddress < fileSize) {
+            blocks.add(this.readBlock(currentAddress));
+            currentAddress++;
+        }
+
+        return blocks;
+    }
+
     /**
      *
      * @param address
@@ -166,6 +196,17 @@ public class FileManager<T extends IRecord> {
                 return false;
             }
         }
+
+        // Vynuluje a nastavi block ako aktivny
+        blockToRemove.setActive(true);
+        blockToRemove.setValidCount(0);
+        blockToRemove.setNextBlock(-1);
+        try {
+            this.writeBlock(address, blockToRemove);
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
         return true;
     }
 
@@ -182,5 +223,15 @@ public class FileManager<T extends IRecord> {
             System.out.println(e);
             return -3;
         }
+    }
+
+    @Override
+    protected void finalize(){
+        try {
+            this.file.close();
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+
     }
 }
