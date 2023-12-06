@@ -331,14 +331,14 @@ public class Tests {
 
     public void testHashFile(){
         DynamicHashFile<Parcel> parcelHashFile = new DynamicHashFile<Parcel>(3, 4, 3, "parcely", Parcel.class);
-        DynamicHashFile<Building> buildingHashFile = new DynamicHashFile<Building>(3, 4, 3, "budovy", Building.class);
+//        DynamicHashFile<Building> buildingHashFile = new DynamicHashFile<Building>(3, 4, 3, "budovy", Building.class);
         this.parcelList = pGenerator.generateData(this.coordinates[0], this.coordinates[1], 9, 0);
-        this.buildingList = bGenerator.generateData(this.coordinates[0], this.coordinates[1], 9, 0);
+        /*this.buildingList = bGenerator.generateData(this.coordinates[0], this.coordinates[1], 9, 0);
         for (Building building : buildingList) {
             System.out.println("\n" + building.getFullDescription());
             buildingHashFile.insert(building);
             this.printBuildingHashFile(buildingHashFile);
-        }
+        }*/
 
         for (Parcel parcel : parcelList) {
             System.out.println("\n" + parcel.getFullDescription());
@@ -346,18 +346,34 @@ public class Tests {
             this.printParcelHashFile(parcelHashFile);
         }
 
-        for (int i = 0; i < 3; i++) {
+//        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < this.parcelList.size(); i++) {
             if (!this.parcelList.get(i).equals(parcelHashFile.find(this.parcelList.get(i))))
                 System.out.println("Find Parcel test N.o.: " + i + " failure");
-            if (!this.buildingList.get(i).equals(buildingHashFile.find(this.buildingList.get(i))))
+            else
+                System.out.println("Find Parcel test N.o.: " + i + " correct");
+            /*if (!this.buildingList.get(i).equals(buildingHashFile.find(this.buildingList.get(i))))
                 System.out.println("Find Building test N.o.: " + i + " failure");
+            else
+                System.out.println("Find Building test N.o.: " + i + " correct");*/
         }
     }
 
     public void printParcelHashFile(DynamicHashFile<Parcel> file) {
         System.out.println(file.getTrieAsString());
 
-        ArrayList<Block<Parcel>> blocks = file.getAllBlocks();
+        ArrayList<Block<Parcel>> blocks = file.getAllRegularBlocks();
+        System.out.println("Regular file");
+        for (int i = 0; i < blocks.size(); i++) {
+            System.out.println("Block " + i + " Valid Count: " + blocks.get(i).getValidCount());
+            IRecord[] records = blocks.get(i).getRecords();
+            for (int j = 0; j < blocks.get(i).getValidCount(); j++) {
+                System.out.println(((Log)records[j]).getFullDescription());
+            }
+        }
+
+        blocks = file.getAllOverflowBlocks();
+        System.out.println("Overflow file");
         for (int i = 0; i < blocks.size(); i++) {
             System.out.println("Block " + i + " Valid Count: " + blocks.get(i).getValidCount());
             IRecord[] records = blocks.get(i).getRecords();
@@ -370,7 +386,18 @@ public class Tests {
     public void printBuildingHashFile(DynamicHashFile<Building> file) {
         System.out.println(file.getTrieAsString());
 
-        ArrayList<Block<Building>> blocks = file.getAllBlocks();
+        ArrayList<Block<Building>> blocks = file.getAllRegularBlocks();
+        System.out.println("Regular file");
+        for (int i = 0; i < blocks.size(); i++) {
+            System.out.println("Block " + i + " Valid Count: " + blocks.get(i).getValidCount());
+            IRecord[] records = blocks.get(i).getRecords();
+            for (int j = 0; j < blocks.get(i).getValidCount(); j++) {
+                System.out.println(((Log)records[j]).getFullDescription());
+            }
+        }
+
+        blocks = file.getAllOverflowBlocks();
+        System.out.println("Overflow file");
         for (int i = 0; i < blocks.size(); i++) {
             System.out.println("Block " + i + " Valid Count: " + blocks.get(i).getValidCount());
             IRecord[] records = blocks.get(i).getRecords();

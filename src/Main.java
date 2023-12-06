@@ -7,8 +7,8 @@ public class Main {
 //        test.testIRecordByteConversions();
 //        test.monteCarlo(1);
 
-/*
-        if (test.bruteForceTestInsert()) {
+
+        /*if (test.bruteForceTestInsert()) {
             System.out.println("Test insert vysiel dobre");
         } else {
             System.out.println("Test insert vysiel zle");

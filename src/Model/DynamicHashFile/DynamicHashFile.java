@@ -5,7 +5,6 @@ import Model.DynamicHashFile.Data.IRecord;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -28,8 +27,7 @@ public class DynamicHashFile <T extends IRecord> {
         this.type = type;
         this.regularFile = new BinaryFileManager<T>(blockFactor, fileName, type);
         this.overflowFile = new BinaryFileManager<T>(overflowBlockFactor, fileName + "Overflow", type);
-        // TODO kuknut ci netreba dat depth 1
-        this.root = new DynamicHashFileNodeExternal(0, 0, null);
+        this.root = new DynamicHashFileNodeExternal(0, 1, null);
         this.fileName = fileName;
 
 
@@ -216,26 +214,65 @@ public class DynamicHashFile <T extends IRecord> {
         }
         return false;
     }
-    public T find(IRecord record) {
-        DynamicHashFileNodeExternal external = this.findExternalNode(record);
 
-        return this.regularFile.readBlock(external.getAddress()).find(record);
+    /**
+     * Ak sa prvok s hashom vlozeneho IRecordu nachadza v strukture, vrati ho ako navratovu hodnotu.
+     * Ak nie, vrati null.
+     * @param record
+     * @return
+     */
+    public T find(IRecord record) {
+        // Najprv sa najde prislusny node a prezrie prislusny block v hlavnom subore
+        DynamicHashFileNodeExternal external = this.findExternalNode(record);
+        Block<T> blockFound = this.regularFile.readBlock(external.getAddress());
+        T found = blockFound.find(record);
+
+        if (found == null && blockFound.getNextBlock() != -1) {
+            // Vetva na prehladavanie preplnovacieho suboru
+            boolean needToLookForAnotherBlock = true;
+
+            while (needToLookForAnotherBlock) {
+                int currentAddress = blockFound.getNextBlock();
+                blockFound = this.overflowFile.readBlock(currentAddress);
+                found = blockFound.find(record);
+
+                if (found != null || blockFound.getNextBlock() == -1)
+                    needToLookForAnotherBlock = false;
+            }
+        }
+
+        return found;
     }
-    public boolean delete() { return false; }
+    public T delete(IRecord record) {
+        T found = null;
+        if (record != null) {
+            DynamicHashFileNodeExternal external = this.findExternalNode(record);
+            Block<T> blockFound = this.regularFile.readBlock(external.getAddress());
+            found = blockFound.find(record);
+
+//            if (found)
+        }
+        return found;
+    }
 
     public DynamicHashFileNode getRoot() {
         return root;
     }
 
     /**
-     * Metoda, ktora vrati vsetky blocky v DynamicHashFile
+     * Metoda, ktora vrati vsetky blocky v regularnom subore
      * @return
      */
-    public ArrayList<Block<T>> getAllBlocks() {
-        ArrayList<Block<T>> regularBlocks = this.regularFile.getAllBlocks();
-        regularBlocks.addAll(this.overflowFile.getAllBlocks());
+    public ArrayList<Block<T>> getAllRegularBlocks() {
+        return this.regularFile.getAllBlocks();
+    }
 
-        return regularBlocks;
+    /**
+     * Metoda, ktora vrati vsetky blocky v preplnovacom subore
+     * @return
+     */
+    public ArrayList<Block<T>> getAllOverflowBlocks() {
+        return this.overflowFile.getAllBlocks();
     }
 
     public String getTrieAsString() {
