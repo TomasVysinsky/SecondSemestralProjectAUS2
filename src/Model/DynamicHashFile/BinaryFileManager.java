@@ -37,7 +37,7 @@ public class BinaryFileManager<T extends IRecord> {
         byte[] byteArray = new byte[newBlock.getSize()];
         try {
             this.file.seek((long) address * byteArray.length);
-            this.file.read(byteArray, address * byteArray.length, byteArray.length);
+            this.file.read(byteArray);
         } catch (Exception e) {
             System.out.println(e);
             return null;
@@ -183,7 +183,7 @@ public class BinaryFileManager<T extends IRecord> {
         }
 
         // Ak nema predchodcu, nastavi korenu svojho nasledovnika
-        if (blockToRemove.getPreviousBlockIfInactive() == -2) {
+        if (blockToRemove.getPreviousBlockIfInactive() == -1) {
             this.firstFreeBlock = blockToRemove.getNextBlock();
         } else {
             // Ak ma predchodcu tak mu nastavi nasledovnika na svojho nasledovnika

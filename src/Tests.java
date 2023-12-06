@@ -356,24 +356,6 @@ public class Tests {
 
     public void printParcelHashFile(DynamicHashFile<Parcel> file) {
         System.out.println(file.getTrieAsString());
-        /*Queue<DynamicHashFileNode> nodeQueue = new LinkedList<>();
-        nodeQueue.add(file.getRoot());
-        boolean allDone = false;
-
-        while (!allDone) {
-            DynamicHashFileNode currentNode = nodeQueue.remove();
-            if (currentNode instanceof DynamicHashFileNodeExternal) {
-                DynamicHashFileNodeExternal externalNode = (DynamicHashFileNodeExternal)currentNode;
-                System.out.println("External node, Depth: " + currentNode.getDepth() + " Address: " + externalNode.getAddress() + " Count: " + externalNode.getCount());
-            } else {
-                System.out.println("Internal Node, Depth: " + currentNode.getDepth());
-                nodeQueue.add(((DynamicHashFileNodeInternal)currentNode).getLeftSon());
-                nodeQueue.add(((DynamicHashFileNodeInternal)currentNode).getRightSon());
-            }
-
-            if (nodeQueue.isEmpty())
-                allDone = true;
-        }*/
 
         ArrayList<Block<Parcel>> blocks = file.getAllBlocks();
         for (int i = 0; i < blocks.size(); i++) {
@@ -387,24 +369,6 @@ public class Tests {
 
     public void printBuildingHashFile(DynamicHashFile<Building> file) {
         System.out.println(file.getTrieAsString());
-        /*Queue<DynamicHashFileNode> nodeQueue = new LinkedList<>();
-        nodeQueue.add(file.getRoot());
-        boolean allDone = false;
-
-        while (!allDone) {
-            DynamicHashFileNode currentNode = nodeQueue.remove();
-            if (currentNode instanceof DynamicHashFileNodeExternal) {
-                DynamicHashFileNodeExternal externalNode = (DynamicHashFileNodeExternal)currentNode;
-                System.out.println("External node, Depth: " + currentNode.getDepth() + " Address: " + externalNode.getAddress() + " Count: " + externalNode.getCount());
-            } else {
-                System.out.println("Internal Node, Depth: " + currentNode.getDepth());
-                nodeQueue.add(((DynamicHashFileNodeInternal)currentNode).getLeftSon());
-                nodeQueue.add(((DynamicHashFileNodeInternal)currentNode).getRightSon());
-            }
-
-            if (nodeQueue.isEmpty())
-                allDone = true;
-        }*/
 
         ArrayList<Block<Building>> blocks = file.getAllBlocks();
         for (int i = 0; i < blocks.size(); i++) {

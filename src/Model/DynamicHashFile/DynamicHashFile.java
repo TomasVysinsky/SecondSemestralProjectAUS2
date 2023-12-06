@@ -43,28 +43,10 @@ public class DynamicHashFile <T extends IRecord> {
 
     public boolean insert(T record) {
         if (record != null) {
-            DynamicHashFileNode current = this.root;
-            while (current instanceof DynamicHashFileNodeInternal) {
-                current = ((DynamicHashFileNodeInternal) current).getNextNode(record.getHash());
-            }
-            DynamicHashFileNodeExternal external = (DynamicHashFileNodeExternal) current;
+            DynamicHashFileNodeExternal external = this.findExternalNode(record);
 
             if (external.getAddress() == -1) {
                 // Vetva v pripade ze externy node nema alokovany block
-
-                /*Block<T> newBlock = new Block<T>(this.blockFactor, this.type);
-                if (this.firstFreeBlock == -1) {
-                    try {
-                        this.file.setLength(this.file.length() + newBlock.getSize());
-                        external.setAddress((int)(this.file.length() / newBlock.getSize()) - 1);
-                    } catch (Exception e) {
-                        System.out.println(e);
-                        return false;
-                    }
-                } else {
-                    //TODO pouzit existujuci prazdny block - dorobit po delete
-                }*/
-
                 int freeBlock = this.regularFile.getRemovedFreeBlock();
                 if (freeBlock == -1)
                     return false;
@@ -124,20 +106,6 @@ public class DynamicHashFile <T extends IRecord> {
                                 if (freeBlock == -1)
                                     return false;
                                 nextNode.setAddress(freeBlock);
-
-                                /*if (this.getFreeBlock() == -1) {
-                                    try {
-                                        this.file.setLength(this.file.length() + originalBlock.getSize());
-                                        nextNode.setAddress((int) (this.file.length() / originalBlock.getSize()));
-                                    } catch (Exception e) {
-                                        System.out.println(e);
-                                        return false;
-                                    }
-                                } else {
-                                    // TODO prerobit ked budem mat aj delete
-                                    nextNode.setAddress(this.getFreeBlock());
-                                    this.firstFreeBlock = -1;
-                                }*/
                             }
 
                             // Vlozenie aktualne triedeneho zaznamu do spravneho blocku
@@ -173,9 +141,9 @@ public class DynamicHashFile <T extends IRecord> {
 
                     } else {
                         // Vlozenie do aktualneho nodu
+                        Block<T> currentBlock = this.regularFile.readBlock(external.getAddress());
                         if (external.getCount() < this.regularFile.getBlockFactor()) {
                             // Vetva ak je v blocku regularneho suboru miesto
-                            Block<T> currentBlock = this.regularFile.readBlock(external.getAddress());
                             if (currentBlock == null) {
                                 System.out.println("Chyba pri nacitani blocku v inserte");
                                 return false;
@@ -189,9 +157,56 @@ public class DynamicHashFile <T extends IRecord> {
                                 System.out.println(e);
                             }
                         } else {
-                            // TODO preplnovaci subor
                             // Vetva aku uz nie je v blocku regularneho suboru miesto, teda ukladanie do preplnovacieho suboru
-                            return false;
+                            boolean blockWithFreeSpaceFound = false;
+                            int currentAddress = external.getAddress();
+                            int cycleCounter = 0;
+
+                            while (!blockWithFreeSpaceFound) {
+                                int nextBlock = currentBlock.getNextBlock();
+
+                                if (nextBlock == -1) {
+                                    // Vetva pokial nema nastaveneho nasledovnika teda vytvorenie noveho nasledovnika v preplnovacom subore
+                                    int freeBlock = this.overflowFile.getRemovedFreeBlock();
+                                    if (freeBlock == -1)
+                                        return false;
+                                    currentBlock.setNextBlock(freeBlock);
+                                    Block<T> newBlock = this.overflowFile.readBlock(currentBlock.getNextBlock());
+                                    newBlock.insert(record);
+                                    external.setCount(external.getCount() + 1);
+                                    try {
+                                        if (cycleCounter == 0) {
+                                            this.regularFile.writeBlock(currentAddress, currentBlock);
+                                        } else {
+                                            this.overflowFile.writeBlock(currentAddress, currentBlock);
+                                        }
+                                        this.overflowFile.writeBlock(currentBlock.getNextBlock(), newBlock);
+                                        blockWithFreeSpaceFound = true;
+                                    } catch (Exception e) {
+                                        System.out.println(e);
+                                        return false;
+                                    }
+
+                                } else {
+                                    // Vetva pokial uz ma nasledovnika v preplnovacom subore
+                                    currentBlock = this.overflowFile.readBlock(nextBlock);
+                                    currentAddress = nextBlock;
+
+                                    if (currentBlock.getValidCount() < this.overflowFile.getBlockFactor()) {
+                                        // Pokial ma block miesto, tak ho ulozi don
+                                        currentBlock.insert(record);
+                                        external.setCount(external.getCount() + 1);
+                                        try {
+                                            this.overflowFile.writeBlock(nextBlock, currentBlock);
+                                            blockWithFreeSpaceFound = true;
+                                        } catch (Exception e) {
+                                            System.out.println(e);
+                                            return false;
+                                        }
+                                    }
+                                }
+                                cycleCounter++;
+                            }
                         }
                         inserted = true;
                     }
@@ -202,46 +217,11 @@ public class DynamicHashFile <T extends IRecord> {
         return false;
     }
     public T find(IRecord record) {
-        // TODO spravit z tohoto kusku samostatnu metodu
-        DynamicHashFileNode current = this.root;
-        while (current instanceof DynamicHashFileNodeInternal) {
-            current = ((DynamicHashFileNodeInternal) current).getNextNode(record.getHash());
-        }
-        DynamicHashFileNodeExternal external = (DynamicHashFileNodeExternal) current;
+        DynamicHashFileNodeExternal external = this.findExternalNode(record);
 
         return this.regularFile.readBlock(external.getAddress()).find(record);
     }
     public boolean delete() { return false; }
-
-
-    /*private Block<T> readBlock(int address, RandomAccessFile file) {
-        Block<T> newBlock = new Block<T>(this.blockFactor, this.type);
-        byte[] byteArray = new byte[newBlock.getSize()];
-        try {
-            file.seek((long) address * byteArray.length);
-//            file.read(byteArray, address * byteArray.length, byteArray.length);
-            file.read(byteArray, address * byteArray.length, byteArray.length);
-        } catch (Exception e) {
-            System.out.println(e);
-            return null;
-        }
-        newBlock.fromByteArray(byteArray);
-        return newBlock;
-    }
-
-    private void writeBlock(int address, RandomAccessFile file, Block<T> block) throws IOException {
-        file.seek((long) address * block.getSize());
-        file.write(block.toByteArray());
-    }
-
-    public int getFreeBlock() {
-        return firstFreeBlock;
-    }
-
-    public void freeTheBlock(int address) {
-        // TODO freeTheBlock
-        this.firstFreeBlock = address;
-    }*/
 
     public DynamicHashFileNode getRoot() {
         return root;
@@ -252,23 +232,8 @@ public class DynamicHashFile <T extends IRecord> {
      * @return
      */
     public ArrayList<Block<T>> getAllBlocks() {
-        /*ArrayList<Block<T>> blocks = new ArrayList<Block<T>>();
-        int currentAddress = 0;
-        Block<T> block = new Block<T>(this.regularFile.getBlockFactor(), this.type);
-        long fileSize = 0;
-        try {
-            fileSize = this.file.length();
-        } catch (Exception e) {
-            System.out.println(e);
-            return blocks;
-        }
-
-        // Precitanie vsetkych blockov regularneho suboru jedneho po druhom
-        while ((long) block.getSize() * currentAddress < fileSize) {
-            blocks.add(this.regularFile.readBlock(currentAddress));
-            currentAddress++;
-        }*/
         ArrayList<Block<T>> regularBlocks = this.regularFile.getAllBlocks();
+        regularBlocks.addAll(this.overflowFile.getAllBlocks());
 
         return regularBlocks;
     }
@@ -297,5 +262,13 @@ public class DynamicHashFile <T extends IRecord> {
                 allDone = true;
         }
         return result;
+    }
+
+    private DynamicHashFileNodeExternal findExternalNode(IRecord record) {
+        DynamicHashFileNode current = this.root;
+        while (current instanceof DynamicHashFileNodeInternal) {
+            current = ((DynamicHashFileNodeInternal) current).getNextNode(record.getHash());
+        }
+        return (DynamicHashFileNodeExternal) current;
     }
 }

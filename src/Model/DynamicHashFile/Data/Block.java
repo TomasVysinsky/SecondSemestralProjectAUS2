@@ -91,13 +91,13 @@ public class Block <T extends IRecord> {
 
     /**
      *
-     * @return Ak je block neplatny vrati poziciu predchadzajuceho blocku. Ak nie, vrati -1.
+     * @return Ak je block neplatny vrati poziciu predchadzajuceho blocku. Ak nie, vrati -2.
      */
     public int getPreviousBlockIfInactive() {
         if (!this.active) {
             return this.validCount;
         }
-        return -1;
+        return -2;
     }
 
     public int getNextBlock() {
