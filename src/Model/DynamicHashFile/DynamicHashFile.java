@@ -6,6 +6,7 @@ import Model.DynamicHashFile.Data.IRecord;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -49,9 +50,10 @@ public class DynamicHashFile <T extends IRecord> {
                 if (freeBlock == -1)
                     return false;
                 external.setAddress(freeBlock);
+                external.increaseCapacityBy(this.regularFile.getBlockFactor());
                 Block<T> newBlock = this.regularFile.readBlock(external.getAddress());
                 newBlock.insert(record);
-                external.setCount(1);
+                external.increaseCountBy(1);
                 try {
                     this.regularFile.writeBlock(external.getAddress(), newBlock);
                 } catch (Exception e) {
@@ -104,6 +106,7 @@ public class DynamicHashFile <T extends IRecord> {
                                 if (freeBlock == -1)
                                     return false;
                                 nextNode.setAddress(freeBlock);
+                                nextNode.increaseCapacityBy(this.regularFile.getBlockFactor());
                             }
 
                             // Vlozenie aktualne triedeneho zaznamu do spravneho blocku
@@ -112,7 +115,7 @@ public class DynamicHashFile <T extends IRecord> {
                             } else {
                                 rigthSonBlock.insert((T) currentRecord);
                             }
-                            nextNode.setCount(nextNode.getCount() + 1);
+                            nextNode.increaseCountBy(1);
                         }
 
                         // Ak je to mozne, vlozi vkladany prvok do prislusneho blocku a nastavi inserted na true aby sa ukoncil cyklus
@@ -123,7 +126,7 @@ public class DynamicHashFile <T extends IRecord> {
                             } else {
                                 rigthSonBlock.insert((T) record);
                             }
-                            external.setCount(external.getCount() + 1);
+                            external.increaseCountBy(1);
                             inserted = true;
                         }
 
@@ -148,12 +151,13 @@ public class DynamicHashFile <T extends IRecord> {
                             }
                             // TODO kontrola ci sa moze vlozit do blocku (nesmie tam vyjst equals true)
                             currentBlock.insert(record);
-                            external.setCount(external.getCount() + 1);
+                            external.increaseCountBy(1);
                             try {
                                 this.regularFile.writeBlock(external.getAddress(), currentBlock);
                             } catch (IOException e) {
                                 System.out.println(e);
                             }
+
                         } else {
                             // Vetva aku uz nie je v blocku regularneho suboru miesto, teda ukladanie do preplnovacieho suboru
                             boolean blockWithFreeSpaceFound = false;
@@ -169,9 +173,10 @@ public class DynamicHashFile <T extends IRecord> {
                                     if (freeBlock == -1)
                                         return false;
                                     currentBlock.setNextBlock(freeBlock);
+                                    external.increaseCapacityBy(this.overflowFile.getBlockFactor());
                                     Block<T> newBlock = this.overflowFile.readBlock(currentBlock.getNextBlock());
                                     newBlock.insert(record);
-                                    external.setCount(external.getCount() + 1);
+                                    external.increaseCountBy(1);
                                     try {
                                         if (cycleCounter == 0) {
                                             this.regularFile.writeBlock(currentAddress, currentBlock);
@@ -193,7 +198,7 @@ public class DynamicHashFile <T extends IRecord> {
                                     if (currentBlock.getValidCount() < this.overflowFile.getBlockFactor()) {
                                         // Pokial ma block miesto, tak ho ulozi don
                                         currentBlock.insert(record);
-                                        external.setCount(external.getCount() + 1);
+                                        external.increaseCountBy(1);
                                         try {
                                             this.overflowFile.writeBlock(nextBlock, currentBlock);
                                             blockWithFreeSpaceFound = true;
@@ -246,11 +251,136 @@ public class DynamicHashFile <T extends IRecord> {
     public T delete(IRecord record) {
         T found = null;
         if (record != null) {
+            // Najprv sa pokusi vymazat data z aktualneho blocku
             DynamicHashFileNodeExternal external = this.findExternalNode(record);
             Block<T> blockFound = this.regularFile.readBlock(external.getAddress());
-            found = blockFound.find(record);
+            int currentAddress = external.getAddress();
+            int blocksFromRegular = 0;
+            found = blockFound.delete(record);
 
-//            if (found)
+            if (found == null && blockFound.getNextBlock() != -1) {
+                // Ak sa data v blocku nenasli a su este neprebadane blocky v poradi zacne prechadzat preplnovaci block
+                boolean needToLookForAnotherBlock = true;
+                int previousAddress = -1;
+                Block<T> previousBlock = null;
+
+                while (needToLookForAnotherBlock) {
+                    previousAddress = currentAddress;
+                    currentAddress = blockFound.getNextBlock();
+                    previousBlock = blockFound;
+                    blockFound = this.overflowFile.readBlock(currentAddress);
+                    blocksFromRegular++;
+                    found = blockFound.delete(record);
+
+                    if (found != null || blockFound.getNextBlock() == -1) {
+                        external.increaseCountBy(-1);
+                        needToLookForAnotherBlock = false;
+                    }
+                }
+
+                if (external.getFreeCapacity() >= this.overflowFile.getBlockFactor()) {
+                    // V pripade ze je volna kapacita aspon o velkosti block factoru preplnovacieho suboru, prebieha striasanie
+
+                    while (blockFound.getNextBlock() != -1) {
+                        // Najprv sa najde posledny node v poradi
+                        previousAddress = currentAddress;
+                        currentAddress = blockFound.getNextBlock();
+                        previousBlock = blockFound;
+                        blockFound = this.overflowFile.readBlock(currentAddress);
+                    }
+
+                    // Nacitanie zaznamov z posledneho blocku do queue
+                    Queue<T> recordsToReinsert = new LinkedList<T>();
+                    for (IRecord rRecord : blockFound.getRecords()) {
+                        recordsToReinsert.add((T) rRecord);
+                    }
+
+                    //Ulozenie predchadzajuceho blocku
+                    this.overflowFile.freeTheBlock(currentAddress);
+                    previousBlock.setNextBlock(-1);
+                    external.increaseCapacityBy(-this.overflowFile.getBlockFactor());
+                    try {
+                        if (blocksFromRegular == 1) {
+                            this.regularFile.writeBlock(previousAddress, previousBlock);
+                        } else {
+                            this.overflowFile.writeBlock(previousAddress, previousBlock);
+                        }
+                    } catch (IOException e) {
+                        System.out.println(e);
+                    }
+
+                    // Prechadzanie blockov nodu a hladanie volneho miesta pre uvolnene zaznamy
+                    currentAddress = external.getAddress();
+                    blocksFromRegular = 0;
+                    blockFound = this.regularFile.readBlock(currentAddress);
+                    while (!recordsToReinsert.isEmpty()) {
+                        int freeCapacity = blockFound.getFreeCapacity();
+                        for (int i = 0; i < freeCapacity; i++)
+                            blockFound.insert(recordsToReinsert.remove());
+
+                        try {
+                            if (blocksFromRegular == 0) {
+                                this.regularFile.writeBlock(currentAddress, blockFound);
+                            } else {
+                                this.overflowFile.writeBlock(currentAddress, blockFound);
+                            }
+                        } catch (IOException e) {
+                            System.out.println(e);
+                        }
+
+                        currentAddress = blockFound.getNextBlock();
+                        blocksFromRegular++;
+                        blockFound = this.overflowFile.readBlock(currentAddress);
+                    }
+                }
+
+            } else {
+                // Vetva ked sa podari odstranit subor z blocku v hlavnom subore
+                external.increaseCountBy(-1);
+
+                if (external.getCount() == 0) {
+                    // Vetva ak sa vyprazdni block v hlavnom subore a nema uz ziadnych nasledovnikov v preplnovacom subore
+                    this.regularFile.freeTheBlock(external.getAddress());
+                    external.setAddress(-1);
+                    if (external.getParent() != null) {
+                        boolean checkNeeded = true;
+
+                        while (checkNeeded) {
+                            // Najprv sa ziska rodic a jeho druhy syn
+                            DynamicHashFileNodeInternal internalParent = (DynamicHashFileNodeInternal) external.getParent();
+                            DynamicHashFileNode otherSon = null;
+                            if (internalParent.getLeftSon() == external) {
+                                otherSon = internalParent.getRightSon();
+                            } else {
+                                otherSon = internalParent.getLeftSon();
+                            }
+
+                            if (otherSon instanceof DynamicHashFileNodeExternal && ((DynamicHashFileNodeExternal)otherSon).getAddress() == -1) {
+                                // Ak je jeho druhy syn externy a prazdny, prebehne krok zlucovania
+                                if (internalParent.getParent() != null) {
+                                    // Ak nie je rodic korenom tak len prenastavi prislusneho syna prarodica na externy node
+                                    // cim sa zrusi referencia na rodica a jeho druheho potomka
+                                    DynamicHashFileNodeInternal internalGrandParent = (DynamicHashFileNodeInternal)internalParent.getParent();
+                                    if (internalGrandParent.getLeftSon() == internalParent) {
+                                        internalGrandParent.setLeftSon(external);
+                                    } else {
+                                        internalGrandParent.setRightSon(external);
+                                    }
+
+                                } else {
+                                    // Ak je rodic korenom tak len nastavi koren na externy node a ukonci cyklus
+                                    external.setParent(internalParent.getParent());
+                                    this.root = external;
+                                    checkNeeded = false;
+                                }
+                            } else {
+                                // Ak jeho druhy syn nie je externy, je interny a ak je tak obsahuje data. V oboch pripadoch sa cyklus Mergovania ukoncuje.
+                                checkNeeded = false;
+                            }
+                        }
+                    }
+                }
+            }
         }
         return found;
     }
@@ -286,7 +416,7 @@ public class DynamicHashFile <T extends IRecord> {
             if (currentNode instanceof DynamicHashFileNodeExternal) {
                 DynamicHashFileNodeExternal externalNode = (DynamicHashFileNodeExternal)currentNode;
                 result = result + "\nExternal node, Depth: " + currentNode.getDepth() +
-                        " Address: " + externalNode.getAddress() + " Count: " + externalNode.getCount();
+                        " Address: " + externalNode.getAddress() + " Count: " + externalNode.getCount() + " Free capacity: " + externalNode.getFreeCapacity();
 //                System.out.println("External node, Depth: " + currentNode.getDepth() + " Address: " + externalNode.getAddress() + " Count: " + externalNode.getCount());
             } else {
                 result = result + "\nInternal Node, Depth: " + currentNode.getDepth();

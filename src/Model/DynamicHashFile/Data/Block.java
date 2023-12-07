@@ -36,11 +36,11 @@ public class Block <T extends IRecord> {
         return null;
     }
 
-    public IRecord delete(T record) {
-        IRecord deleted = null;
+    public T delete(IRecord record) {
+        T deleted = null;
         for (int i = 0; i < this.validCount; i++) {
             if (this.records[i].equals(record)){
-                deleted = this.records[i];
+                deleted = (T) this.records[i];
                 this.records[i] = this.records[this.validCount];
                 this.validCount--;
                 break;
@@ -107,6 +107,8 @@ public class Block <T extends IRecord> {
     public IRecord[] getRecords() {
         return records;
     }
+
+    public int getFreeCapacity() { return this.records.length - this.validCount; }
 
     /**
      *

@@ -40,6 +40,7 @@ public class Building extends Log {
         if (cmpMin[0] == 0 && cmpMin[1] == 0 && cmpMax[0] == 0 && cmpMax[1] == 0) {
             if (other instanceof Log) {
                 if (super.id == ((Log) other).id) {
+                    // TODO prerobit ked budem robit specialne classy pre QuadTree
                     if (other instanceof Building) {
                         return 1;
                     }

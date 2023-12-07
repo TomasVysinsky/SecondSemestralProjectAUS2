@@ -23,10 +23,12 @@ public class DynamicHashFileNodeInternal extends DynamicHashFileNode {
 
     public void setLeftSon(DynamicHashFileNode leftSon) {
         this.leftSon = leftSon;
+        this.leftSon.setParent(this);
     }
 
     public void setRightSon(DynamicHashFileNode rightSon) {
         this.rightSon = rightSon;
+        this.rightSon.setParent(this);
     }
 
     public DynamicHashFileNode getNextNode(BitSet hash) {

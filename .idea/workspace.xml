@@ -4,11 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="df963b7d-2346-4567-b4d9-bdccb337eaa4" name="Changes" comment="V inserte je implementovany preplnovaci block">
+    <list default="true" id="df963b7d-2346-4567-b4d9-bdccb337eaa4" name="Changes" comment="Find naimplementovany aj otestovany. Delete rozrobeny.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/Data/Building.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Data/Building.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/DynamicHashFile/Data/Block.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/DynamicHashFile/Data/Block.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Tests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Tests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFileNodeExternal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFileNodeExternal.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFileNodeInternal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFileNodeInternal.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,7 +93,7 @@
       <workItem from="1700860000180" duration="322000" />
       <workItem from="1700860378472" duration="79769000" />
       <workItem from="1701388650728" duration="340000" />
-      <workItem from="1701388999126" duration="36863000" />
+      <workItem from="1701388999126" duration="49574000" />
     </task>
     <task id="LOCAL-00001" summary="Proper find finished">
       <option name="closed" value="true" />
@@ -333,7 +335,15 @@
       <option name="project" value="LOCAL" />
       <updated>1701884620807</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="Find naimplementovany aj otestovany. Delete rozrobeny.">
+      <option name="closed" value="true" />
+      <created>1701897903798</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1701897903798</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -354,7 +364,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$" />
     </ignored-roots>
-    <MESSAGE value="Edit done...not properly tested" />
     <MESSAGE value="Edit and delete done" />
     <MESSAGE value="Point Find done" />
     <MESSAGE value="Auto optimalisation done" />
@@ -379,7 +388,8 @@
     <MESSAGE value="File manager hotovy ale neotestovany ani nenaimplementovany v strukture" />
     <MESSAGE value="File manager hotovy naimplementovany a otestovany" />
     <MESSAGE value="V inserte je implementovany preplnovaci block" />
-    <option name="LAST_COMMIT_MESSAGE" value="V inserte je implementovany preplnovaci block" />
+    <MESSAGE value="Find naimplementovany aj otestovany. Delete rozrobeny." />
+    <option name="LAST_COMMIT_MESSAGE" value="Find naimplementovany aj otestovany. Delete rozrobeny." />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>
