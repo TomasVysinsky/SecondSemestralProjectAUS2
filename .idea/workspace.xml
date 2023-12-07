@@ -4,13 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="df963b7d-2346-4567-b4d9-bdccb337eaa4" name="Changes" comment="Kontrola unikatnosti naimplementovana a otestovana">
+    <list default="true" id="df963b7d-2346-4567-b4d9-bdccb337eaa4" name="Changes" comment="Bug v delete fixnuty">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Model/DynamicHashFile/BinaryFileManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/DynamicHashFile/BinaryFileManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Model/DynamicHashFile/Data/Block.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/DynamicHashFile/Data/Block.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFileNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFileNode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFileNodeInternal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFileNodeInternal.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Tests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Tests.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -95,7 +92,7 @@
       <workItem from="1700860000180" duration="322000" />
       <workItem from="1700860378472" duration="79769000" />
       <workItem from="1701388650728" duration="340000" />
-      <workItem from="1701388999126" duration="62763000" />
+      <workItem from="1701388999126" duration="64199000" />
     </task>
     <task id="LOCAL-00001" summary="Proper find finished">
       <option name="closed" value="true" />
@@ -369,7 +366,15 @@
       <option name="project" value="LOCAL" />
       <updated>1701946809962</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="Bug v delete fixnuty">
+      <option name="closed" value="true" />
+      <created>1701988531818</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1701988531818</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -390,7 +395,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$" />
     </ignored-roots>
-    <MESSAGE value="Saving into the File done" />
     <MESSAGE value="Loading from File done" />
     <MESSAGE value="Informations about steps and empty fields done" />
     <MESSAGE value="Monte Carlo testing added" />
@@ -415,7 +419,8 @@
     <MESSAGE value="Delete naimplementovany, neotestovany" />
     <MESSAGE value="Delete naimplementovany, otestovany. Working: Yupi yay!!!" />
     <MESSAGE value="Kontrola unikatnosti naimplementovana a otestovana" />
-    <option name="LAST_COMMIT_MESSAGE" value="Kontrola unikatnosti naimplementovana a otestovana" />
+    <MESSAGE value="Bug v delete fixnuty" />
+    <option name="LAST_COMMIT_MESSAGE" value="Bug v delete fixnuty" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -427,7 +432,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/Model/DynamicHashFile/BinaryFileManager.java</url>
-          <line>91</line>
+          <line>92</line>
           <option name="timeStamp" value="34" />
         </line-breakpoint>
       </breakpoints>

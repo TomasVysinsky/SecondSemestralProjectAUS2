@@ -62,6 +62,7 @@ public class BinaryFileManager<T extends IRecord> {
             // Vetva v pripade, ze je zoznam prazdnych blockov prazdny
             Block<T> newBlock = new Block<T>(this.blockFactor, this.type);
             newBlock.setActive(true);
+            newBlock.setValidCount(0);
             try {
                 this.file.setLength(this.file.length() + newBlock.getSize());
                 int address = this.getLastBlockAddress();

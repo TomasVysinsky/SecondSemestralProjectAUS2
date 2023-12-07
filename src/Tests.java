@@ -364,7 +364,33 @@ public class Tests {
                 System.out.println("Find Building test N.o.: " + i + " correct");*/
         }
 
+//        for (Parcel parcel : parcelList) {
+        for (int i = 0; i < this.parcelList.size() - 1; i++) {
+            System.out.println("\n" + parcelList.get(i).getFullDescription());
+            parcelHashFile.delete(parcelList.get(i));
+            this.printParcelHashFile(parcelHashFile);
+        }
+
+        for (int i = 0; i < this.parcelList.size() - 1; i++) {
+            System.out.println("\n" + parcelList.get(i).getFullDescription());
+            parcelHashFile.insert(parcelList.get(i));
+            this.printParcelHashFile(parcelHashFile);
+        }
+
+        System.out.println(" ");
+        for (int i = 0; i < this.parcelList.size(); i++) {
+            if (!this.parcelList.get(i).equals(parcelHashFile.find(this.parcelList.get(i))))
+                System.out.println("Find Parcel test N.o.: " + i + " failure");
+            else
+                System.out.println("Find Parcel test N.o.: " + i + " correct");
+            /*if (!this.buildingList.get(i).equals(buildingHashFile.find(this.buildingList.get(i))))
+                System.out.println("Find Building test N.o.: " + i + " failure");
+            else
+                System.out.println("Find Building test N.o.: " + i + " correct");*/
+        }
+
         for (Parcel parcel : parcelList) {
+//        for (int i = 0; i < this.parcelList.size() - 1; i++) {
             System.out.println("\n" + parcel.getFullDescription());
             parcelHashFile.delete(parcel);
             this.printParcelHashFile(parcelHashFile);
