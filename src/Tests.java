@@ -330,7 +330,7 @@ public class Tests {
     }
 
     public void testHashFile(){
-        DynamicHashFile<Parcel> parcelHashFile = new DynamicHashFile<Parcel>(3, 4, 3, "parcely", Parcel.class);
+        DynamicHashFile<Parcel> parcelHashFile = new DynamicHashFile<Parcel>(3, 4, 10, "parcely", Parcel.class);
 //        DynamicHashFile<Building> buildingHashFile = new DynamicHashFile<Building>(3, 4, 3, "budovy", Building.class);
         this.parcelList = pGenerator.generateData(this.coordinates[0], this.coordinates[1], 9, 0);
         /*this.buildingList = bGenerator.generateData(this.coordinates[0], this.coordinates[1], 9, 0);
@@ -377,7 +377,7 @@ public class Tests {
         ArrayList<Block<Parcel>> blocks = file.getAllRegularBlocks();
         System.out.println("Regular file");
         for (int i = 0; i < blocks.size(); i++) {
-            System.out.println("Block " + i + " Valid Count: " + blocks.get(i).getValidCount());
+            System.out.println("Block " + i + " Valid Count: " + blocks.get(i).getValidCount() + " Active: " + blocks.get(i).isActive());
             IRecord[] records = blocks.get(i).getRecords();
             for (int j = 0; j < blocks.get(i).getValidCount(); j++) {
                 System.out.println(((Log)records[j]).getFullDescription());
@@ -387,7 +387,7 @@ public class Tests {
         blocks = file.getAllOverflowBlocks();
         System.out.println("Overflow file");
         for (int i = 0; i < blocks.size(); i++) {
-            System.out.println("Block " + i + " Valid Count: " + blocks.get(i).getValidCount());
+            System.out.println("Block " + i + " Valid Count: " + blocks.get(i).getValidCount() + " Active: " + blocks.get(i).isActive());
             IRecord[] records = blocks.get(i).getRecords();
             for (int j = 0; j < blocks.get(i).getValidCount(); j++) {
                 System.out.println(((Log)records[j]).getFullDescription());

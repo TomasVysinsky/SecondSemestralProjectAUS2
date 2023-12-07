@@ -32,9 +32,22 @@ public class DynamicHashFileNodeInternal extends DynamicHashFileNode {
     }
 
     public DynamicHashFileNode getNextNode(BitSet hash) {
-        if (hash.get(this.depth)) {
+        int size = hash.size();
+
+        /*for (int i = 0; i < size; i++) {
+            System.out.print(hash.get(i));
+        }
+        System.out.println();
+        System.out.println(hash);*/
+        if (size == 0) {
+//            System.out.println(hash.get(this.depth));
+            if (hash.get(this.depth))
+                return this.rightSon;
+        } else if (hash.get(size - this.depth)) {
+//            System.out.println(hash.get(size - this.depth));
             return this.rightSon;
         }
+
         return this.leftSon;
     }
 }

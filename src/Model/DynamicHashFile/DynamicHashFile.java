@@ -303,6 +303,7 @@ public class DynamicHashFile <T extends IRecord> {
                     // Vetva ak sa vyprazdni block v hlavnom subore a nema uz ziadnych nasledovnikov v preplnovacom subore
                     this.regularFile.freeTheBlock(external.getAddress());
                     external.setAddress(-1);
+                    external.increaseCapacityBy(-this.regularFile.getBlockFactor());
                     if (external.getParent() != null) {
                         boolean checkNeeded = true;
 
@@ -334,6 +335,7 @@ public class DynamicHashFile <T extends IRecord> {
                                     this.root = external;
                                     checkNeeded = false;
                                 }
+                                external.increaseDepthBy(-1);
                             } else {
                                 // Ak jeho druhy syn nie je externy, je interny a ak je tak obsahuje data. V oboch pripadoch sa cyklus Mergovania ukoncuje.
                                 checkNeeded = false;

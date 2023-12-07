@@ -133,8 +133,10 @@ public class Block <T extends IRecord> {
         }
         byteBuffer.putInt(this.validCount);
         byteBuffer.putInt(this.nextBlock);
-        for (int i = 0; i < this.validCount; i++) {
-            byteBuffer.put(this.records[i].toByteArray());
+        if (this.active) {
+            for (int i = 0; i < this.validCount; i++) {
+                byteBuffer.put(this.records[i].toByteArray());
+            }
         }
         return byteBuffer.array();
     }
@@ -144,23 +146,25 @@ public class Block <T extends IRecord> {
             this.active = (byteBuffer.getChar() == 'T');
             this.validCount = byteBuffer.getInt();
             this.nextBlock = byteBuffer.getInt();
-            for (int i = 0; i < this.validCount; i++) {
-                byte[] newArray;
-                try {
-                    newArray = new byte[this.type.newInstance().getSize()];
-                } catch (Exception e) {
-                    System.out.println(e);
-                    return;
-                }
-                for (int j = 0; j < newArray.length; j++) {
-                    newArray[j] = byteBuffer.get();
-                }
-                try {
-                    this.records[i] = this.type.newInstance();
-                    this.records[i].fromByteArray(newArray);
-                } catch (Exception e) {
-                    System.out.println(e);
-                    return;
+            if (this.active) {
+                for (int i = 0; i < this.validCount; i++) {
+                    byte[] newArray;
+                    try {
+                        newArray = new byte[this.type.newInstance().getSize()];
+                    } catch (Exception e) {
+                        System.out.println(e);
+                        return;
+                    }
+                    for (int j = 0; j < newArray.length; j++) {
+                        newArray[j] = byteBuffer.get();
+                    }
+                    try {
+                        this.records[i] = this.type.newInstance();
+                        this.records[i].fromByteArray(newArray);
+                    } catch (Exception e) {
+                        System.out.println(e);
+                        return;
+                    }
                 }
             }
             return;

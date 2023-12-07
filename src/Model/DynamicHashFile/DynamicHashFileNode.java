@@ -20,4 +20,5 @@ public abstract class DynamicHashFileNode {
     public int getDepth() {
         return depth;
     }
+    public void increaseDepthBy(int number) { this.depth += number; }
 }

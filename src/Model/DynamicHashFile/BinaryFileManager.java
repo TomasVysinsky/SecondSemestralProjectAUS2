@@ -104,6 +104,13 @@ public class BinaryFileManager<T extends IRecord> {
                 }
             }
             this.firstFreeBlock = address;
+            blockToSetFree.setPreviousBlockIfInactive(-1);
+            try {
+                this.writeBlock(this.firstFreeBlock, blockToSetFree);
+            } catch (Exception e) {
+                System.out.println(e);
+                return;
+            }
 
         } else if (address == lastBlockAddress) {
             // Cast ktora skracuje subor
