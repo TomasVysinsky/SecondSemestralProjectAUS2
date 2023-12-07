@@ -346,6 +346,11 @@ public class Tests {
             this.printParcelHashFile(parcelHashFile);
         }
 
+        if (parcelHashFile.insert(parcelList.get(0)))
+            System.out.println("Test unikatnosti nefunguje spravne");
+        if (parcelHashFile.insert(parcelList.get(8)))
+            System.out.println("Test unikatnosti nefunguje spravne");
+
         System.out.println("");
 //        for (int i = 0; i < 3; i++) {
         for (int i = 0; i < this.parcelList.size(); i++) {

@@ -4,11 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="df963b7d-2346-4567-b4d9-bdccb337eaa4" name="Changes" comment="Delete naimplementovany, neotestovany">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/DynamicHashFile/Data/Block.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/DynamicHashFile/Data/Block.java" afterDir="false" />
+    <list default="true" id="df963b7d-2346-4567-b4d9-bdccb337eaa4" name="Changes" comment="Delete naimplementovany, otestovany. Working: Yupi yay!!!">
       <change beforePath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Tests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Tests.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,7 +88,7 @@
       <workItem from="1700860000180" duration="322000" />
       <workItem from="1700860378472" duration="79769000" />
       <workItem from="1701388650728" duration="340000" />
-      <workItem from="1701388999126" duration="54489000" />
+      <workItem from="1701388999126" duration="55579000" />
     </task>
     <task id="LOCAL-00001" summary="Proper find finished">
       <option name="closed" value="true" />
@@ -349,7 +346,15 @@
       <option name="project" value="LOCAL" />
       <updated>1701940472338</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="Delete naimplementovany, otestovany. Working: Yupi yay!!!">
+      <option name="closed" value="true" />
+      <created>1701945758537</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1701945758537</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -370,7 +375,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$" />
     </ignored-roots>
-    <MESSAGE value="Point Find done" />
     <MESSAGE value="Auto optimalisation done" />
     <MESSAGE value="Saving into the File done" />
     <MESSAGE value="Loading from File done" />
@@ -395,7 +399,8 @@
     <MESSAGE value="V inserte je implementovany preplnovaci block" />
     <MESSAGE value="Find naimplementovany aj otestovany. Delete rozrobeny." />
     <MESSAGE value="Delete naimplementovany, neotestovany" />
-    <option name="LAST_COMMIT_MESSAGE" value="Delete naimplementovany, neotestovany" />
+    <MESSAGE value="Delete naimplementovany, otestovany. Working: Yupi yay!!!" />
+    <option name="LAST_COMMIT_MESSAGE" value="Delete naimplementovany, otestovany. Working: Yupi yay!!!" />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>

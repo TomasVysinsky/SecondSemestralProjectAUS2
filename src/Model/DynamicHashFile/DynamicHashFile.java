@@ -64,6 +64,10 @@ public class DynamicHashFile <T extends IRecord> {
 
             } else {
                 boolean inserted = false;
+                // Kontrola ci je zaznam unikatny
+                if (!this.isUnique(external, record))
+                    return false;
+
                 while (!inserted) {
                     if (external.getCount() == this.regularFile.getBlockFactor() && external.getDepth() < this.maxDepth) {
                         // Vetva v pripade ze je externy node naplneny a trie nie je na dne
@@ -149,7 +153,6 @@ public class DynamicHashFile <T extends IRecord> {
                                 System.out.println("Chyba pri nacitani blocku v inserte");
                                 return false;
                             }
-                            // TODO kontrola ci sa moze vlozit do blocku (nesmie tam vyjst equals true)
                             currentBlock.insert(record);
                             external.increaseCountBy(1);
                             try {
@@ -340,7 +343,6 @@ public class DynamicHashFile <T extends IRecord> {
                 }
             }
 
-            // TODO
             if (found != null) {
                 if (external.getCount() >= this.regularFile.getBlockFactor() && external.getFreeCapacity() >= this.overflowFile.getBlockFactor()) {
                     // V pripade ze je volna kapacita aspon o velkosti block factoru preplnovacieho suboru, prebieha striasanie
@@ -446,6 +448,30 @@ public class DynamicHashFile <T extends IRecord> {
                 allDone = true;
         }
         return result;
+    }
+
+    /**
+     * Metoda ktora skontroluje unikatnost zaznamu v danom node
+     * @param external
+     * @param record
+     * @return true ak je record unikatny, false ak nie
+     */
+    private boolean isUnique(DynamicHashFileNodeExternal external, IRecord record) {
+        if (external.getAddress() == -1)
+            return true;
+        Block<T> currentBlock = this.regularFile.readBlock(external.getAddress());
+        boolean endFound = false;
+        while (!endFound) {
+            if (currentBlock.find(record) != null)
+                return false;
+            if (currentBlock.getNextBlock() == -1) {
+                endFound = true;
+            } else {
+                currentBlock = this.overflowFile.readBlock(currentBlock.getNextBlock());
+            }
+        }
+
+        return true;
     }
 
     private DynamicHashFileNodeExternal findExternalNode(IRecord record) {
