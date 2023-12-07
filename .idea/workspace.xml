@@ -4,13 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="df963b7d-2346-4567-b4d9-bdccb337eaa4" name="Changes" comment="Find naimplementovany aj otestovany. Delete rozrobeny.">
+    <list default="true" id="df963b7d-2346-4567-b4d9-bdccb337eaa4" name="Changes" comment="Delete naimplementovany, neotestovany">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Data/Building.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Data/Building.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Model/DynamicHashFile/Data/Block.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/DynamicHashFile/Data/Block.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFileNodeExternal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFileNodeExternal.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFileNodeInternal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFileNodeInternal.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Tests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Tests.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -93,7 +91,7 @@
       <workItem from="1700860000180" duration="322000" />
       <workItem from="1700860378472" duration="79769000" />
       <workItem from="1701388650728" duration="340000" />
-      <workItem from="1701388999126" duration="49574000" />
+      <workItem from="1701388999126" duration="54489000" />
     </task>
     <task id="LOCAL-00001" summary="Proper find finished">
       <option name="closed" value="true" />
@@ -343,7 +341,15 @@
       <option name="project" value="LOCAL" />
       <updated>1701897903798</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="Delete naimplementovany, neotestovany">
+      <option name="closed" value="true" />
+      <created>1701940472338</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1701940472338</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -364,7 +370,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$" />
     </ignored-roots>
-    <MESSAGE value="Edit and delete done" />
     <MESSAGE value="Point Find done" />
     <MESSAGE value="Auto optimalisation done" />
     <MESSAGE value="Saving into the File done" />
@@ -389,13 +394,16 @@
     <MESSAGE value="File manager hotovy naimplementovany a otestovany" />
     <MESSAGE value="V inserte je implementovany preplnovaci block" />
     <MESSAGE value="Find naimplementovany aj otestovany. Delete rozrobeny." />
-    <option name="LAST_COMMIT_MESSAGE" value="Find naimplementovany aj otestovany. Delete rozrobeny." />
+    <MESSAGE value="Delete naimplementovany, neotestovany" />
+    <option name="LAST_COMMIT_MESSAGE" value="Delete naimplementovany, neotestovany" />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>
       <pinned-members>
+        <PinnedItemInfo parentTag="Model.DynamicHashFile.Data.Block" memberName="validCount" />
         <PinnedItemInfo parentTag="Model.QuadTree.QuadTree" memberName="nodesOnEachDepth" />
         <PinnedItemInfo parentTag="Model.QuadTree.Data.Building" memberName="supisneCislo" />
+        <PinnedItemInfo parentTag="Model.DynamicHashFile.Data.Block" memberName="records" />
         <PinnedItemInfo parentTag="Model.DynamicHashFile.DynamicHashFile" memberName="root" />
       </pinned-members>
     </pin-to-top-manager>

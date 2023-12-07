@@ -253,16 +253,18 @@ public class DynamicHashFile <T extends IRecord> {
         if (record != null) {
             // Najprv sa pokusi vymazat data z aktualneho blocku
             DynamicHashFileNodeExternal external = this.findExternalNode(record);
+            if (external.getAddress() == -1)
+                return null;
             Block<T> blockFound = this.regularFile.readBlock(external.getAddress());
             int currentAddress = external.getAddress();
             int blocksFromRegular = 0;
+            int previousAddress = -1;
+            Block<T> previousBlock = null;
             found = blockFound.delete(record);
 
             if (found == null && blockFound.getNextBlock() != -1) {
                 // Ak sa data v blocku nenasli a su este neprebadane blocky v poradi zacne prechadzat preplnovaci block
                 boolean needToLookForAnotherBlock = true;
-                int previousAddress = -1;
-                Block<T> previousBlock = null;
 
                 while (needToLookForAnotherBlock) {
                     previousAddress = currentAddress;
@@ -272,71 +274,27 @@ public class DynamicHashFile <T extends IRecord> {
                     blocksFromRegular++;
                     found = blockFound.delete(record);
 
-                    if (found != null || blockFound.getNextBlock() == -1) {
+                    if (found != null) {
                         external.increaseCountBy(-1);
-                        needToLookForAnotherBlock = false;
-                    }
-                }
-
-                if (external.getFreeCapacity() >= this.overflowFile.getBlockFactor()) {
-                    // V pripade ze je volna kapacita aspon o velkosti block factoru preplnovacieho suboru, prebieha striasanie
-
-                    while (blockFound.getNextBlock() != -1) {
-                        // Najprv sa najde posledny node v poradi
-                        previousAddress = currentAddress;
-                        currentAddress = blockFound.getNextBlock();
-                        previousBlock = blockFound;
-                        blockFound = this.overflowFile.readBlock(currentAddress);
-                    }
-
-                    // Nacitanie zaznamov z posledneho blocku do queue
-                    Queue<T> recordsToReinsert = new LinkedList<T>();
-                    for (IRecord rRecord : blockFound.getRecords()) {
-                        recordsToReinsert.add((T) rRecord);
-                    }
-
-                    //Ulozenie predchadzajuceho blocku
-                    this.overflowFile.freeTheBlock(currentAddress);
-                    previousBlock.setNextBlock(-1);
-                    external.increaseCapacityBy(-this.overflowFile.getBlockFactor());
-                    try {
-                        if (blocksFromRegular == 1) {
-                            this.regularFile.writeBlock(previousAddress, previousBlock);
-                        } else {
-                            this.overflowFile.writeBlock(previousAddress, previousBlock);
-                        }
-                    } catch (IOException e) {
-                        System.out.println(e);
-                    }
-
-                    // Prechadzanie blockov nodu a hladanie volneho miesta pre uvolnene zaznamy
-                    currentAddress = external.getAddress();
-                    blocksFromRegular = 0;
-                    blockFound = this.regularFile.readBlock(currentAddress);
-                    while (!recordsToReinsert.isEmpty()) {
-                        int freeCapacity = blockFound.getFreeCapacity();
-                        for (int i = 0; i < freeCapacity; i++)
-                            blockFound.insert(recordsToReinsert.remove());
-
                         try {
-                            if (blocksFromRegular == 0) {
-                                this.regularFile.writeBlock(currentAddress, blockFound);
-                            } else {
-                                this.overflowFile.writeBlock(currentAddress, blockFound);
-                            }
+                            this.overflowFile.writeBlock(currentAddress, blockFound);
                         } catch (IOException e) {
                             System.out.println(e);
                         }
-
-                        currentAddress = blockFound.getNextBlock();
-                        blocksFromRegular++;
-                        blockFound = this.overflowFile.readBlock(currentAddress);
+                        needToLookForAnotherBlock = false;
+                    } else if (blockFound.getNextBlock() == -1) {
+                        needToLookForAnotherBlock = false;
                     }
                 }
-
-            } else {
+            } else if (found != null){
                 // Vetva ked sa podari odstranit subor z blocku v hlavnom subore
                 external.increaseCountBy(-1);
+                try {
+                    this.regularFile.writeBlock(currentAddress, blockFound);
+                } catch (IOException e) {
+                    System.out.println(e);
+                }
+
 
                 if (external.getCount() == 0) {
                     // Vetva ak sa vyprazdni block v hlavnom subore a nema uz ziadnych nasledovnikov v preplnovacom subore
@@ -378,6 +336,65 @@ public class DynamicHashFile <T extends IRecord> {
                                 checkNeeded = false;
                             }
                         }
+                    }
+                }
+            }
+
+            // TODO
+            if (found != null) {
+                if (external.getCount() >= this.regularFile.getBlockFactor() && external.getFreeCapacity() >= this.overflowFile.getBlockFactor()) {
+                    // V pripade ze je volna kapacita aspon o velkosti block factoru preplnovacieho suboru, prebieha striasanie
+                    while (blockFound.getNextBlock() != -1) {
+                        // Najprv sa najde posledny node v poradi
+                        previousAddress = currentAddress;
+                        currentAddress = blockFound.getNextBlock();
+                        previousBlock = blockFound;
+                        blockFound = this.overflowFile.readBlock(currentAddress);
+                        blocksFromRegular++;
+                    }
+
+                    // Nacitanie zaznamov z posledneho blocku do queue
+                    Queue<T> recordsToReinsert = new LinkedList<T>();
+                    for (int i = 0; i < blockFound.getValidCount(); i++)
+                        recordsToReinsert.add((T) blockFound.getRecords()[i]);
+
+                    //Ulozenie predchadzajuceho blocku
+                    this.overflowFile.freeTheBlock(currentAddress);
+                    previousBlock.setNextBlock(-1);
+                    external.increaseCapacityBy(-this.overflowFile.getBlockFactor());
+                    try {
+                        if (blocksFromRegular == 1) {
+                            this.regularFile.writeBlock(previousAddress, previousBlock);
+                        } else {
+                            this.overflowFile.writeBlock(previousAddress, previousBlock);
+                        }
+                    } catch (IOException e) {
+                        System.out.println(e);
+                    }
+
+                    // Prechadzanie blockov nodu a hladanie volneho miesta pre uvolnene zaznamy
+                    currentAddress = external.getAddress();
+                    blocksFromRegular = 0;
+                    blockFound = this.regularFile.readBlock(currentAddress);
+                    while (!recordsToReinsert.isEmpty()) {
+                        int freeCapacity = blockFound.getFreeCapacity();
+                        for (int i = 0; i < freeCapacity; i++)
+                            blockFound.insert(recordsToReinsert.remove());
+
+                        try {
+                            if (blocksFromRegular == 0) {
+                                this.regularFile.writeBlock(currentAddress, blockFound);
+                            } else {
+                                this.overflowFile.writeBlock(currentAddress, blockFound);
+                            }
+                        } catch (IOException e) {
+                            System.out.println(e);
+                        }
+
+                        currentAddress = blockFound.getNextBlock();
+                        blocksFromRegular++;
+                        if (currentAddress != -1)
+                            blockFound = this.overflowFile.readBlock(currentAddress);
                     }
                 }
             }

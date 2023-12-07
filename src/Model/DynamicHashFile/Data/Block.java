@@ -41,7 +41,7 @@ public class Block <T extends IRecord> {
         for (int i = 0; i < this.validCount; i++) {
             if (this.records[i].equals(record)){
                 deleted = (T) this.records[i];
-                this.records[i] = this.records[this.validCount];
+                this.records[i] = this.records[this.validCount - 1];
                 this.validCount--;
                 break;
             }

@@ -346,6 +346,7 @@ public class Tests {
             this.printParcelHashFile(parcelHashFile);
         }
 
+        System.out.println("");
 //        for (int i = 0; i < 3; i++) {
         for (int i = 0; i < this.parcelList.size(); i++) {
             if (!this.parcelList.get(i).equals(parcelHashFile.find(this.parcelList.get(i))))
@@ -356,6 +357,12 @@ public class Tests {
                 System.out.println("Find Building test N.o.: " + i + " failure");
             else
                 System.out.println("Find Building test N.o.: " + i + " correct");*/
+        }
+
+        for (Parcel parcel : parcelList) {
+            System.out.println("\n" + parcel.getFullDescription());
+            parcelHashFile.delete(parcel);
+            this.printParcelHashFile(parcelHashFile);
         }
     }
 
