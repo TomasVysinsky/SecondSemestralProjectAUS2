@@ -37,4 +37,8 @@ public class DynamicHashFileNodeExternal extends DynamicHashFileNode {
      * @return
      */
     public int getFreeCapacity() { return this.capacity - this.count; }
+
+    public int getCapacity() {
+        return capacity;
+    }
 }

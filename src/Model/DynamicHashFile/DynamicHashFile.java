@@ -299,11 +299,14 @@ public class DynamicHashFile <T extends IRecord> {
                 }
 
 
-                if (external.getCount() == 0) {
+                if (blockFound.getValidCount() <= this.regularFile.getBlockFactor() && blockFound.getNextBlock() == -1) {
                     // Vetva ak sa vyprazdni block v hlavnom subore a nema uz ziadnych nasledovnikov v preplnovacom subore
-                    this.regularFile.freeTheBlock(external.getAddress());
-                    external.setAddress(-1);
-                    external.increaseCapacityBy(-this.regularFile.getBlockFactor());
+                    if (external.getCount() == 0) {
+                        this.regularFile.freeTheBlock(external.getAddress());
+                        external.setAddress(-1);
+                        external.increaseCapacityBy(-this.regularFile.getBlockFactor());
+                    }
+
                     if (external.getParent() != null) {
                         boolean checkNeeded = true;
 
@@ -317,25 +320,33 @@ public class DynamicHashFile <T extends IRecord> {
                                 otherSon = internalParent.getLeftSon();
                             }
 
-                            if (otherSon instanceof DynamicHashFileNodeExternal && ((DynamicHashFileNodeExternal)otherSon).getAddress() == -1) {
-                                // Ak je jeho druhy syn externy a prazdny, prebehne krok zlucovania
-                                if (internalParent.getParent() != null) {
-                                    // Ak nie je rodic korenom tak len prenastavi prislusneho syna prarodica na externy node
-                                    // cim sa zrusi referencia na rodica a jeho druheho potomka
-                                    DynamicHashFileNodeInternal internalGrandParent = (DynamicHashFileNodeInternal)internalParent.getParent();
-                                    if (internalGrandParent.getLeftSon() == internalParent) {
-                                        internalGrandParent.setLeftSon(external);
-                                    } else {
-                                        internalGrandParent.setRightSon(external);
-                                    }
+                            if (otherSon instanceof DynamicHashFileNodeExternal) {
+                                // Zmerguje potomkov svojho predka do jedneho nodu
+                                DynamicHashFileNodeExternal mergedNode = this.mergeExternalNodes((DynamicHashFileNodeExternal)otherSon, external);
 
+                                if (mergedNode != null) {
+                                    // Ak merge prebehol, prebehne krok zlucovania
+                                    if (internalParent.getParent() != null) {
+                                        // Ak nie je rodic korenom tak len prenastavi prislusneho syna prarodica na externy node
+                                        // cim sa zrusi referencia na rodica a jeho druheho potomka
+                                        DynamicHashFileNodeInternal internalGrandParent = (DynamicHashFileNodeInternal) internalParent.getParent();
+                                        if (internalGrandParent.getLeftSon() == internalParent) {
+                                            internalGrandParent.setLeftSon(mergedNode);
+                                        } else {
+                                            internalGrandParent.setRightSon(mergedNode);
+                                        }
+                                        external = mergedNode;
+
+                                    } else {
+                                        // Ak je rodic korenom tak len nastavi koren na externy node a ukonci cyklus
+                                        mergedNode.setParent(internalParent.getParent());
+                                        this.root = mergedNode;
+                                        checkNeeded = false;
+                                    }
+                                    mergedNode.increaseDepthBy(-1);
                                 } else {
-                                    // Ak je rodic korenom tak len nastavi koren na externy node a ukonci cyklus
-                                    external.setParent(internalParent.getParent());
-                                    this.root = external;
                                     checkNeeded = false;
                                 }
-                                external.increaseDepthBy(-1);
                             } else {
                                 // Ak jeho druhy syn nie je externy, je interny a ak je tak obsahuje data. V oboch pripadoch sa cyklus Mergovania ukoncuje.
                                 checkNeeded = false;
@@ -404,6 +415,11 @@ public class DynamicHashFile <T extends IRecord> {
             }
         }
         return found;
+    }
+
+    public boolean edit(T record) {
+        // TODO edit
+        return false;
     }
 
     public DynamicHashFileNode getRoot() {
@@ -482,5 +498,55 @@ public class DynamicHashFile <T extends IRecord> {
             current = ((DynamicHashFileNodeInternal) current).getNextNode(record.getHash());
         }
         return (DynamicHashFileNodeExternal) current;
+    }
+
+    /**
+     * Pokial je mozne zlucit dva externe nody do jedneho s jednym blockom v zakladnom subore, vrati taky externy node s
+     * hotovou upravou v prislusnom subore. Ak nie, vrati null.
+     * @param external1
+     * @param external2
+     * @return
+     */
+    private DynamicHashFileNodeExternal mergeExternalNodes(DynamicHashFileNodeExternal external1, DynamicHashFileNodeExternal external2) {
+        if (external1 == external2 || external1 == null || external2 == null)
+            return null;
+
+        // Ak ma jeden z nodov vacsiu kapacitu ako block zakladneho suboru, nie je merge vykonany
+        if (external1.getCapacity() > this.regularFile.getBlockFactor() || external2.getCapacity() > this.regularFile.getBlockFactor())
+            return null;
+
+        // Ak jeden node nema alokovany zakladny block, nie je potrebny merge ale staci vratit druhy node
+        if (external1.getAddress() == -1)
+            return external2;
+        if (external2.getAddress() == -1)
+            return external1;
+
+        // Ak sa prvky jedneho nedaju vlozit do druheho, merge sa neda vykonat
+        if (external1.getFreeCapacity() < external2.getCount())
+            return null;
+
+        // Merge prvkov dvoch nodov do nodu external1
+        Block<T> block1 = this.regularFile.readBlock(external1.getAddress());
+        Block<T> block2 = this.regularFile.readBlock(external2.getAddress());
+        IRecord[] records2 = block2.getRecords();
+        for (int i = 0; i < block2.getValidCount(); i++) {
+            block1.insert((T)records2[i]);
+        }
+        external1.increaseCountBy(external2.getCount());
+
+        // Block zapise na tu adresu, ktora je dalej od konca suboru
+        if (external1.getAddress() < external2.getAddress()) {
+            this.regularFile.freeTheBlock(external2.getAddress());
+        } else {
+            this.regularFile.freeTheBlock(external1.getAddress());
+            external1.setAddress(external2.getAddress());
+        }
+        try {
+            this.regularFile.writeBlock(external1.getAddress(), block1);
+        } catch (Exception e) {
+            System.out.println(e);
+            return null;
+        }
+        return external1;
     }
 }

@@ -81,7 +81,8 @@ public class BinaryFileManager<T extends IRecord> {
     }
 
     /**
-     * Ak je block uprostred suboru, nastavi block ako prvy v poradovniku volnych blockov.
+     * Ak je block uprostred suboru, nastavi block na prislusnu poziciu v poradovniku volnych blockov tak, aby zaciatok
+     * poradovnika bol co najviac na zaciatku suboru.
      * Ak je block na konci, skrati subor tak, aby na konci ostal platny block
      * @param address
      */
@@ -90,24 +91,68 @@ public class BinaryFileManager<T extends IRecord> {
         int lastBlockAddress = this.getLastBlockAddress();
 
         if(address < lastBlockAddress) {
+            // TODO queue na blocky
             blockToSetFree.setActive(false);
             blockToSetFree.setNextBlock(this.firstFreeBlock);
 
-            // Skontroluje ci uz tam nejaky block bol ulozeny, ak nie tak len nastavi prvy volny block, ak ano tak nastavi na nasledujucemu blocku predchodcu
+            // Skontroluje ci uz tam nejaky block bol ulozeny, ak nie tak len nastavi prvy volny block, ak ano, najde mu miesto na vlozenie
             if (this.firstFreeBlock != -1) {
                 Block<T> nextBlock = this.readBlock(this.firstFreeBlock);
-                nextBlock.setPreviousBlockIfInactive(address);
+                int nextBlockAddress = this.firstFreeBlock;
+
+                if (nextBlockAddress < address) {
+                    // Ak block nie je najvhodnejsie vlozit na zaciatok zretazenia, zapocne cyklus hladania optimalneho miesta
+                    boolean placeFound = false;
+                    while (!placeFound) {
+                        if (nextBlock.getNextBlock() != -1) {
+                            // Ak nasledujuci block obsahuje nasledovnika, skusi ci nie je vhodne vlozit block medzi ne
+                            int previousAddress = nextBlockAddress;
+                            Block<T> previousBlock = nextBlock;
+                            nextBlockAddress = nextBlock.getNextBlock();
+                            nextBlock = this.readBlock(nextBlockAddress);
+
+                            if (address < nextBlockAddress) {
+                                // Vlozenie blocku medzi dva blocky ak sa jeho adresa nachadza medzi nimi
+                                previousBlock.setNextBlock(address);
+                                try {
+                                    this.writeBlock(previousAddress, previousBlock);
+                                } catch (Exception e) {
+                                    System.out.println(e);
+                                    return;
+                                }
+                                nextBlock.setPreviousBlockIfInactive(address);
+                                blockToSetFree.setPreviousBlockIfInactive(previousAddress);
+                                blockToSetFree.setNextBlock(nextBlockAddress);
+                                placeFound = true;
+                            }
+                        } else {
+                            // Ak nasledujuci block uz nema nasledovnika, vlozi sa block na koniec zretazenia
+                            nextBlock.setNextBlock(address);
+                            blockToSetFree.setPreviousBlockIfInactive(nextBlockAddress);
+                            blockToSetFree.setNextBlock(-1);
+                            placeFound = true;
+                        }
+                    }
+                } else {
+                    // Vkladanie blocku na zaciatok zretazenia ak ma najmensiu adresu
+                    nextBlock.setPreviousBlockIfInactive(address);
+                    this.firstFreeBlock = address;
+                    blockToSetFree.setPreviousBlockIfInactive(-1);
+                }
+
                 try {
-                    this.writeBlock(this.firstFreeBlock, nextBlock);
+                    this.writeBlock(nextBlockAddress, nextBlock);
                 } catch (Exception e) {
                     System.out.println(e);
                     return;
                 }
+            } else {
+                this.firstFreeBlock = address;
+                blockToSetFree.setPreviousBlockIfInactive(-1);
             }
-            this.firstFreeBlock = address;
-            blockToSetFree.setPreviousBlockIfInactive(-1);
+
             try {
-                this.writeBlock(this.firstFreeBlock, blockToSetFree);
+                this.writeBlock(address, blockToSetFree);
             } catch (Exception e) {
                 System.out.println(e);
                 return;

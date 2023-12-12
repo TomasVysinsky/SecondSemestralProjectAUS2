@@ -332,7 +332,7 @@ public class Tests {
     public void testHashFile(){
         DynamicHashFile<Parcel> parcelHashFile = new DynamicHashFile<Parcel>(3, 4, 10, "parcely", Parcel.class);
 //        DynamicHashFile<Building> buildingHashFile = new DynamicHashFile<Building>(3, 4, 3, "budovy", Building.class);
-        this.parcelList = pGenerator.generateData(this.coordinates[0], this.coordinates[1], 9, 0);
+        this.parcelList = pGenerator.generateData(this.coordinates[0], this.coordinates[1], 10, 0);
         /*this.buildingList = bGenerator.generateData(this.coordinates[0], this.coordinates[1], 9, 0);
         for (Building building : buildingList) {
             System.out.println("\n" + building.getFullDescription());
@@ -341,7 +341,7 @@ public class Tests {
         }*/
 
         for (Parcel parcel : parcelList) {
-            System.out.println("\n" + parcel.getFullDescription());
+            System.out.println("\nInsert: " + parcel.getFullDescription());
             parcelHashFile.insert(parcel);
             this.printParcelHashFile(parcelHashFile);
         }
@@ -366,13 +366,13 @@ public class Tests {
 
 //        for (Parcel parcel : parcelList) {
         for (int i = 0; i < this.parcelList.size() - 1; i++) {
-            System.out.println("\n" + parcelList.get(i).getFullDescription());
+            System.out.println("\nDelete: " + parcelList.get(i).getFullDescription());
             parcelHashFile.delete(parcelList.get(i));
             this.printParcelHashFile(parcelHashFile);
         }
 
         for (int i = 0; i < this.parcelList.size() - 1; i++) {
-            System.out.println("\n" + parcelList.get(i).getFullDescription());
+            System.out.println("\nInsert: " + parcelList.get(i).getFullDescription());
             parcelHashFile.insert(parcelList.get(i));
             this.printParcelHashFile(parcelHashFile);
         }
@@ -391,10 +391,12 @@ public class Tests {
 
         for (Parcel parcel : parcelList) {
 //        for (int i = 0; i < this.parcelList.size() - 1; i++) {
-            System.out.println("\n" + parcel.getFullDescription());
+            System.out.println("\nDelete: " + parcel.getFullDescription());
             parcelHashFile.delete(parcel);
             this.printParcelHashFile(parcelHashFile);
         }
+
+//        this.printParcelHashFile(parcelHashFile);
     }
 
     public void printParcelHashFile(DynamicHashFile<Parcel> file) {
@@ -403,7 +405,7 @@ public class Tests {
         ArrayList<Block<Parcel>> blocks = file.getAllRegularBlocks();
         System.out.println("Regular file");
         for (int i = 0; i < blocks.size(); i++) {
-            System.out.println("Block " + i + " Valid Count: " + blocks.get(i).getValidCount() + " Active: " + blocks.get(i).isActive());
+            System.out.println("Block " + i + " Valid Count: " + blocks.get(i).getValidCount() + " Next Block: " + blocks.get(i).getNextBlock() + " Active: " + blocks.get(i).isActive());
             IRecord[] records = blocks.get(i).getRecords();
             for (int j = 0; j < blocks.get(i).getValidCount(); j++) {
                 System.out.println(((Log)records[j]).getFullDescription());
