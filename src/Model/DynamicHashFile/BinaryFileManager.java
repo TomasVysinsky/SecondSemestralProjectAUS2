@@ -91,7 +91,6 @@ public class BinaryFileManager<T extends IRecord> {
         int lastBlockAddress = this.getLastBlockAddress();
 
         if(address < lastBlockAddress) {
-            // TODO queue na blocky
             blockToSetFree.setActive(false);
             blockToSetFree.setNextBlock(this.firstFreeBlock);
 

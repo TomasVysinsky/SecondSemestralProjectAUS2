@@ -61,7 +61,6 @@ public abstract class Log implements IData {
 
     @Override
     public BitSet getHash() {
-        // TODO reverse poradie bitov
         ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
         buffer.putLong(0, this.id);
         return BitSet.valueOf(buffer.array());

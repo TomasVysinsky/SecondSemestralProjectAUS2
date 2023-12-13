@@ -298,7 +298,7 @@ public class DynamicHashFile <T extends IRecord> {
                     System.out.println(e);
                 }
 
-
+                // TODO posunut to von z tejto vetvy aby sa ked tak mergol aj ked ma len plny block v hlavnom subore
                 if (blockFound.getValidCount() <= this.regularFile.getBlockFactor() && blockFound.getNextBlock() == -1) {
                     // Vetva ak sa vyprazdni block v hlavnom subore a nema uz ziadnych nasledovnikov v preplnovacom subore
                     if (external.getCount() == 0) {
@@ -418,7 +418,44 @@ public class DynamicHashFile <T extends IRecord> {
     }
 
     public boolean edit(T record) {
-        // TODO edit
+        // Najprv sa najde prislusny node a prezrie prislusny block v hlavnom subore
+        DynamicHashFileNodeExternal external = this.findExternalNode(record);
+        Block<T> blockFound = this.regularFile.readBlock(external.getAddress());
+        int blocksFromRegular = 0;
+        int currentAddress = external.getAddress();
+        T found = blockFound.find(record);
+
+        if (found == null && blockFound.getNextBlock() != -1) {
+            // Vetva na prehladavanie preplnovacieho suboru
+            boolean needToLookForAnotherBlock = true;
+
+            while (needToLookForAnotherBlock) {
+                currentAddress = blockFound.getNextBlock();
+                blockFound = this.overflowFile.readBlock(currentAddress);
+                blocksFromRegular++;
+                found = blockFound.find(record);
+
+                if (found != null || blockFound.getNextBlock() == -1)
+                    needToLookForAnotherBlock = false;
+            }
+        }
+
+        if (found != null) {
+            // Pokial sa nasiel hladany prvok, zmaze ho z povodneho blocku a na jeho miesto zapise upraveny
+            blockFound.delete(found);
+            blockFound.insert(record);
+            try {
+                if (blocksFromRegular == 0)
+                    this.regularFile.writeBlock(currentAddress, blockFound);
+                else
+                    this.overflowFile.writeBlock(currentAddress, blockFound);
+            } catch (Exception e) {
+                System.out.println(e);
+                return false;
+            }
+            return true;
+        }
+
         return false;
     }
 
