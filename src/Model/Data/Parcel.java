@@ -82,7 +82,7 @@ public class Parcel extends Log {
 
     @Override
     public String getFullDescription() {
-        return "Parcel: " + this.id + " Description: " + Arrays.toString(this.description);
+        return "Parcel: " + this.id + " Description: " + this.getDescription();
     }
 
     public int getCisloParcely() {

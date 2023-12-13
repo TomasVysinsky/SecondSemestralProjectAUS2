@@ -4,8 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="df963b7d-2346-4567-b4d9-bdccb337eaa4" name="Changes" comment="Edit done aj otestovany">
-      <change beforePath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFile.java" afterDir="false" />
+    <list default="true" id="df963b7d-2346-4567-b4d9-bdccb337eaa4" name="Changes" comment="Merge detail fixnuty aj otestovany">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/Data/Log.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Data/Log.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/Data/Parcel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Data/Parcel.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,7 +92,7 @@
       <workItem from="1700860000180" duration="322000" />
       <workItem from="1700860378472" duration="79769000" />
       <workItem from="1701388650728" duration="340000" />
-      <workItem from="1701388999126" duration="87539000" />
+      <workItem from="1701388999126" duration="90757000" />
     </task>
     <task id="LOCAL-00001" summary="Proper find finished">
       <option name="closed" value="true" />
@@ -396,7 +398,15 @@
       <option name="project" value="LOCAL" />
       <updated>1702458378330</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="Merge detail fixnuty aj otestovany">
+      <option name="closed" value="true" />
+      <created>1702471251388</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1702471251388</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -417,7 +427,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$" />
     </ignored-roots>
-    <MESSAGE value="Empty fields bug fixed" />
     <MESSAGE value="Empty fields bug fixed + find bug fixed" />
     <MESSAGE value="Littel bugs in view tested" />
     <MESSAGE value="Dáke drobné opravy" />
@@ -442,7 +451,8 @@
     <MESSAGE value="Bug v getRemovedFreeBlock fixnuty" />
     <MESSAGE value="Merge fixnuty aj otestovany + efektivnejsie pracovanie s blockmi tak, aby bol subor co najmensi, tiez otestovane" />
     <MESSAGE value="Edit done aj otestovany" />
-    <option name="LAST_COMMIT_MESSAGE" value="Edit done aj otestovany" />
+    <MESSAGE value="Merge detail fixnuty aj otestovany" />
+    <option name="LAST_COMMIT_MESSAGE" value="Merge detail fixnuty aj otestovany" />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>

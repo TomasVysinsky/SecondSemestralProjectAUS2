@@ -36,7 +36,14 @@ public abstract class Log implements IData {
     }
 
     public String getDescription() {
-        return String.valueOf(this.description);
+        String value = "";
+        for (int i = 0; i < this.description.length; i++) {
+            if (this.description[i] == '\u0000')
+                break;
+            value += this.description[i];
+        }
+        return value;
+//        return String.valueOf(this.description);
     }
 
     @Override
