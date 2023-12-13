@@ -2,9 +2,9 @@ package Model.DynamicHashFile;
 
 import Model.DynamicHashFile.Data.Block;
 import Model.DynamicHashFile.Data.IRecord;
+import Model.QuadTree.Data.IData;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -28,16 +28,9 @@ public class DynamicHashFile <T extends IRecord> {
         this.type = type;
         this.regularFile = new BinaryFileManager<T>(blockFactor, fileName, type);
         this.overflowFile = new BinaryFileManager<T>(overflowBlockFactor, fileName + "Overflow", type);
-        this.root = new DynamicHashFileNodeExternal(0, 1, null);
+        this.root = this.getFileAsTrie(fileName);
+//        this.root = new DynamicHashFileNodeExternal(0, 1, null);
         this.fileName = fileName;
-
-
-        File backup = new File(this.fileName + ".txt");
-        if (backup.exists()) {
-            System.out.println("Subor existuje");
-        } else {
-            System.out.println("Subor neexistuje");
-        }
     }
 
     public boolean insert(T record) {
@@ -488,11 +481,11 @@ public class DynamicHashFile <T extends IRecord> {
             DynamicHashFileNode currentNode = nodeQueue.remove();
             if (currentNode instanceof DynamicHashFileNodeExternal) {
                 DynamicHashFileNodeExternal externalNode = (DynamicHashFileNodeExternal)currentNode;
-                result = result + "\nExternal node, Depth: " + currentNode.getDepth() +
-                        " Address: " + externalNode.getAddress() + " Count: " + externalNode.getCount() + " Free capacity: " + externalNode.getFreeCapacity();
+                result = result + "\nExternal node Depth: " + currentNode.getDepth() +
+                        " Address: " + externalNode.getAddress() + " Count: " + externalNode.getCount() + " Capacity: " + externalNode.getCapacity();
 //                System.out.println("External node, Depth: " + currentNode.getDepth() + " Address: " + externalNode.getAddress() + " Count: " + externalNode.getCount());
             } else {
-                result = result + "\nInternal Node, Depth: " + currentNode.getDepth();
+                result = result + "\nInternal node Depth: " + currentNode.getDepth();
 //                System.out.println("Internal Node, Depth: " + currentNode.getDepth());
                 nodeQueue.add(((DynamicHashFileNodeInternal)currentNode).getLeftSon());
                 nodeQueue.add(((DynamicHashFileNodeInternal)currentNode).getRightSon());
@@ -502,6 +495,80 @@ public class DynamicHashFile <T extends IRecord> {
                 allDone = true;
         }
         return result;
+    }
+
+    /**
+     * Metoda urcena na prepis flie zapisaneho v style getTrieAsString do stromu.
+     * Ak sa file najde a metoda v poriadku prebehne, vrati adresu korena vytvoreneho stromu. Ak nie, vrati prazdny nealokovany externy node ako koren.
+     * @param fileName nazov suboru bez .txt pripony
+     * @return Koren stromu vytvoreneho v operacnej pamati
+     */
+    public DynamicHashFileNode getFileAsTrie(String fileName) {
+        File file = new File(fileName + ".txt");
+        DynamicHashFileNode newRoot = new DynamicHashFileNodeExternal(0, 1, null);
+        if (file.exists()) {
+            try {
+                FileReader fileReader = new FileReader(file);
+                BufferedReader buffer = new BufferedReader(fileReader);
+                String line = buffer.readLine();
+                line = buffer.readLine();
+                Queue<DynamicHashFileNodeInternal> unassignedInternals = new LinkedList<>();
+                while (line != null) {
+                    ArrayList<String> lineWords = new ArrayList<>(Arrays.asList(line.split(" ")));
+                    if (lineWords.get(0).equals("Internal")) {
+                        // Znovuvytvorenie interneho nodu
+                        DynamicHashFileNodeInternal newInternal = new DynamicHashFileNodeInternal(Integer.parseInt(lineWords.get(3)), null, null, null);
+                        if (!unassignedInternals.isEmpty()) {
+                            // Ak interny node nie je prvy v strome, zaradi sa do stromu.
+                            // Potomkovia su zoradeni v poradi najprv lavy potom pravy takze interny node vymazavame z poradovnika az ked sa mu naplni pravy node.
+                            if (unassignedInternals.peek().getLeftSon() == null) {
+                                unassignedInternals.peek().setLeftSon(newInternal);
+                            } else {
+                                unassignedInternals.remove().setRightSon(newInternal);
+                            }
+                        } else {
+                            newRoot = newInternal;
+                        }
+                        unassignedInternals.add(newInternal);
+                    } else {
+                        // Znovuvytvorenie externeho nodu
+                        DynamicHashFileNodeExternal newExternal = new DynamicHashFileNodeExternal(Integer.parseInt(lineWords.get(7)), Integer.parseInt(lineWords.get(3)), null);
+                        newExternal.setAddress(Integer.parseInt(lineWords.get(5)));
+                        newExternal.increaseCapacityBy(Integer.parseInt(lineWords.get(9)));
+                        if (!unassignedInternals.isEmpty()) {
+                            // Potomkovia su zoradeni v poradi najprv lavy potom pravy takze interny node vymazavame z poradovnika az ked sa mu naplni pravy node.
+                            if (unassignedInternals.peek().getLeftSon() == null) {
+                                unassignedInternals.peek().setLeftSon(newExternal);
+                            } else {
+                                unassignedInternals.remove().setRightSon(newExternal);
+                            }
+                        } else {
+                            newRoot = newExternal;
+                        }
+                    }
+
+                    line = buffer.readLine();
+                }
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        }
+
+        return newRoot;
+    }
+
+    /**
+     * Ulozi aktualny trie do .txt suboru
+     */
+    public void saveCurrentSetup() {
+        try {
+            FileWriter fileWriter = new FileWriter(this.fileName + ".txt");
+            fileWriter.write(this.getTrieAsString());
+            fileWriter.close();
+        } catch (Exception e) {
+            System.out.println("Error occured while writing into the file: \n" + e);
+        }
+
     }
 
     /**

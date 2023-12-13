@@ -3,7 +3,8 @@ public class Main {
 //        new View();
 
         Tests test = new Tests();
-        test.testHashFile();
+        test.testHashFile1();
+        test.testHashFile2();
 //        test.testIRecordByteConversions();
 //        test.monteCarlo(1);
 

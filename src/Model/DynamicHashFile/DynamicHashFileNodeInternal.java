@@ -9,8 +9,10 @@ public class DynamicHashFileNodeInternal extends DynamicHashFileNode {
         super(depth, parent);
         this.leftSon = leftSon;
         this.rightSon = rightSon;
-        this.leftSon.setParent(this);
-        this.rightSon.setParent(this);
+        if (this.leftSon != null)
+            this.leftSon.setParent(this);
+        if (this.rightSon != null)
+            this.rightSon.setParent(this);
     }
 
     public DynamicHashFileNode getLeftSon() {
@@ -22,13 +24,17 @@ public class DynamicHashFileNodeInternal extends DynamicHashFileNode {
     }
 
     public void setLeftSon(DynamicHashFileNode leftSon) {
-        this.leftSon = leftSon;
-        this.leftSon.setParent(this);
+        if (leftSon != null) {
+            this.leftSon = leftSon;
+            this.leftSon.setParent(this);
+        }
     }
 
     public void setRightSon(DynamicHashFileNode rightSon) {
-        this.rightSon = rightSon;
-        this.rightSon.setParent(this);
+        if (rightSon != null) {
+            this.rightSon = rightSon;
+            this.rightSon.setParent(this);
+        }
     }
 
     public DynamicHashFileNode getNextNode(BitSet hash) {

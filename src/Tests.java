@@ -5,9 +5,6 @@ import Model.Data.Log;
 import Model.DynamicHashFile.Data.Block;
 import Model.DynamicHashFile.Data.IRecord;
 import Model.DynamicHashFile.DynamicHashFile;
-import Model.DynamicHashFile.DynamicHashFileNode;
-import Model.DynamicHashFile.DynamicHashFileNodeExternal;
-import Model.DynamicHashFile.DynamicHashFileNodeInternal;
 import Model.QuadTree.Coordinates.Coordinate;
 import Model.QuadTree.Coordinates.CoordinateComputer;
 import Model.QuadTree.Data.IData;
@@ -19,8 +16,6 @@ import Model.QuadTree.Coordinates.Length;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Queue;
 
 
 public class Tests {
@@ -329,7 +324,7 @@ public class Tests {
                 bestDeleteImprovement + "%\n Najhorsie zlepsenie bolo: " + worstDeleteImprovement + "%\n");
     }
 
-    public void testHashFile(){
+    public void testHashFile1(){
         DynamicHashFile<Parcel> parcelHashFile = new DynamicHashFile<Parcel>(3, 4, 10, "parcely", Parcel.class);
 //        DynamicHashFile<Building> buildingHashFile = new DynamicHashFile<Building>(3, 4, 3, "budovy", Building.class);
         this.parcelList = pGenerator.generateData(this.coordinates[0], this.coordinates[1], 10, 0);
@@ -370,6 +365,48 @@ public class Tests {
             System.out.println("Pri edite doslo k chybe");
 
 //        for (Parcel parcel : parcelList) {
+        /*for (int i = 0; i < this.parcelList.size() - 1; i++) {
+            System.out.println("\nDelete: " + parcelList.get(i).getFullDescription());
+            parcelHashFile.delete(parcelList.get(i));
+            this.printParcelHashFile(parcelHashFile);
+        }
+
+        for (int i = 0; i < this.parcelList.size() - 1; i++) {
+            System.out.println("\nInsert: " + parcelList.get(i).getFullDescription());
+            parcelHashFile.insert(parcelList.get(i));
+            this.printParcelHashFile(parcelHashFile);
+        }
+
+        System.out.println(" ");
+        for (int i = 0; i < this.parcelList.size(); i++) {
+            if (!this.parcelList.get(i).equals(parcelHashFile.find(this.parcelList.get(i))))
+                System.out.println("Find Parcel test N.o.: " + i + " failure");
+            else
+                System.out.println("Find Parcel test N.o.: " + i + " correct");
+            *//*if (!this.buildingList.get(i).equals(buildingHashFile.find(this.buildingList.get(i))))
+                System.out.println("Find Building test N.o.: " + i + " failure");
+            else
+                System.out.println("Find Building test N.o.: " + i + " correct");*//*
+        }
+
+        for (Parcel parcel : parcelList) {
+//        for (int i = 0; i < this.parcelList.size() - 1; i++) {
+            System.out.println("\nDelete: " + parcel.getFullDescription());
+            parcelHashFile.delete(parcel);
+            this.printParcelHashFile(parcelHashFile);
+        }*/
+
+        parcelHashFile.saveCurrentSetup();
+
+//        this.printParcelHashFile(parcelHashFile);
+    }
+
+    public void testHashFile2(){
+        DynamicHashFile<Parcel> parcelHashFile = new DynamicHashFile<Parcel>(3, 4, 10, "parcely", Parcel.class);
+
+        this.printParcelHashFile(parcelHashFile);
+
+//        for (Parcel parcel : parcelList) {
         for (int i = 0; i < this.parcelList.size() - 1; i++) {
             System.out.println("\nDelete: " + parcelList.get(i).getFullDescription());
             parcelHashFile.delete(parcelList.get(i));
@@ -388,10 +425,6 @@ public class Tests {
                 System.out.println("Find Parcel test N.o.: " + i + " failure");
             else
                 System.out.println("Find Parcel test N.o.: " + i + " correct");
-            /*if (!this.buildingList.get(i).equals(buildingHashFile.find(this.buildingList.get(i))))
-                System.out.println("Find Building test N.o.: " + i + " failure");
-            else
-                System.out.println("Find Building test N.o.: " + i + " correct");*/
         }
 
         for (Parcel parcel : parcelList) {
@@ -400,6 +433,8 @@ public class Tests {
             parcelHashFile.delete(parcel);
             this.printParcelHashFile(parcelHashFile);
         }
+
+        parcelHashFile.saveCurrentSetup();
 
 //        this.printParcelHashFile(parcelHashFile);
     }
