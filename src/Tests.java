@@ -330,7 +330,7 @@ public class Tests {
     }
 
     public void testHashFile(){
-        DynamicHashFile<Parcel> parcelHashFile = new DynamicHashFile<Parcel>(3, 4, 3, "parcely", Parcel.class);
+        DynamicHashFile<Parcel> parcelHashFile = new DynamicHashFile<Parcel>(3, 4, 10, "parcely", Parcel.class);
 //        DynamicHashFile<Building> buildingHashFile = new DynamicHashFile<Building>(3, 4, 3, "budovy", Building.class);
         this.parcelList = pGenerator.generateData(this.coordinates[0], this.coordinates[1], 10, 0);
         /*this.buildingList = bGenerator.generateData(this.coordinates[0], this.coordinates[1], 9, 0);

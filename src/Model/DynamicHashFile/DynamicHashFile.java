@@ -297,63 +297,6 @@ public class DynamicHashFile <T extends IRecord> {
                 } catch (IOException e) {
                     System.out.println(e);
                 }
-
-                // TODO posunut to von z tejto vetvy aby sa ked tak mergol aj ked ma len plny block v hlavnom subore
-                if (blockFound.getValidCount() <= this.regularFile.getBlockFactor() && blockFound.getNextBlock() == -1) {
-                    // Vetva ak sa vyprazdni block v hlavnom subore a nema uz ziadnych nasledovnikov v preplnovacom subore
-                    if (external.getCount() == 0) {
-                        this.regularFile.freeTheBlock(external.getAddress());
-                        external.setAddress(-1);
-                        external.increaseCapacityBy(-this.regularFile.getBlockFactor());
-                    }
-
-                    if (external.getParent() != null) {
-                        boolean checkNeeded = true;
-
-                        while (checkNeeded) {
-                            // Najprv sa ziska rodic a jeho druhy syn
-                            DynamicHashFileNodeInternal internalParent = (DynamicHashFileNodeInternal) external.getParent();
-                            DynamicHashFileNode otherSon = null;
-                            if (internalParent.getLeftSon() == external) {
-                                otherSon = internalParent.getRightSon();
-                            } else {
-                                otherSon = internalParent.getLeftSon();
-                            }
-
-                            if (otherSon instanceof DynamicHashFileNodeExternal) {
-                                // Zmerguje potomkov svojho predka do jedneho nodu
-                                DynamicHashFileNodeExternal mergedNode = this.mergeExternalNodes((DynamicHashFileNodeExternal)otherSon, external);
-
-                                if (mergedNode != null) {
-                                    // Ak merge prebehol, prebehne krok zlucovania
-                                    if (internalParent.getParent() != null) {
-                                        // Ak nie je rodic korenom tak len prenastavi prislusneho syna prarodica na externy node
-                                        // cim sa zrusi referencia na rodica a jeho druheho potomka
-                                        DynamicHashFileNodeInternal internalGrandParent = (DynamicHashFileNodeInternal) internalParent.getParent();
-                                        if (internalGrandParent.getLeftSon() == internalParent) {
-                                            internalGrandParent.setLeftSon(mergedNode);
-                                        } else {
-                                            internalGrandParent.setRightSon(mergedNode);
-                                        }
-                                        external = mergedNode;
-
-                                    } else {
-                                        // Ak je rodic korenom tak len nastavi koren na externy node a ukonci cyklus
-                                        mergedNode.setParent(internalParent.getParent());
-                                        this.root = mergedNode;
-                                        checkNeeded = false;
-                                    }
-                                    mergedNode.increaseDepthBy(-1);
-                                } else {
-                                    checkNeeded = false;
-                                }
-                            } else {
-                                // Ak jeho druhy syn nie je externy, je interny a ak je tak obsahuje data. V oboch pripadoch sa cyklus Mergovania ukoncuje.
-                                checkNeeded = false;
-                            }
-                        }
-                    }
-                }
             }
 
             if (found != null) {
@@ -410,6 +353,62 @@ public class DynamicHashFile <T extends IRecord> {
                         blocksFromRegular++;
                         if (currentAddress != -1)
                             blockFound = this.overflowFile.readBlock(currentAddress);
+                    }
+                }
+
+                if (external.getCapacity() <= this.regularFile.getBlockFactor()) {
+                    // Vetva ak sa vyprazdni block v hlavnom subore a nema uz ziadnych nasledovnikov v preplnovacom subore
+                    if (external.getCount() == 0) {
+                        this.regularFile.freeTheBlock(external.getAddress());
+                        external.setAddress(-1);
+                        external.increaseCapacityBy(-this.regularFile.getBlockFactor());
+                    }
+
+                    if (external.getParent() != null) {
+                        boolean checkNeeded = true;
+
+                        while (checkNeeded) {
+                            // Najprv sa ziska rodic a jeho druhy syn
+                            DynamicHashFileNodeInternal internalParent = (DynamicHashFileNodeInternal) external.getParent();
+                            DynamicHashFileNode otherSon = null;
+                            if (internalParent.getLeftSon() == external) {
+                                otherSon = internalParent.getRightSon();
+                            } else {
+                                otherSon = internalParent.getLeftSon();
+                            }
+
+                            if (otherSon instanceof DynamicHashFileNodeExternal) {
+                                // Zmerguje potomkov svojho predka do jedneho nodu
+                                DynamicHashFileNodeExternal mergedNode = this.mergeExternalNodes((DynamicHashFileNodeExternal)otherSon, external);
+
+                                if (mergedNode != null) {
+                                    // Ak merge prebehol, prebehne krok zlucovania
+                                    if (internalParent.getParent() != null) {
+                                        // Ak nie je rodic korenom tak len prenastavi prislusneho syna prarodica na externy node
+                                        // cim sa zrusi referencia na rodica a jeho druheho potomka
+                                        DynamicHashFileNodeInternal internalGrandParent = (DynamicHashFileNodeInternal) internalParent.getParent();
+                                        if (internalGrandParent.getLeftSon() == internalParent) {
+                                            internalGrandParent.setLeftSon(mergedNode);
+                                        } else {
+                                            internalGrandParent.setRightSon(mergedNode);
+                                        }
+                                        external = mergedNode;
+
+                                    } else {
+                                        // Ak je rodic korenom tak len nastavi koren na externy node a ukonci cyklus
+                                        mergedNode.setParent(internalParent.getParent());
+                                        this.root = mergedNode;
+                                        checkNeeded = false;
+                                    }
+                                    mergedNode.increaseDepthBy(-1);
+                                } else {
+                                    checkNeeded = false;
+                                }
+                            } else {
+                                // Ak jeho druhy syn nie je externy, je interny a ak je tak obsahuje data. V oboch pripadoch sa cyklus Mergovania ukoncuje.
+                                checkNeeded = false;
+                            }
+                        }
                     }
                 }
             }
