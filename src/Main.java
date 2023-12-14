@@ -1,10 +1,10 @@
 public class Main {
     public static void main(String[] args) {
-//        new View();
+        new View();
 
-        Tests test = new Tests();
-        test.testHashFile1();
-        test.testHashFile2();
+//        Tests test = new Tests();
+//        test.testHashFile1();
+//        test.testHashFile2();
 //        test.testIRecordByteConversions();
 //        test.monteCarlo(1);
 

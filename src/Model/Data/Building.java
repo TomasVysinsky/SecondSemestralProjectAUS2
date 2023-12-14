@@ -89,7 +89,8 @@ public class Building extends Log {
 
     @Override
     public String getFullDescription() {
-        return "Building: " + this.supisneCislo + " Description: " + Arrays.toString(this.description);
+        // TODO pridat id do description
+        return "Building: " + this.supisneCislo + " Description: " + this.getDescription();
     }
 
     @Override

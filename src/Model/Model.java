@@ -96,7 +96,7 @@ public class Model {
         // Nasledne sa pridaju vsetky prislusne parcely
         ArrayList<IData> parcely = this.parcelsQuadTree.find(newBuilding.getCoordinates()[0], newBuilding.getCoordinates()[1]);
         for (IData data : parcely) {
-            if (!newBuilding.addProperty((Parcel) data))
+            if (!newBuilding.addProperty(this.convertQTParcel((QuadTreeParcel) data)))
                 break;
 
         }
@@ -120,7 +120,7 @@ public class Model {
     }
 
     public boolean insertParcel(String description, Coordinate minCoordinate, Coordinate maxCoordinate) {
-        Parcel newParcel = new Parcel(this.currentBuildingID, description, minCoordinate, maxCoordinate);
+        Parcel newParcel = new Parcel(this.currentParcelID, description, minCoordinate, maxCoordinate);
         return this.insertParcel(newParcel);
     }
 
@@ -136,7 +136,7 @@ public class Model {
 
         ArrayList<IData> budovy = this.buildingsQuadTree.find(newParcel.getCoordinates()[0], newParcel.getCoordinates()[1]);
         for (IData data : budovy) {
-            if (!newParcel.addProperty((Building) data))
+            if (!newParcel.addProperty(this.convertQTBuilding((QuadTreeBuilding) data)))
                 break;
         }
 
@@ -152,7 +152,7 @@ public class Model {
                 this.buildingFile.edit(foundBuilding);
         }
 
-        this.currentBuildingID++;
+        this.currentParcelID++;
         return true;
     }
 
