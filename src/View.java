@@ -52,8 +52,8 @@ public class View extends JFrame {
     private JLabel hlbkaOrFile;
 //    private JButton findAllPropertiesInButton;
     private JLabel pocetPrvkovTextField;
-    private JTextArea BuildingFileTextArea;
-    private JTextArea ParcelFileTextArea;
+    private JTextArea buildingFileTextArea;
+    private JTextArea parcelFileTextArea;
     private JScrollPane BuildingFile;
     private JScrollPane ParcelFile;
     private DefaultListModel<String> model = new DefaultListModel<>();
@@ -85,6 +85,8 @@ public class View extends JFrame {
         showFindButtons(false);
         showGenerateButtons(false);
         createButton.setText("Create new tree");
+        buildingFileTextArea.setEnabled(false);
+        parcelFileTextArea.setEnabled(false);
 
         currentIndex = -1;
         resultList.setModel(model);
@@ -99,6 +101,7 @@ public class View extends JFrame {
                     return;
                 }
                 createController();
+                showFiles();
             }
         };
 
@@ -669,11 +672,16 @@ public class View extends JFrame {
         return !supisneCisloTextField.getText().isEmpty() || !popisTextField.getText().isEmpty();
     }
 
+    public void showFiles() {
+        this.showBuildingFile();
+        this.showParcelFile();
+    }
+
     public void showBuildingFile() {
-        // TODO showBuildingFile
+        this.buildingFileTextArea.setText(this.controller.getBuildingFileAsString());
     }
 
     public void showParcelFile() {
-        // TODO showParcelFile
+        this.parcelFileTextArea.setText(this.controller.getParcelFileAsString());
     }
 }

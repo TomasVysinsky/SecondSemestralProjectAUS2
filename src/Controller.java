@@ -208,6 +208,14 @@ public class Controller {
 
     }
 
+    public String getBuildingFileAsString() {
+        return this.model.getBuildingFileAsString();
+    }
+
+    public String getParcelFileAsString() {
+        return this.model.getParcelFileAsString();
+    }
+
     /*public void loadFromFile(String fileName) {
         if (this.model.loadFromFile(fileName)) {
             this.view.infoSuborSaNacital();

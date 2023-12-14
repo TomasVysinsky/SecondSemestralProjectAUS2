@@ -2,6 +2,8 @@ package Model;
 
 import Generator.BuildingGenerator;
 import Generator.ParcelGenerator;
+import Model.DynamicHashFile.Data.Block;
+import Model.DynamicHashFile.Data.IRecord;
 import Model.DynamicHashFile.DynamicHashFile;
 import Model.QuadTree.Coordinates.Coordinate;
 import Model.QuadTree.Coordinates.CoordinateComputer;
@@ -460,6 +462,52 @@ public class Model {
             return false;
         }
         return true;
+    }
+
+    public String getBuildingFileAsString() {
+        String finalText = "";
+        ArrayList<Block<Building>> blocks = this.buildingFile.getAllRegularBlocks();
+        finalText += "Regular file\n";
+        finalText = this.appendBuildingBlocksToString(blocks, finalText);
+
+        blocks = this.buildingFile.getAllOverflowBlocks();
+        finalText += "\nOverflow file\n";
+        finalText = this.appendBuildingBlocksToString(blocks, finalText);
+        return finalText;
+    }
+
+    public String getParcelFileAsString() {
+        String finalText = "";
+        ArrayList<Block<Parcel>> blocks = this.parcelFile.getAllRegularBlocks();
+        finalText += "Regular file\n";
+        finalText = this.appendParcelBlocksToString(blocks, finalText);
+
+        blocks = this.parcelFile.getAllOverflowBlocks();
+        finalText += "\nOverflow file\n";
+        finalText = this.appendParcelBlocksToString(blocks, finalText);
+        return finalText;
+    }
+
+    private String appendBuildingBlocksToString(ArrayList<Block<Building>> blocks, String text) {
+        for (int i = 0; i < blocks.size(); i++) {
+            text += "Block " + i + " Valid Count: " + blocks.get(i).getValidCount() + " Next Block: " + blocks.get(i).getNextBlock() + " Active: " + blocks.get(i).isActive() + "\n";
+            IRecord[] records = blocks.get(i).getRecords();
+            for (int j = 0; j < blocks.get(i).getValidCount(); j++) {
+                text += ((Log)records[j]).getFullDescription() + "\n";
+            }
+        }
+        return text;
+    }
+
+    private String appendParcelBlocksToString(ArrayList<Block<Parcel>> blocks, String text) {
+        for (int i = 0; i < blocks.size(); i++) {
+            text += "Block " + i + " Valid Count: " + blocks.get(i).getValidCount() + " Next Block: " + blocks.get(i).getNextBlock() + " Active: " + blocks.get(i).isActive() + "\n";
+            IRecord[] records = blocks.get(i).getRecords();
+            for (int j = 0; j < blocks.get(i).getValidCount(); j++) {
+                text += ((Log)records[j]).getFullDescription() + "\n";
+            }
+        }
+        return text;
     }
 
     private Width charToWidth(char width) {
