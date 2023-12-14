@@ -50,7 +50,7 @@ public class View extends JFrame {
     private JButton pointFindButton;
     private JButton fileBackupButton;
     private JLabel hlbkaOrFile;
-    private JButton findAllPropertiesInButton;
+//    private JButton findAllPropertiesInButton;
     private JLabel pocetPrvkovTextField;
     private JTextArea BuildingFileTextArea;
     private JTextArea ParcelFileTextArea;
@@ -76,7 +76,7 @@ public class View extends JFrame {
         pointFindButton.setEnabled(false);
         generateButton.setEnabled(false);
         fileBackupButton.setEnabled(false);
-        findAllPropertiesInButton.setEnabled(false);
+//        findAllPropertiesInButton.setEnabled(false);
         supisneCisloTextField.setEnabled(false);
         popisTextField.setEnabled(false);
         pocetGenerovanychPrvkovTextField.setEnabled(true);
@@ -267,8 +267,11 @@ public class View extends JFrame {
                 }
                 currentIndex = -1;
                 resultList.setSelectedIndex(currentIndex);
-                enableOneCoordinateField();
+                disableCoordinateFields();
                 findVisualisation();
+                pocetGenerovanychPrvkovTextField.setEnabled(true);
+                pocetGenerovanychPrvkovTextField.setText("");
+                pocetPrvkovTextField.setText("ID");
                 findBuildingsButton.removeActionListener(intervalFindBuilding);
                 findBuildingsButton.addActionListener(pointFindBuilding);
                 findParcelsButton.removeActionListener(intervalFindParcel);
@@ -355,7 +358,6 @@ public class View extends JFrame {
         editButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO dorobit edit
                 currentIndex = resultList.getSelectedIndex();
                 if (currentIndex == -1)
                     return;
@@ -433,7 +435,7 @@ public class View extends JFrame {
             }
         });
 
-        findAllPropertiesInButton.addActionListener(new ActionListener() {
+        /*findAllPropertiesInButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.findAllProperties();
@@ -445,7 +447,7 @@ public class View extends JFrame {
                 showFindButtons(false);
                 showGenerateButtons(false);
             }
-        });
+        });*/
     }
 
     public void showResults() {
@@ -537,7 +539,7 @@ public class View extends JFrame {
         pointFindButton.setEnabled(true);
         generateButton.setEnabled(true);
         fileBackupButton.setEnabled(true);
-        findAllPropertiesInButton.setEnabled(true);
+//        findAllPropertiesInButton.setEnabled(true);
         treeDepthTextField.setEnabled(false);
         treeDepthTextField.setText("");
         pocetGenerovanychPrvkovTextField.setEnabled(false);
@@ -556,7 +558,6 @@ public class View extends JFrame {
     }
 
     public void findVisualisation(){
-        // TODO rozdelit na dve podla toho ci bodove alebo intervalove
         supisneCisloTextField.setEnabled(false);
         popisTextField.setEnabled(false);
         createButton.setVisible(false);

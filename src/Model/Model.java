@@ -285,8 +285,26 @@ public class Model {
                 this.allPropertiesQuadTree.delete(oldqtBuilding);
                 this.buildingsQuadTree.insert(newqtBuilding);
                 this.buildingsQuadTree.delete(oldqtBuilding);
+
+                ArrayList<IData> parcely = this.parcelsQuadTree.find(newBuilding.getCoordinates()[0], newBuilding.getCoordinates()[1]);
+                for (IData data : parcely) {
+                    if (!newBuilding.addProperty(this.convertQTParcel((QuadTreeParcel) data)))
+                        break;
+                }
+
+                for (IData data : parcely) {
+                    Parcel foundParcel = this.convertQTParcel((QuadTreeParcel) data);
+                    foundParcel = this.parcelFile.find(foundParcel);
+                    if (foundParcel.addProperty(newBuilding))
+                        this.parcelFile.edit(foundParcel);
+                }
             } else {
                 return oldBuilding;
+            }
+        } else {
+            long[] originalParcelIndexes = oldBuilding.getParcels();
+            for (int i = 0; i < oldBuilding.getValidParcels(); i++) {
+                newBuilding.addProperty(new Parcel(originalParcelIndexes[i], "", new Coordinate(), new Coordinate()));
             }
         }
         this.buildingFile.edit(newBuilding);
@@ -307,8 +325,26 @@ public class Model {
                 this.allPropertiesQuadTree.delete(oldqtParcel);
                 this.buildingsQuadTree.insert(newqtParcel);
                 this.buildingsQuadTree.delete(oldqtParcel);
+
+                ArrayList<IData> budovy = this.buildingsQuadTree.find(newParcel.getCoordinates()[0], newParcel.getCoordinates()[1]);
+                for (IData data : budovy) {
+                    if (!newParcel.addProperty(this.convertQTBuilding((QuadTreeBuilding) data)))
+                        break;
+                }
+
+                for (IData data : budovy) {
+                    Building foundBuilding = this.convertQTBuilding((QuadTreeBuilding) data);
+                    foundBuilding = this.buildingFile.find(foundBuilding);
+                    if (foundBuilding.addProperty(newParcel))
+                        this.buildingFile.edit(foundBuilding);
+                }
             } else {
                 return oldParcel;
+            }
+        } else {
+            long[] originalBuildingIndexes = oldParcel.getBuildings();
+            for (int i = 0; i < oldParcel.getValidBuildings(); i++) {
+                newParcel.addProperty(new Parcel(originalBuildingIndexes[i], "", new Coordinate(), new Coordinate()));
             }
         }
         this.parcelFile.edit(newParcel);

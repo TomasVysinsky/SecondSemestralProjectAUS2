@@ -29,6 +29,14 @@ public class Building extends Log {
         this.validParcels = 0;
     }
 
+    public long[] getParcels() {
+        return parcels;
+    }
+
+    public int getValidParcels() {
+        return validParcels;
+    }
+
     /**
      *
      * @param other

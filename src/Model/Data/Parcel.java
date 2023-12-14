@@ -23,6 +23,14 @@ public class Parcel extends Log {
         this.buildings = new long[5];
     }
 
+    public long[] getBuildings() {
+        return buildings;
+    }
+
+    public int getValidBuildings() {
+        return validBuildings;
+    }
+
     /**
      *
      * @param other

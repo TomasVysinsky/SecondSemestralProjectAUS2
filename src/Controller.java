@@ -147,13 +147,12 @@ public class Controller {
             return;
         }
         this.view.showResults(foundList);
-    }*/
+    }
 
     public void findAllProperties() {
-        // TODO findAllProperties
 //        ArrayList<Log> foundList = this.model.findAllProperties();
 //        this.view.showResults(foundList);
-    }
+    }*/
 
     public Log edit(Log oldLog, long id, int cislo, String description,
                      String minWidth, double minWidthPosition, String minLength, double minLengthPosition,
