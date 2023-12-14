@@ -77,14 +77,13 @@ public class Controller {
     }
 
     public void findBuilding(long id) {
-        // TODO findBuilding na zaklade id
-    }
-    public void findBuildings(long[] ids, int validBuildings) {
-        // TODO implementovat to do viewu
-        ArrayList<Log> foundList = this.model.findBuildingsWithIDs(ids, validBuildings);
-        if (foundList == null) {
-            this.view.errorOutOfBorders();
-            return;
+        ArrayList<Log> foundList = new ArrayList<Log>();
+        Building found = this.model.findBuilding(id);
+        if (found != null) {
+            foundList.add(found);
+            ArrayList<Log> foundParcels = this.model.findParcelsWithIDs(found.getParcels(), found.getValidParcels());
+            if (foundParcels != null)
+                foundList.addAll(foundParcels);
         }
         this.view.showResults(foundList);
     }
@@ -102,15 +101,13 @@ public class Controller {
     }
 
     public void findParcel(long id) {
-        // TODO findParcel na zaklade id
-    }
-
-    public void findParcels(long[] ids, int validParcels) {
-        // TODO implementovat to do viewu
-        ArrayList<Log> foundList = this.model.findParcelsWithIDs(ids, validParcels);
-        if (foundList == null) {
-            this.view.errorOutOfBorders();
-            return;
+        ArrayList<Log> foundList = new ArrayList<Log>();
+        Parcel found = this.model.findParcel(id);
+        if (found != null) {
+            foundList.add(found);
+            ArrayList<Log> foundParcels = this.model.findBuildingsWithIDs(found.getBuildings(), found.getValidBuildings());
+            if (foundParcels != null)
+                foundList.addAll(foundParcels);
         }
         this.view.showResults(foundList);
     }

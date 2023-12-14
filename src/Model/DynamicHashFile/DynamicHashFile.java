@@ -226,6 +226,8 @@ public class DynamicHashFile <T extends IRecord> {
         // Najprv sa najde prislusny node a prezrie prislusny block v hlavnom subore
         DynamicHashFileNodeExternal external = this.findExternalNode(record);
         Block<T> blockFound = this.regularFile.readBlock(external.getAddress());
+        if (blockFound == null)
+            return null;
         T found = blockFound.find(record);
 
         if (found == null && blockFound.getNextBlock() != -1) {

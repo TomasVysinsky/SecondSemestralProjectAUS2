@@ -158,6 +158,10 @@ public class Model {
         return true;
     }
 
+    public Building findBuilding(long id) {
+        return this.buildingFile.find(new Building(id, 0, "", new Coordinate(), new Coordinate()));
+    }
+
     public ArrayList<Log> findBuildingsWithIDs(long[] ids, int validBuildings) {
         if (ids.length < validBuildings)
             return null;
@@ -187,6 +191,10 @@ public class Model {
         for (int i = 0; i < dataList.size(); i++)
             finalDataList.add(this.buildingFile.find(this.convertQTBuilding((QuadTreeBuilding) dataList.get(i))));
         return finalDataList;
+    }
+
+    public Parcel findParcel(long id) {
+        return this.parcelFile.find(new Parcel(id, "", new Coordinate(), new Coordinate()));
     }
 
     public ArrayList<Log> findParcelsWithIDs(long[] ids, int validParcels) {
@@ -325,8 +333,8 @@ public class Model {
             if (this.allPropertiesQuadTree.insert(newqtParcel)) {
                 QuadTreeParcel oldqtParcel = this.convertToQTParcel(oldParcel);
                 this.allPropertiesQuadTree.delete(oldqtParcel);
-                this.buildingsQuadTree.insert(newqtParcel);
-                this.buildingsQuadTree.delete(oldqtParcel);
+                this.parcelsQuadTree.insert(newqtParcel);
+                this.parcelsQuadTree.delete(oldqtParcel);
 
                 ArrayList<IData> budovy = this.buildingsQuadTree.find(newParcel.getCoordinates()[0], newParcel.getCoordinates()[1]);
                 for (IData data : budovy) {
@@ -382,6 +390,7 @@ public class Model {
             FileWriter fileWriter = new FileWriter(fileName + "QuadTree.txt");
             ArrayList<IData> dataList = this.allPropertiesQuadTree.getAllData();
             // Najprv parametre QuadStromu
+            fileWriter.write(String.valueOf(this.currentBuildingID) + ',' + String.valueOf(this.currentParcelID) + "\n");
             fileWriter.write("Tree," + this.allPropertiesQuadTree.getMaxDepth() + ',' +
                     this.allPropertiesQuadTree.getCoordinates()[0].getWidthAsChar() + ',' + this.allPropertiesQuadTree.getCoordinates()[0].getWidthPosition() + ',' +
                     this.allPropertiesQuadTree.getCoordinates()[0].getLengthAsChar() + ',' + this.allPropertiesQuadTree.getCoordinates()[0].getLengthPosition() + ',' +
@@ -424,6 +433,13 @@ public class Model {
             String line = buffer.readLine();
             if (line != null) {
                 ArrayList<String> lineWords = new ArrayList<>(Arrays.asList(line.split(",")));
+                this.currentBuildingID = Integer.parseInt(lineWords.get(0));
+                this.currentParcelID = Integer.parseInt(lineWords.get(1));
+
+                line = buffer.readLine();
+                lineWords.clear();
+                lineWords.addAll(Arrays.asList(line.split(",")));
+
                 Coordinate minCoordinate = new Coordinate(this.charToWidth(lineWords.get(2).charAt(0)), Double.parseDouble(lineWords.get(3)),
                         this.charToLength(lineWords.get(4).charAt(0)), Double.parseDouble(lineWords.get(5)));
                 Coordinate maxCoordinate = new Coordinate(this.charToWidth(lineWords.get(6).charAt(0)), Double.parseDouble(lineWords.get(7)),

@@ -85,8 +85,8 @@ public class View extends JFrame {
         showFindButtons(false);
         showGenerateButtons(false);
         createButton.setText("Create new tree");
-        buildingFileTextArea.setEnabled(false);
-        parcelFileTextArea.setEnabled(false);
+//        buildingFileTextArea.setEnabled(false);
+//        parcelFileTextArea.setEnabled(false);
 
         currentIndex = -1;
         resultList.setModel(model);
@@ -119,6 +119,7 @@ public class View extends JFrame {
                         (String) minLengthComboBox.getSelectedItem(), Double.parseDouble(minLengthPositionField.getText()),
                         (String) maxWidthComboBox.getSelectedItem(), Double.parseDouble(maxWidthPositionField.getText()),
                         (String) maxLengthComboBox.getSelectedItem(), Double.parseDouble(maxLengthPositionField.getText()));
+                showFiles();
             }
         };
 
@@ -134,6 +135,7 @@ public class View extends JFrame {
                         (String) minLengthComboBox.getSelectedItem(), Double.parseDouble(minLengthPositionField.getText()),
                         (String) maxWidthComboBox.getSelectedItem(), Double.parseDouble(maxWidthPositionField.getText()),
                         (String) maxLengthComboBox.getSelectedItem(), Double.parseDouble(maxLengthPositionField.getText()));
+                showFiles();
             }
         };
 
@@ -292,6 +294,7 @@ public class View extends JFrame {
                     return;
                 }
                 controller.generateBuildings(Integer.parseInt(pocetGenerovanychPrvkovTextField.getText()));
+                showFiles();
             }
         });
 
@@ -303,6 +306,7 @@ public class View extends JFrame {
                     return;
                 }
                 controller.generateParcels(Integer.parseInt(pocetGenerovanychPrvkovTextField.getText()));
+                showFiles();
             }
         });
         generateButton.addActionListener(new ActionListener() {
@@ -354,6 +358,7 @@ public class View extends JFrame {
                 }
 
                 showFindButtons(false);
+                pocetGenerovanychPrvkovTextField.setEnabled(false);
                 showEditButtons(true);
             }
         });
@@ -399,6 +404,7 @@ public class View extends JFrame {
                 showEditButtons(false);
                 resultList.setSelectedIndex(currentIndex);
                 infoDataBoliUpravene();
+                showFiles();
             }
         });
 
@@ -416,6 +422,7 @@ public class View extends JFrame {
                 disablePropertyAttributes();
                 showEditButtons(false);
                 infoDataBoliZmazane();
+                showFiles();
             }
         });
         fileBackupButton.addActionListener(new ActionListener() {
