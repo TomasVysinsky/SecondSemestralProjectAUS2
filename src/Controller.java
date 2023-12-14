@@ -158,12 +158,14 @@ public class Controller {
     public Log edit(Log oldLog, long id, int cislo, String description,
                      String minWidth, double minWidthPosition, String minLength, double minLengthPosition,
                      String maxWidth, double maxWidthPosition, String maxLength, double maxLengthPosition) {
-        //TODO checknut edit
+        Log logToReturn = oldLog;
         if (oldLog instanceof Building) {
             Building newLog = new Building(id, cislo, description,
                     new Coordinate(this.stringToWidth(minWidth), minWidthPosition, this.stringToLength(minLength), minLengthPosition),
                     new Coordinate(this.stringToWidth(maxWidth), maxWidthPosition, this.stringToLength(maxLength), maxLengthPosition));
-            if (oldLog.equals((IData) newLog)) {
+            logToReturn = this.model.editBuilding((Building) oldLog, newLog);
+
+            /*if (oldLog.equals((IData) newLog)) {
                 oldLog.edit(newLog);
             } else {
                 if (model.insertBuilding(newLog)) {
@@ -173,12 +175,13 @@ public class Controller {
                     return oldLog;
                 }
             }
-            return newLog;
+            return newLog;*/
         } else if (oldLog instanceof Parcel) {
             Parcel newLog = new Parcel(id, description,
                     new Coordinate(this.stringToWidth(minWidth), minWidthPosition, this.stringToLength(minLength), minLengthPosition),
                     new Coordinate(this.stringToWidth(maxWidth), maxWidthPosition, this.stringToLength(maxLength), maxLengthPosition));
-            if (oldLog.equals((IData) newLog)) {
+            logToReturn = this.model.editParcel((Parcel) oldLog, newLog);
+            /*if (oldLog.equals((IData) newLog)) {
                 oldLog.edit(newLog);
             } else {
                 if (this.model.insertParcel(newLog)) {
@@ -188,9 +191,9 @@ public class Controller {
                     return oldLog;
                 }
             }
-            return newLog;
+            return logToReturn;*/
         }
-        return oldLog;
+        return logToReturn;
     }
 
     public void delete(Log log) {

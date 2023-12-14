@@ -75,6 +75,7 @@ public class Model {
      */
     public boolean insertBuilding(int supisneCislo, String description, Coordinate minCoordinate, Coordinate maxCoordinate) {
         Building newBuilding = new Building(this.currentBuildingID, supisneCislo, description, minCoordinate, maxCoordinate);
+        this.currentBuildingID++;
         return this.insertBuilding(newBuilding);
     }
 
@@ -115,12 +116,12 @@ public class Model {
                 this.parcelFile.edit(foundParcel);
         }
 
-        this.currentBuildingID++;
         return true;
     }
 
     public boolean insertParcel(String description, Coordinate minCoordinate, Coordinate maxCoordinate) {
         Parcel newParcel = new Parcel(this.currentParcelID, description, minCoordinate, maxCoordinate);
+        this.currentParcelID++;
         return this.insertParcel(newParcel);
     }
 
@@ -152,7 +153,6 @@ public class Model {
                 this.buildingFile.edit(foundBuilding);
         }
 
-        this.currentParcelID++;
         return true;
     }
 
@@ -271,19 +271,63 @@ public class Model {
         }
     }
 
+    /**
+     * Vrati novu budovu ak prebehne edit v poriadku a staru ak nie
+     * @param oldBuilding
+     * @param newBuilding
+     * @return
+     */
+    public Log editBuilding(Building oldBuilding, Building newBuilding) {
+        QuadTreeBuilding newqtBuilding = this.convertToQTBuilding(newBuilding);
+        if (this.allPropertiesQuadTree.insert(newqtBuilding)) {
+            QuadTreeBuilding oldqtBuilding = this.convertToQTBuilding(oldBuilding);
+            this.allPropertiesQuadTree.delete(oldqtBuilding);
+            this.buildingsQuadTree.insert(newqtBuilding);
+            this.buildingsQuadTree.delete(oldqtBuilding);
+        } else {
+            return oldBuilding;
+        }
+        this.buildingFile.edit(newBuilding);
+        return newBuilding;
+    }
+
+    /**
+     * Vrati novy parcel ak prebehne edit v poriadku a stary ak nie
+     * @param oldParcel
+     * @param newParcel
+     * @return
+     */
+    public Log editParcel(Parcel oldParcel, Parcel newParcel) {
+        QuadTreeParcel newqtParcel = this.convertToQTParcel(newParcel);
+        if (this.allPropertiesQuadTree.insert(newqtParcel)) {
+            QuadTreeParcel oldqtParcel = this.convertToQTParcel(oldParcel);
+            this.allPropertiesQuadTree.delete(oldqtParcel);
+            this.buildingsQuadTree.insert(newqtParcel);
+            this.buildingsQuadTree.delete(oldqtParcel);
+        } else {
+            return oldParcel;
+        }
+        this.parcelFile.edit(newParcel);
+        return newParcel;
+    }
+
     public boolean generateBuildings(int numberOfBuildings) {
         ArrayList<Building> newBuildings = this.bGenerator.generateData(this.buildingsQuadTree.getCoordinates()[0], this.buildingsQuadTree.getCoordinates()[1], numberOfBuildings, this.currentBuildingID);
-        for (Building current : newBuildings)
+        for (Building current : newBuildings) {
             if (!this.insertBuilding(current))
                 return false;
+            this.currentBuildingID++;
+        }
         return true;
     }
 
     public boolean generateParcels(int numberOfParcels) {
         ArrayList<Parcel> newParcels = this.pGenerator.generateData(this.parcelsQuadTree.getCoordinates()[0], this.parcelsQuadTree.getCoordinates()[1], numberOfParcels, this.currentParcelID);
-        for (Parcel current : newParcels)
+        for (Parcel current : newParcels) {
             if (!this.insertParcel(current))
                 return false;
+            this.currentParcelID++;
+        }
         return true;
     }
 

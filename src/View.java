@@ -52,6 +52,10 @@ public class View extends JFrame {
     private JLabel hlbkaOrFile;
     private JButton findAllPropertiesInButton;
     private JLabel pocetPrvkovTextField;
+    private JTextArea BuildingFileTextArea;
+    private JTextArea ParcelFileTextArea;
+    private JScrollPane BuildingFile;
+    private JScrollPane ParcelFile;
     private DefaultListModel<String> model = new DefaultListModel<>();
     private ActionListener buildingCreator, parcelCreator, treeCreator,
             pointFindParcel, pointFindBuilding, intervalFindParcel, intervalFindBuilding, intervalFindAll;
@@ -355,11 +359,24 @@ public class View extends JFrame {
                 currentIndex = resultList.getSelectedIndex();
                 if (currentIndex == -1)
                     return;
-                if (!buildingAttributesFilledUp() || !bothCoordinatesFilledUp()) {
+
+                if (!bothCoordinatesFilledUp()) {
                     errorNieSuVyplneneVsetkyPolia();
                     return;
                 }
                 Log oldLog = currentLogs.get(currentIndex);
+
+                if (oldLog instanceof Building) {
+                    if (!buildingAttributesFilledUp()) {
+                        errorNieSuVyplneneVsetkyPolia();
+                        return;
+                    }
+                } else {
+                    if (popisTextField.getText().isEmpty()) {
+                        errorNieSuVyplneneVsetkyPolia();
+                        return;
+                    }
+                }
                 Log newLog = controller.edit(oldLog, oldLog.getId(), Integer.parseInt(supisneCisloTextField.getText()), popisTextField.getText(),
                         (String) minWidthComboBox.getSelectedItem(), Double.parseDouble(minWidthPositionField.getText()),
                         (String) minLengthComboBox.getSelectedItem(), Double.parseDouble(minLengthPositionField.getText()),
@@ -643,5 +660,13 @@ public class View extends JFrame {
 
     public boolean buildingAttributesFilledUp() {
         return !supisneCisloTextField.getText().isEmpty() || !popisTextField.getText().isEmpty();
+    }
+
+    public void showBuildingFile() {
+        // TODO showBuildingFile
+    }
+
+    public void showParcelFile() {
+        // TODO showParcelFile
     }
 }

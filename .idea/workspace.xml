@@ -4,11 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="df963b7d-2346-4567-b4d9-bdccb337eaa4" name="Changes" comment="Model, Controller a View v povodnej podobe upravene tak, aby si zachovali potrebne povodne funkcie. Neotestovane ale Test DynamicHashFile presiel">
+    <list default="true" id="df963b7d-2346-4567-b4d9-bdccb337eaa4" name="Changes" comment="Model, Controller a View v povodnej podobe upravene tak, aby si zachovali potrebne povodne funkcie. Zo zakladnych funkcii chyba este Edit. Generator, insert, delete a save, rovnako ako aj nacitanie backupu otestovane.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Model/Data/Building.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Data/Building.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/Data/Log.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Data/Log.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Model/Model.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Model.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/View.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/View.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/View.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -93,7 +96,7 @@
       <workItem from="1700860000180" duration="322000" />
       <workItem from="1700860378472" duration="79769000" />
       <workItem from="1701388650728" duration="340000" />
-      <workItem from="1701388999126" duration="128909000" />
+      <workItem from="1701388999126" duration="135297000" />
     </task>
     <task id="LOCAL-00001" summary="Proper find finished">
       <option name="closed" value="true" />
@@ -431,7 +434,15 @@
       <option name="project" value="LOCAL" />
       <updated>1702554814668</updated>
     </task>
-    <option name="localTasksCounter" value="43" />
+    <task id="LOCAL-00043" summary="Model, Controller a View v povodnej podobe upravene tak, aby si zachovali potrebne povodne funkcie. Zo zakladnych funkcii chyba este Edit. Generator, insert, delete a save, rovnako ako aj nacitanie backupu otestovane.">
+      <option name="closed" value="true" />
+      <created>1702563614575</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1702563614575</updated>
+    </task>
+    <option name="localTasksCounter" value="44" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -452,7 +463,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$" />
     </ignored-roots>
-    <MESSAGE value="Find All prepared backup" />
     <MESSAGE value="Find All Properties done" />
     <MESSAGE value="Jar included" />
     <MESSAGE value="Posledna verzia po obhajobe" />
@@ -477,7 +487,8 @@
     <MESSAGE value="Opraveny vypis description" />
     <MESSAGE value="Ukladanie a nacitavanie suboru spravene aj otestovane" />
     <MESSAGE value="Model, Controller a View v povodnej podobe upravene tak, aby si zachovali potrebne povodne funkcie. Neotestovane ale Test DynamicHashFile presiel" />
-    <option name="LAST_COMMIT_MESSAGE" value="Model, Controller a View v povodnej podobe upravene tak, aby si zachovali potrebne povodne funkcie. Neotestovane ale Test DynamicHashFile presiel" />
+    <MESSAGE value="Model, Controller a View v povodnej podobe upravene tak, aby si zachovali potrebne povodne funkcie. Zo zakladnych funkcii chyba este Edit. Generator, insert, delete a save, rovnako ako aj nacitanie backupu otestovane." />
+    <option name="LAST_COMMIT_MESSAGE" value="Model, Controller a View v povodnej podobe upravene tak, aby si zachovali potrebne povodne funkcie. Zo zakladnych funkcii chyba este Edit. Generator, insert, delete a save, rovnako ako aj nacitanie backupu otestovane." />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>

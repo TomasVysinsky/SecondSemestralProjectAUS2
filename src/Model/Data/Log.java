@@ -82,8 +82,7 @@ public abstract class Log implements IData, IRecord {
     protected boolean editLog(Log other) {
         if (other != null) {
             if (this.equals((IData) other)) {
-                // TODO check ci to takto mozem urobit
-                this.description = other.description;
+                System.arraycopy(other.description, 0, this.description, 0, this.description.length);
                 this.numberOfValidChars = other.numberOfValidChars;
                 return true;
             }
