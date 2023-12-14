@@ -365,23 +365,29 @@ public class View extends JFrame {
                     return;
                 }
                 Log oldLog = currentLogs.get(currentIndex);
+                Log newLog = oldLog;
 
                 if (oldLog instanceof Building) {
                     if (!buildingAttributesFilledUp()) {
                         errorNieSuVyplneneVsetkyPolia();
                         return;
                     }
+                    newLog = controller.edit(oldLog, oldLog.getId(), Integer.parseInt(supisneCisloTextField.getText()), popisTextField.getText(),
+                            (String) minWidthComboBox.getSelectedItem(), Double.parseDouble(minWidthPositionField.getText()),
+                            (String) minLengthComboBox.getSelectedItem(), Double.parseDouble(minLengthPositionField.getText()),
+                            (String) maxWidthComboBox.getSelectedItem(), Double.parseDouble(maxWidthPositionField.getText()),
+                            (String) maxLengthComboBox.getSelectedItem(), Double.parseDouble(maxLengthPositionField.getText()));
                 } else {
                     if (popisTextField.getText().isEmpty()) {
                         errorNieSuVyplneneVsetkyPolia();
                         return;
                     }
+                    newLog = controller.edit(oldLog, oldLog.getId(), 0, popisTextField.getText(),
+                            (String) minWidthComboBox.getSelectedItem(), Double.parseDouble(minWidthPositionField.getText()),
+                            (String) minLengthComboBox.getSelectedItem(), Double.parseDouble(minLengthPositionField.getText()),
+                            (String) maxWidthComboBox.getSelectedItem(), Double.parseDouble(maxWidthPositionField.getText()),
+                            (String) maxLengthComboBox.getSelectedItem(), Double.parseDouble(maxLengthPositionField.getText()));
                 }
-                Log newLog = controller.edit(oldLog, oldLog.getId(), Integer.parseInt(supisneCisloTextField.getText()), popisTextField.getText(),
-                        (String) minWidthComboBox.getSelectedItem(), Double.parseDouble(minWidthPositionField.getText()),
-                        (String) minLengthComboBox.getSelectedItem(), Double.parseDouble(minLengthPositionField.getText()),
-                        (String) maxWidthComboBox.getSelectedItem(), Double.parseDouble(maxWidthPositionField.getText()),
-                        (String) maxLengthComboBox.getSelectedItem(), Double.parseDouble(maxLengthPositionField.getText()));
                 currentLogs.set(currentIndex, newLog);
                 showResults();
                 disablePropertyAttributes();

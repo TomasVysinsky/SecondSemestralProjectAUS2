@@ -4,13 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="df963b7d-2346-4567-b4d9-bdccb337eaa4" name="Changes" comment="Model, Controller a View v povodnej podobe upravene tak, aby si zachovali potrebne povodne funkcie. Zo zakladnych funkcii chyba este Edit. Generator, insert, delete a save, rovnako ako aj nacitanie backupu otestovane.">
+    <list default="true" id="df963b7d-2346-4567-b4d9-bdccb337eaa4" name="Changes" comment="Edit done ale s bugom">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Data/Building.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Data/Building.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Data/Log.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Data/Log.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Model/Model.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Model.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/View.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/View.form" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/View.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -96,7 +92,7 @@
       <workItem from="1700860000180" duration="322000" />
       <workItem from="1700860378472" duration="79769000" />
       <workItem from="1701388650728" duration="340000" />
-      <workItem from="1701388999126" duration="135297000" />
+      <workItem from="1701388999126" duration="136690000" />
     </task>
     <task id="LOCAL-00001" summary="Proper find finished">
       <option name="closed" value="true" />
@@ -442,7 +438,15 @@
       <option name="project" value="LOCAL" />
       <updated>1702563614575</updated>
     </task>
-    <option name="localTasksCounter" value="44" />
+    <task id="LOCAL-00044" summary="Edit done ale s bugom">
+      <option name="closed" value="true" />
+      <created>1702576504722</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1702576504722</updated>
+    </task>
+    <option name="localTasksCounter" value="45" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -463,7 +467,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$" />
     </ignored-roots>
-    <MESSAGE value="Find All Properties done" />
     <MESSAGE value="Jar included" />
     <MESSAGE value="Posledna verzia po obhajobe" />
     <MESSAGE value="First classes defined" />
@@ -488,9 +491,19 @@
     <MESSAGE value="Ukladanie a nacitavanie suboru spravene aj otestovane" />
     <MESSAGE value="Model, Controller a View v povodnej podobe upravene tak, aby si zachovali potrebne povodne funkcie. Neotestovane ale Test DynamicHashFile presiel" />
     <MESSAGE value="Model, Controller a View v povodnej podobe upravene tak, aby si zachovali potrebne povodne funkcie. Zo zakladnych funkcii chyba este Edit. Generator, insert, delete a save, rovnako ako aj nacitanie backupu otestovane." />
-    <option name="LAST_COMMIT_MESSAGE" value="Model, Controller a View v povodnej podobe upravene tak, aby si zachovali potrebne povodne funkcie. Zo zakladnych funkcii chyba este Edit. Generator, insert, delete a save, rovnako ako aj nacitanie backupu otestovane." />
+    <MESSAGE value="Edit done ale s bugom" />
+    <option name="LAST_COMMIT_MESSAGE" value="Edit done ale s bugom" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/View.java</url>
+          <line>358</line>
+          <option name="timeStamp" value="38" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="Model.DynamicHashFile.Data.Block" memberName="validCount" />

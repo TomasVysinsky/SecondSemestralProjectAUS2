@@ -278,14 +278,16 @@ public class Model {
      * @return
      */
     public Log editBuilding(Building oldBuilding, Building newBuilding) {
-        QuadTreeBuilding newqtBuilding = this.convertToQTBuilding(newBuilding);
-        if (this.allPropertiesQuadTree.insert(newqtBuilding)) {
-            QuadTreeBuilding oldqtBuilding = this.convertToQTBuilding(oldBuilding);
-            this.allPropertiesQuadTree.delete(oldqtBuilding);
-            this.buildingsQuadTree.insert(newqtBuilding);
-            this.buildingsQuadTree.delete(oldqtBuilding);
-        } else {
-            return oldBuilding;
+        if (!oldBuilding.equals((IData) newBuilding)) {
+            QuadTreeBuilding newqtBuilding = this.convertToQTBuilding(newBuilding);
+            if (this.allPropertiesQuadTree.insert(newqtBuilding)) {
+                QuadTreeBuilding oldqtBuilding = this.convertToQTBuilding(oldBuilding);
+                this.allPropertiesQuadTree.delete(oldqtBuilding);
+                this.buildingsQuadTree.insert(newqtBuilding);
+                this.buildingsQuadTree.delete(oldqtBuilding);
+            } else {
+                return oldBuilding;
+            }
         }
         this.buildingFile.edit(newBuilding);
         return newBuilding;
@@ -298,14 +300,16 @@ public class Model {
      * @return
      */
     public Log editParcel(Parcel oldParcel, Parcel newParcel) {
-        QuadTreeParcel newqtParcel = this.convertToQTParcel(newParcel);
-        if (this.allPropertiesQuadTree.insert(newqtParcel)) {
-            QuadTreeParcel oldqtParcel = this.convertToQTParcel(oldParcel);
-            this.allPropertiesQuadTree.delete(oldqtParcel);
-            this.buildingsQuadTree.insert(newqtParcel);
-            this.buildingsQuadTree.delete(oldqtParcel);
-        } else {
-            return oldParcel;
+        if (!oldParcel.equals((IData) newParcel)) {
+            QuadTreeParcel newqtParcel = this.convertToQTParcel(newParcel);
+            if (this.allPropertiesQuadTree.insert(newqtParcel)) {
+                QuadTreeParcel oldqtParcel = this.convertToQTParcel(oldParcel);
+                this.allPropertiesQuadTree.delete(oldqtParcel);
+                this.buildingsQuadTree.insert(newqtParcel);
+                this.buildingsQuadTree.delete(oldqtParcel);
+            } else {
+                return oldParcel;
+            }
         }
         this.parcelFile.edit(newParcel);
         return newParcel;
