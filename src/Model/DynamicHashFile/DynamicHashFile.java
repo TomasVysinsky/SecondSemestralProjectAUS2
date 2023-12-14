@@ -504,7 +504,7 @@ public class DynamicHashFile <T extends IRecord> {
      * @return Koren stromu vytvoreneho v operacnej pamati
      */
     public DynamicHashFileNode getFileAsTrie(String fileName) {
-        File file = new File(fileName + ".txt");
+        File file = new File(fileName + "Trie.txt");
         DynamicHashFileNode newRoot = new DynamicHashFileNodeExternal(0, 1, null);
         if (file.exists()) {
             try {
@@ -562,7 +562,7 @@ public class DynamicHashFile <T extends IRecord> {
      */
     public void saveCurrentSetup() {
         try {
-            FileWriter fileWriter = new FileWriter(this.fileName + ".txt");
+            FileWriter fileWriter = new FileWriter(this.fileName + "Trie.txt");
             fileWriter.write(this.getTrieAsString());
             fileWriter.close();
         } catch (Exception e) {

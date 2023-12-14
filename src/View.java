@@ -49,13 +49,12 @@ public class View extends JFrame {
     private JButton createButton;
     private JButton pointFindButton;
     private JButton fileBackupButton;
-    private JButton saveToFileButton;
-    private JButton loadFromFileButton;
     private JLabel hlbkaOrFile;
     private JButton findAllPropertiesInButton;
+    private JLabel pocetPrvkovTextField;
     private DefaultListModel<String> model = new DefaultListModel<>();
     private ActionListener buildingCreator, parcelCreator, treeCreator,
-            pointFindParcel, pointFindBuilding, pointFindAll, intervalFindParcel, intervalFindBuilding, intervalFindAll;
+            pointFindParcel, pointFindBuilding, intervalFindParcel, intervalFindBuilding, intervalFindAll;
     private ArrayList<Log> currentLogs;
     int currentIndex;
 
@@ -76,11 +75,11 @@ public class View extends JFrame {
         findAllPropertiesInButton.setEnabled(false);
         supisneCisloTextField.setEnabled(false);
         popisTextField.setEnabled(false);
-        pocetGenerovanychPrvkovTextField.setEnabled(false);
+        pocetGenerovanychPrvkovTextField.setEnabled(true);
+        pocetPrvkovTextField.setText("Nazov suborov");
         showEditButtons(false);
         showFindButtons(false);
         showGenerateButtons(false);
-        showFileButtons(false);
         createButton.setText("Create new tree");
 
         currentIndex = -1;
@@ -91,7 +90,7 @@ public class View extends JFrame {
         treeCreator = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (treeDepthTextField.getText().isEmpty() || !bothCoordinatesFilledUp()) {
+                if (treeDepthTextField.getText().isEmpty() || !bothCoordinatesFilledUp() || pocetGenerovanychPrvkovTextField.getText().isEmpty()) {
                     errorNieSuVyplneneVsetkyPolia();
                     return;
                 }
@@ -104,7 +103,7 @@ public class View extends JFrame {
         buildingCreator = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!propertyAttributesFilledUp() || !bothCoordinatesFilledUp()) {
+                if (!buildingAttributesFilledUp() || !bothCoordinatesFilledUp()) {
                     errorNieSuVyplneneVsetkyPolia();
                     return;
                 }
@@ -119,11 +118,11 @@ public class View extends JFrame {
         parcelCreator = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!propertyAttributesFilledUp() || !bothCoordinatesFilledUp()) {
+                if (popisTextField.getText().isEmpty() || !bothCoordinatesFilledUp()) {
                     errorNieSuVyplneneVsetkyPolia();
                     return;
                 }
-                controller.createParcel(Integer.parseInt(supisneCisloTextField.getText()), popisTextField.getText(),
+                controller.createParcel(popisTextField.getText(),
                         (String) minWidthComboBox.getSelectedItem(), Double.parseDouble(minWidthPositionField.getText()),
                         (String) minLengthComboBox.getSelectedItem(), Double.parseDouble(minLengthPositionField.getText()),
                         (String) maxWidthComboBox.getSelectedItem(), Double.parseDouble(maxWidthPositionField.getText()),
@@ -197,57 +196,41 @@ public class View extends JFrame {
             }
         };
 
-        intervalFindAll = new ActionListener() {
+        findAllPropertiesButton.addActionListener(intervalFindAll = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!bothCoordinatesFilledUp()) {
                     errorNieSuVyplneneVsetkyPolia();
                     return;
                 }
-                controller.findProperties(
+                errorOutOfBorders();
+                /*controller.findProperties(
                         (String) minWidthComboBox.getSelectedItem(), Double.parseDouble(minWidthPositionField.getText()),
                         (String) minLengthComboBox.getSelectedItem(), Double.parseDouble(minLengthPositionField.getText()),
                         (String) maxWidthComboBox.getSelectedItem(), Double.parseDouble(maxWidthPositionField.getText()),
-                        (String) maxLengthComboBox.getSelectedItem(), Double.parseDouble(maxLengthPositionField.getText()));
+                        (String) maxLengthComboBox.getSelectedItem(), Double.parseDouble(maxLengthPositionField.getText()));*/
             }
-        };
+        });
 
         pointFindBuilding = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!minCoordinateFilledUp()) {
+                if (pocetGenerovanychPrvkovTextField.getText().isEmpty()) {
                     errorNieSuVyplneneVsetkyPolia();
                     return;
                 }
-                controller.findBuildings(
-                        (String) minWidthComboBox.getSelectedItem(), Double.parseDouble(minWidthPositionField.getText()),
-                        (String) minLengthComboBox.getSelectedItem(), Double.parseDouble(minLengthPositionField.getText()));
+                controller.findBuilding(Integer.parseInt(pocetGenerovanychPrvkovTextField.getText()));
             }
         };
 
         pointFindParcel = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!minCoordinateFilledUp()) {
+                if (pocetGenerovanychPrvkovTextField.getText().isEmpty()) {
                     errorNieSuVyplneneVsetkyPolia();
                     return;
                 }
-                controller.findParcels(
-                        (String) minWidthComboBox.getSelectedItem(), Double.parseDouble(minWidthPositionField.getText()),
-                        (String) minLengthComboBox.getSelectedItem(), Double.parseDouble(minLengthPositionField.getText()));
-            }
-        };
-
-        pointFindAll = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (!minCoordinateFilledUp()) {
-                    errorNieSuVyplneneVsetkyPolia();
-                    return;
-                }
-                controller.findProperties(
-                        (String) minWidthComboBox.getSelectedItem(), Double.parseDouble(minWidthPositionField.getText()),
-                        (String) minLengthComboBox.getSelectedItem(), Double.parseDouble(minLengthPositionField.getText()));
+                controller.findParcel(Integer.parseInt(pocetGenerovanychPrvkovTextField.getText()));
             }
         };
 
@@ -266,8 +249,8 @@ public class View extends JFrame {
                 findBuildingsButton.addActionListener(intervalFindBuilding);
                 findParcelsButton.removeActionListener(pointFindParcel);
                 findParcelsButton.addActionListener(intervalFindParcel);
-                findAllPropertiesButton.removeActionListener(pointFindAll);
-                findAllPropertiesButton.addActionListener(intervalFindAll);
+//                findAllPropertiesButton.removeActionListener(pointFindAll);
+//                findAllPropertiesButton.addActionListener(intervalFindAll);
             }
         });
 
@@ -286,8 +269,8 @@ public class View extends JFrame {
                 findBuildingsButton.addActionListener(pointFindBuilding);
                 findParcelsButton.removeActionListener(intervalFindParcel);
                 findParcelsButton.addActionListener(pointFindParcel);
-                findAllPropertiesButton.removeActionListener(intervalFindAll);
-                findAllPropertiesButton.addActionListener(pointFindAll);
+//                findAllPropertiesButton.removeActionListener(intervalFindAll);
+//                findAllPropertiesButton.addActionListener(pointFindAll);
             }
         });
 
@@ -323,12 +306,12 @@ public class View extends JFrame {
                 supisneCisloTextField.setEnabled(false);
                 popisTextField.setEnabled(false);
                 createButton.setVisible(false);
+                pocetPrvkovTextField.setText("Pocet prvkov");
                 pocetGenerovanychPrvkovTextField.setEnabled(true);
                 treeDepthTextField.setEnabled(false);
                 showEditButtons(false);
                 showFindButtons(false);
                 showGenerateButtons(true);
-                showFileButtons(false);
                 clearFieldsAfterEditing();
             }
         });
@@ -357,7 +340,7 @@ public class View extends JFrame {
                     supisneCisloTextField.setText(Integer.toString(((Building)selectedLog).getSupisneCislo()));
                 } else if (selectedLog instanceof Parcel) {
                     enableParcelAttributes();
-                    supisneCisloTextField.setText(Integer.toString(((Parcel)selectedLog).getCisloParcely()));
+                    supisneCisloTextField.setText("");
                 }
 
                 showFindButtons(false);
@@ -368,10 +351,11 @@ public class View extends JFrame {
         editButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                // TODO dorobit edit
                 currentIndex = resultList.getSelectedIndex();
                 if (currentIndex == -1)
                     return;
-                if (!propertyAttributesFilledUp() || !bothCoordinatesFilledUp()) {
+                if (!buildingAttributesFilledUp() || !bothCoordinatesFilledUp()) {
                     errorNieSuVyplneneVsetkyPolia();
                     return;
                 }
@@ -413,6 +397,8 @@ public class View extends JFrame {
                     currentLogs.clear();
                     showResults();
                 }
+                controller.saveInFile();
+
                 disableCoordinateFields();
                 disablePropertyAttributes();
                 pocetGenerovanychPrvkovTextField.setEnabled(false);
@@ -420,32 +406,10 @@ public class View extends JFrame {
                 showEditButtons(false);
                 showFindButtons(false);
                 showGenerateButtons(false);
-                showFileButtons(true);
-                hlbkaOrFile.setText("Nazov Suboru");
-                treeDepthTextField.setEnabled(true);
+                treeDepthTextField.setEnabled(false);
             }
         });
 
-        saveToFileButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (treeDepthTextField.getText().isEmpty()) {
-                    errorNieSuVyplneneVsetkyPolia();
-                    return;
-                }
-                controller.saveInFile(treeDepthTextField.getText());
-            }
-        });
-        loadFromFileButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (treeDepthTextField.getText().isEmpty()) {
-                    errorNieSuVyplneneVsetkyPolia();
-                    return;
-                }
-                controller.loadFromFile(treeDepthTextField.getText());
-            }
-        });
         findAllPropertiesInButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -457,7 +421,6 @@ public class View extends JFrame {
                 showEditButtons(false);
                 showFindButtons(false);
                 showGenerateButtons(false);
-                showFileButtons(false);
             }
         });
     }
@@ -539,6 +502,7 @@ public class View extends JFrame {
 
     private void createController() {
         controller = new Controller(this, Integer.parseInt(treeDepthTextField.getText()),
+                10, 3, 4, pocetGenerovanychPrvkovTextField.getText(),
                 (String) minWidthComboBox.getSelectedItem(), Double.parseDouble(minWidthPositionField.getText()),
                 (String) minLengthComboBox.getSelectedItem(), Double.parseDouble(minLengthPositionField.getText()),
                 (String) maxWidthComboBox.getSelectedItem(), Double.parseDouble(maxWidthPositionField.getText()),
@@ -553,6 +517,9 @@ public class View extends JFrame {
         findAllPropertiesInButton.setEnabled(true);
         treeDepthTextField.setEnabled(false);
         treeDepthTextField.setText("");
+        pocetGenerovanychPrvkovTextField.setEnabled(false);
+        pocetPrvkovTextField.setText("Pocet prvkov");
+        pocetGenerovanychPrvkovTextField.setText("");
         createButton.setVisible(false);
     }
 
@@ -563,10 +530,10 @@ public class View extends JFrame {
         showEditButtons(false);
         showFindButtons(false);
         showGenerateButtons(false);
-        showFileButtons(false);
     }
 
     public void findVisualisation(){
+        // TODO rozdelit na dve podla toho ci bodove alebo intervalove
         supisneCisloTextField.setEnabled(false);
         popisTextField.setEnabled(false);
         createButton.setVisible(false);
@@ -575,14 +542,7 @@ public class View extends JFrame {
         showEditButtons(false);
         showFindButtons(true);
         showGenerateButtons(false);
-        showFileButtons(false);
         clearFieldsAfterEditing();
-    }
-
-    public void enablePropertyAttributes() {
-        supisneCisloTextField.setEnabled(true);
-        popisTextField.setEnabled(true);
-        enableCoordinateFields();
     }
 
     public void disablePropertyAttributes() {
@@ -592,12 +552,15 @@ public class View extends JFrame {
     }
 
     public void enableBuildingAttributes() {
-        enablePropertyAttributes();
+        enableParcelAttributes();
+        supisneCisloTextField.setEnabled(true);
         number.setText("Supisne Cislo");
     }
 
     public void enableParcelAttributes() {
-        enablePropertyAttributes();
+        supisneCisloTextField.setEnabled(false);
+        popisTextField.setEnabled(true);
+        enableCoordinateFields();
         number.setText("Cislo Parcelu");
     }
 
@@ -668,10 +631,6 @@ public class View extends JFrame {
         generateBuildingsButton.setVisible(show);
         generateParcelsButton.setVisible(show);
     }
-    public void showFileButtons(boolean show) {
-        saveToFileButton.setVisible(show);
-        loadFromFileButton.setVisible(show);
-    }
 
     public boolean bothCoordinatesFilledUp() {
         return this.minCoordinateFilledUp() ||
@@ -682,7 +641,7 @@ public class View extends JFrame {
         return !minWidthPositionField.getText().isEmpty() || !minLengthPositionField.getText().isEmpty();
     }
 
-    public boolean propertyAttributesFilledUp() {
+    public boolean buildingAttributesFilledUp() {
         return !supisneCisloTextField.getText().isEmpty() || !popisTextField.getText().isEmpty();
     }
 }

@@ -4,12 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="df963b7d-2346-4567-b4d9-bdccb337eaa4" name="Changes" comment="Opraveny vypis description">
+    <list default="true" id="df963b7d-2346-4567-b4d9-bdccb337eaa4" name="Changes" comment="Ukladanie a nacitavanie suboru spravene aj otestovane">
+      <change afterPath="$PROJECT_DIR$/src/Model/QuadTree/Data/QuadTreeBuilding.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Model/QuadTree/Data/QuadTreeParcel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Generator/ParcelGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Generator/ParcelGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/Data/Building.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Data/Building.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/Data/Log.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Data/Log.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/Data/Parcel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Data/Parcel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFileNodeInternal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFileNodeInternal.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/Model.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Model.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/QuadTree/Data/IData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/QuadTree/Data/IData.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Tests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Tests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/View.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/View.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/View.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -94,7 +103,7 @@
       <workItem from="1700860000180" duration="322000" />
       <workItem from="1700860378472" duration="79769000" />
       <workItem from="1701388650728" duration="340000" />
-      <workItem from="1701388999126" duration="99579000" />
+      <workItem from="1701388999126" duration="126480000" />
     </task>
     <task id="LOCAL-00001" summary="Proper find finished">
       <option name="closed" value="true" />
@@ -416,7 +425,15 @@
       <option name="project" value="LOCAL" />
       <updated>1702473909976</updated>
     </task>
-    <option name="localTasksCounter" value="41" />
+    <task id="LOCAL-00041" summary="Ukladanie a nacitavanie suboru spravene aj otestovane">
+      <option name="closed" value="true" />
+      <created>1702497264222</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1702497264222</updated>
+    </task>
+    <option name="localTasksCounter" value="42" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -437,7 +454,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$" />
     </ignored-roots>
-    <MESSAGE value="Littel bugs in view tested" />
     <MESSAGE value="Dáke drobné opravy" />
     <MESSAGE value="Find All prepared backup" />
     <MESSAGE value="Find All Properties done" />
@@ -462,18 +478,10 @@
     <MESSAGE value="Edit done aj otestovany" />
     <MESSAGE value="Merge detail fixnuty aj otestovany" />
     <MESSAGE value="Opraveny vypis description" />
-    <option name="LAST_COMMIT_MESSAGE" value="Opraveny vypis description" />
+    <MESSAGE value="Ukladanie a nacitavanie suboru spravene aj otestovane" />
+    <option name="LAST_COMMIT_MESSAGE" value="Ukladanie a nacitavanie suboru spravene aj otestovane" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFile.java</url>
-          <line>506</line>
-          <option name="timeStamp" value="36" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="Model.DynamicHashFile.Data.Block" memberName="validCount" />

@@ -1,5 +1,6 @@
 package Model.Data;
 
+import Model.DynamicHashFile.Data.IRecord;
 import Model.QuadTree.Coordinates.Coordinate;
 import Model.QuadTree.Data.IData;
 
@@ -17,8 +18,7 @@ public class Parcel extends Log {
         this.validBuildings = 0;
     }
 
-    public Parcel(long id, int cisloParcely, String description, Coordinate coordinate1, Coordinate coordinate2) {
-        // TODO zmazat cislo parcely
+    public Parcel(long id, String description, Coordinate coordinate1, Coordinate coordinate2) {
         super(id, description, 11, coordinate1, coordinate2);
         this.buildings = new long[5];
     }
@@ -85,8 +85,9 @@ public class Parcel extends Log {
         return "Parcel: " + this.id + " Description: " + this.getDescription();
     }
 
-    public int getCisloParcely() {
-        return 0; // TODO zmazat
+    @Override
+    public boolean isInstanceOfSame(IRecord other) {
+        return other instanceof Parcel;
     }
 
     @Override

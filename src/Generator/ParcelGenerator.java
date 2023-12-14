@@ -14,7 +14,7 @@ public class ParcelGenerator extends dataGenerator<Parcel> {
     @Override
     public Parcel createInstance(Coordinate minCoordinate, Coordinate maxCoordinate, long id) {
         int cisloParcelu = Math.abs(this.random.nextInt());
-        return new Parcel(id, cisloParcelu, "Parcel number " + cisloParcelu,
+        return new Parcel(id, "Parcel N." + cisloParcelu,
                 this.generateBetween(minCoordinate, maxCoordinate), this.generateBetween(minCoordinate, maxCoordinate));
     }
 

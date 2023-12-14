@@ -58,7 +58,7 @@ public class Tests {
     }
 
     public boolean testIRecordByteConversions() {
-        Parcel parcel = new Parcel(1, 20, "Abcde", this.searchedArea[0], this.searchedArea[1]);
+        Parcel parcel = new Parcel(1, "Abcde", this.searchedArea[0], this.searchedArea[1]);
         Building building = new Building(2, 30, "Fghij", this.searchedArea[0], this.searchedArea[1]);
         parcel.addProperty(building);
         building.addProperty(parcel);
@@ -72,11 +72,11 @@ public class Tests {
         newParcel.fromByteArray(byteParcel);
         newBuilding.fromByteArray(byteBuilding);
 
-        if (!parcel.equals(newParcel))
+        if (!parcel.equals((IRecord) newParcel))
             System.out.println("Parcel equals nevysiel.");
         if (!parcel.getDescription().equals(newParcel.getDescription()))
             System.out.println("Parcel description nevysiel.");
-        if (!building.equals(newBuilding))
+        if (!building.equals((IRecord) newBuilding))
             System.out.println("Building equals nevysiel.");
         if (!building.getDescription().equals(newBuilding.getDescription()))
             System.out.println("Building description nevysiel.");
@@ -86,7 +86,7 @@ public class Tests {
 
     public boolean testInsert(){
         //false test
-        Parcel parcel = new Parcel(12, 1, "test1",
+        Parcel parcel = new Parcel(12, "test1",
                 new Coordinate(this.width[0], this.widthPositions[0] + 1, this.lengths[0], this.lengthPositions[0]+1),
                 new Coordinate(this.width[1], this.widthPositions[1] + 1, this.lengths[1], this.lengthPositions[1]+1));
         if (this.testTree.insert(parcel)){
@@ -94,7 +94,7 @@ public class Tests {
         }
         System.out.println("Test insert mimo suradnic vysiel dobre");
 
-        parcel = new Parcel(12, 1, "test1",
+        parcel = new Parcel(12, "test1",
                 new Coordinate(this.width[0], this.widthPositions[0] - 1, this.lengths[0], this.lengthPositions[0]-1),
                 new Coordinate(this.width[1], this.widthPositions[1] - 1, this.lengths[1], this.lengthPositions[1]-1));
         if (!this.testTree.insert(parcel)){
@@ -107,7 +107,7 @@ public class Tests {
         }
         System.out.println("Test insert vramci primarnych klucov vysiel dobre");
 
-        parcel = new Parcel(12, 2, "test1",
+        parcel = new Parcel(12, "test1",
                 new Coordinate(this.width[0], this.widthPositions[0] - 2, this.lengths[0], this.lengthPositions[0] - 2),
                 new Coordinate(this.width[0], this.widthPositions[0] - 3, this.lengths[0], this.lengthPositions[0] - 3));
         if (!this.testTree.insert(parcel)){
@@ -349,7 +349,7 @@ public class Tests {
         System.out.println("");
 //        for (int i = 0; i < 3; i++) {
         for (int i = 0; i < this.parcelList.size(); i++) {
-            if (!this.parcelList.get(i).equals(parcelHashFile.find(this.parcelList.get(i))))
+            if (!this.parcelList.get(i).equals((IRecord) parcelHashFile.find(this.parcelList.get(i))))
                 System.out.println("Find Parcel test N.o.: " + i + " failure");
             else
                 System.out.println("Find Parcel test N.o.: " + i + " correct");
@@ -360,7 +360,7 @@ public class Tests {
         }
 
         Parcel toEdit = this.parcelList.get(3);
-        Parcel edited = new Parcel(toEdit.getId(), 0, "ABCDE", toEdit.getCoordinates()[0], toEdit.getCoordinates()[1]);
+        Parcel edited = new Parcel(toEdit.getId(), "ABCDE", toEdit.getCoordinates()[0], toEdit.getCoordinates()[1]);
         if (!parcelHashFile.edit(edited))
             System.out.println("Pri edite doslo k chybe");
 
@@ -421,7 +421,7 @@ public class Tests {
 
         System.out.println(" ");
         for (int i = 0; i < this.parcelList.size(); i++) {
-            if (!this.parcelList.get(i).equals(parcelHashFile.find(this.parcelList.get(i))))
+            if (!this.parcelList.get(i).equals((IRecord) parcelHashFile.find(this.parcelList.get(i))))
                 System.out.println("Find Parcel test N.o.: " + i + " failure");
             else
                 System.out.println("Find Parcel test N.o.: " + i + " correct");

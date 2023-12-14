@@ -8,7 +8,7 @@ import Model.QuadTree.Data.IData;
 import java.nio.ByteBuffer;
 import java.util.BitSet;
 
-public abstract class Log implements IData {
+public abstract class Log implements IData, IRecord {
     protected long id;
     protected char[] description;
     protected int numberOfValidChars;
@@ -60,8 +60,9 @@ public abstract class Log implements IData {
     public void setCoordinates(Coordinate[] coordinates) { if (coordinates.length == 2) this.coordinates = coordinates; }
 
     public boolean equals(IRecord other) {
-        if (other instanceof IData) {
-            return this.equals((IData) other);
+        if (other instanceof Log) {
+            if (this.isInstanceOfSame(other))
+                return ((Log) other).id == this.id;
         }
         return false;
     }
@@ -80,7 +81,7 @@ public abstract class Log implements IData {
      */
     protected boolean editLog(Log other) {
         if (other != null) {
-            if (this.equals(other)) {
+            if (this.equals((IData) other)) {
                 // TODO check ci to takto mozem urobit
                 this.description = other.description;
                 this.numberOfValidChars = other.numberOfValidChars;
@@ -104,4 +105,11 @@ public abstract class Log implements IData {
      * @return
      */
     public abstract String getFullDescription();
+
+    /**
+     * Skontroluje, ci je instanciou rovnakeho potomka
+     * @param other
+     * @return
+     */
+    public abstract boolean isInstanceOfSame(IRecord other);
 }

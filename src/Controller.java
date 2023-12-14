@@ -5,6 +5,7 @@ import Model.QuadTree.Coordinates.Width;
 import Model.Data.Building;
 import Model.Data.Log;
 import Model.Data.Parcel;
+import Model.QuadTree.Data.IData;
 
 import java.util.ArrayList;
 
@@ -12,10 +13,10 @@ public class Controller {
     private View view;
     private Model model;
 
-    public Controller(View view, int maxDepth,
+    public Controller(View view, int maxDepthQuadTree, int maxHashSize, int blockFactor, int overflowBlockFactor, String filename,
                       String minWidth, double minWidthPosition, String minLength, double minLengthPosition,
                       String  maxWidth, double maxWidthPosition, String maxLength, double maxLengthPosition) {
-        this.model = new Model(maxDepth,
+        this.model = new Model(maxDepthQuadTree, maxHashSize, blockFactor, overflowBlockFactor, filename,
                 this.stringToWidth(minWidth), minWidthPosition, this.stringToLength(minLength), minLengthPosition,
                 this.stringToWidth(maxWidth), maxWidthPosition, this.stringToLength(maxLength), maxLengthPosition);
         this.view = view;
@@ -39,7 +40,7 @@ public class Controller {
         }
     }
 
-    public void createParcel(int cisloParcely, String description,
+    public void createParcel(String description,
                                String minWidth, double minWidthPosition, String minLength, double minLengthPosition,
                                String maxWidth, double maxWidthPosition, String maxLength, double maxLengthPosition) {
         Width eMinWidth = this.stringToWidth(minWidth),
@@ -47,7 +48,7 @@ public class Controller {
         Length eMinLength = this.stringToLength(minLength),
                 eMaxLength = this.stringToLength(maxLength);
 
-        if (this.model.insertParcel(cisloParcely, description,
+        if (this.model.insertParcel(description,
                 new Coordinate(eMinWidth, minWidthPosition, eMinLength, minLengthPosition),
                 new Coordinate(eMaxWidth, maxWidthPosition, eMaxLength, maxLengthPosition))) {
             System.out.println("Parcel sa uspesne vlozil");
@@ -75,9 +76,12 @@ public class Controller {
         }
     }
 
-    public void findBuildings(String width, double widthPosition, String length, double lengthPosition) {
-        ArrayList<Log> foundList = this.model.findBuildingsAtCoordinate(
-                new Coordinate(this.stringToWidth(width), widthPosition, this.stringToLength(length), lengthPosition));
+    public void findBuilding(long id) {
+        // TODO findBuilding na zaklade id
+    }
+    public void findBuildings(long[] ids, int validBuildings) {
+        // TODO implementovat to do viewu
+        ArrayList<Log> foundList = this.model.findBuildingsWithIDs(ids, validBuildings);
         if (foundList == null) {
             this.view.errorOutOfBorders();
             return;
@@ -97,9 +101,13 @@ public class Controller {
         this.view.showResults(foundList);
     }
 
-    public void findParcels(String width, double widthPosition, String length, double lengthPosition) {
-        ArrayList<Log> foundList = this.model.findParcelsAtCoordinate(
-                new Coordinate(this.stringToWidth(width), widthPosition, this.stringToLength(length), lengthPosition));
+    public void findParcel(long id) {
+        // TODO findParcel na zaklade id
+    }
+
+    public void findParcels(long[] ids, int validParcels) {
+        // TODO implementovat to do viewu
+        ArrayList<Log> foundList = this.model.findParcelsWithIDs(ids, validParcels);
         if (foundList == null) {
             this.view.errorOutOfBorders();
             return;
@@ -119,7 +127,7 @@ public class Controller {
         this.view.showResults(foundList);
     }
 
-    public void findProperties(String width, double widthPosition, String length, double lengthPosition) {
+    /*public void findProperties(String width, double widthPosition, String length, double lengthPosition) {
         ArrayList<Log> foundList = this.model.findPropertiesAtCoordinate(
                 new Coordinate(this.stringToWidth(width), widthPosition, this.stringToLength(length), lengthPosition));
         if (foundList == null) {
@@ -139,22 +147,23 @@ public class Controller {
             return;
         }
         this.view.showResults(foundList);
-    }
+    }*/
 
     public void findAllProperties() {
-        ArrayList<Log> foundList = this.model.findAllProperties();
-        this.view.showResults(foundList);
+        // TODO findAllProperties
+//        ArrayList<Log> foundList = this.model.findAllProperties();
+//        this.view.showResults(foundList);
     }
 
     public Log edit(Log oldLog, long id, int cislo, String description,
                      String minWidth, double minWidthPosition, String minLength, double minLengthPosition,
                      String maxWidth, double maxWidthPosition, String maxLength, double maxLengthPosition) {
-
+        //TODO checknut edit
         if (oldLog instanceof Building) {
             Building newLog = new Building(id, cislo, description,
                     new Coordinate(this.stringToWidth(minWidth), minWidthPosition, this.stringToLength(minLength), minLengthPosition),
                     new Coordinate(this.stringToWidth(maxWidth), maxWidthPosition, this.stringToLength(maxLength), maxLengthPosition));
-            if (oldLog.equals(newLog)) {
+            if (oldLog.equals((IData) newLog)) {
                 oldLog.edit(newLog);
             } else {
                 if (model.insertBuilding(newLog)) {
@@ -166,10 +175,10 @@ public class Controller {
             }
             return newLog;
         } else if (oldLog instanceof Parcel) {
-            Parcel newLog = new Parcel(id, cislo, description,
+            Parcel newLog = new Parcel(id, description,
                     new Coordinate(this.stringToWidth(minWidth), minWidthPosition, this.stringToLength(minLength), minLengthPosition),
                     new Coordinate(this.stringToWidth(maxWidth), maxWidthPosition, this.stringToLength(maxLength), maxLengthPosition));
-            if (oldLog.equals(newLog)) {
+            if (oldLog.equals((IData) newLog)) {
                 oldLog.edit(newLog);
             } else {
                 if (this.model.insertParcel(newLog)) {
@@ -188,8 +197,8 @@ public class Controller {
         this.model.remove(log);
     }
 
-    public void saveInFile(String fileName) {
-        if (this.model.saveInFile(fileName)) {
+    public void saveInFile() {
+        if (this.model.saveInFile()) {
             this.view.infoSuborBolUlozeny();
         } else {
             this.view.errorSuborNebolUlozeny();
@@ -197,13 +206,13 @@ public class Controller {
 
     }
 
-    public void loadFromFile(String fileName) {
+    /*public void loadFromFile(String fileName) {
         if (this.model.loadFromFile(fileName)) {
             this.view.infoSuborSaNacital();
         } else {
             this.view.errorSuborSaNenacital();
         }
-    }
+    }*/
 
     private Width stringToWidth(String width) {
         if (width.equals("North")) {

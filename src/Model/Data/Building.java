@@ -1,5 +1,6 @@
 package Model.Data;
 
+import Model.DynamicHashFile.Data.IRecord;
 import Model.QuadTree.Coordinates.Coordinate;
 import Model.QuadTree.Coordinates.Length;
 import Model.QuadTree.Coordinates.Width;
@@ -40,7 +41,6 @@ public class Building extends Log {
         if (cmpMin[0] == 0 && cmpMin[1] == 0 && cmpMax[0] == 0 && cmpMax[1] == 0) {
             if (other instanceof Log) {
                 if (super.id == ((Log) other).id) {
-                    // TODO prerobit ked budem robit specialne classy pre QuadTree
                     if (other instanceof Building) {
                         return 1;
                     }
@@ -90,6 +90,11 @@ public class Building extends Log {
     @Override
     public String getFullDescription() {
         return "Building: " + this.supisneCislo + " Description: " + Arrays.toString(this.description);
+    }
+
+    @Override
+    public boolean isInstanceOfSame(IRecord other) {
+        return other instanceof Building;
     }
 
     public int getSupisneCislo() {
