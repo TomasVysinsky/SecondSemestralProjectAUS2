@@ -98,26 +98,28 @@ public class Model {
 
         // Nasledne sa pridaju vsetky prislusne parcely
         ArrayList<IData> parcely = this.parcelsQuadTree.find(newBuilding.getCoordinates()[0], newBuilding.getCoordinates()[1]);
-        boolean writeCollision = true;
+        ArrayList<IData> neplatne = new ArrayList<IData>();
+        for (IData data : parcely) {
+            Parcel foundParcel = this.convertQTParcel((QuadTreeParcel) data);
+            foundParcel = this.parcelFile.find(foundParcel);
+            if (foundParcel.getBuildings().length == foundParcel.getValidBuildings()) {
+                neplatne.add(data);
+            }
+        }
+        for (IData data : neplatne) {
+            parcely.remove(data);
+        }
         if (parcely.size() > newBuilding.getParcels().length) {
-            writeCollision = false;
-        } else {
-            for (IData data : parcely) {
-                Parcel foundParcel = this.convertQTParcel((QuadTreeParcel) data);
-                foundParcel = this.parcelFile.find(foundParcel);
-                if (foundParcel.getBuildings().length == foundParcel.getValidBuildings()) {
-                    writeCollision = false;
-                    break;
-                }
+            int len = newBuilding.getParcels().length;
+            for (int i = 0; i <= parcely.size() - len; i++) {
+                parcely.remove(0);
             }
         }
 
-        if (writeCollision) {
-            for (IData data : parcely) {
-                if (!newBuilding.addProperty(this.convertQTParcel((QuadTreeParcel) data)))
-                    break;
+        for (IData data : parcely) {
+            if (!newBuilding.addProperty(this.convertQTParcel((QuadTreeParcel) data)))
+                break;
 
-            }
         }
 
         // Zaznam sa ulozi do suboru
@@ -127,13 +129,11 @@ public class Model {
         }
 
         // Budova sa ulozi do prislusnych parcelov, pokial je to mozne
-        if (writeCollision) {
-            for (IData data : parcely) {
-                Parcel foundParcel = this.convertQTParcel((QuadTreeParcel) data);
-                foundParcel = this.parcelFile.find(foundParcel);
-                if (foundParcel.addProperty(newBuilding))
-                    this.parcelFile.edit(foundParcel);
-            }
+        for (IData data : parcely) {
+            Parcel foundParcel = this.convertQTParcel((QuadTreeParcel) data);
+            foundParcel = this.parcelFile.find(foundParcel);
+            if (foundParcel.addProperty(newBuilding))
+                this.parcelFile.edit(foundParcel);
         }
 
         return true;
@@ -156,25 +156,27 @@ public class Model {
         }
 
         ArrayList<IData> budovy = this.buildingsQuadTree.find(newParcel.getCoordinates()[0], newParcel.getCoordinates()[1]);
-        boolean writeCollision = true;
+        ArrayList<IData> neplatne = new ArrayList<IData>();
+        for (IData data : budovy) {
+            Building foundBuilding = this.convertQTBuilding((QuadTreeBuilding) data);
+            foundBuilding = this.buildingFile.find(foundBuilding);
+            if (foundBuilding.getParcels().length == foundBuilding.getValidParcels()) {
+                neplatne.add(data);
+            }
+        }
+        for (IData data : neplatne) {
+            budovy.remove(data);
+        }
         if (budovy.size() > newParcel.getBuildings().length) {
-            writeCollision = false;
-        } else {
-            for (IData data : budovy) {
-                Building foundBuilding = this.convertQTBuilding((QuadTreeBuilding) data);
-                foundBuilding = this.buildingFile.find(foundBuilding);
-                if (foundBuilding.getParcels().length == foundBuilding.getValidParcels()) {
-                    writeCollision = false;
-                    break;
-                }
+            int len = newParcel.getBuildings().length;
+            for (int i = 0; i <= budovy.size() - len; i++) {
+                budovy.remove(0);
             }
         }
 
-        if (writeCollision) {
-            for (IData data : budovy) {
-                if (!newParcel.addProperty(this.convertQTBuilding((QuadTreeBuilding) data)))
-                    break;
-            }
+        for (IData data : budovy) {
+            if (!newParcel.addProperty(this.convertQTBuilding((QuadTreeBuilding) data)))
+                break;
         }
 
         if (!this.parcelFile.insert(newParcel)) {
@@ -182,13 +184,11 @@ public class Model {
             return false;
         }
 
-        if (writeCollision) {
-            for (IData data : budovy) {
-                Building foundBuilding = this.convertQTBuilding((QuadTreeBuilding) data);
-                foundBuilding = this.buildingFile.find(foundBuilding);
-                if (foundBuilding.addProperty(newParcel))
-                    this.buildingFile.edit(foundBuilding);
-            }
+        for (IData data : budovy) {
+            Building foundBuilding = this.convertQTBuilding((QuadTreeBuilding) data);
+            foundBuilding = this.buildingFile.find(foundBuilding);
+            if (foundBuilding.addProperty(newParcel))
+                this.buildingFile.edit(foundBuilding);
         }
 
         return true;
@@ -263,36 +263,6 @@ public class Model {
         }
         return finalDataList;
     }
-
-    /*public ArrayList<Log> findPropertiesAtCoordinate(Coordinate coordinate) {
-        ArrayList<IData> dataList = this.allPropertiesQuadTree.find(coordinate);
-        if (dataList == null)
-            return null;
-        ArrayList<Log> finalDataList = new ArrayList<Log>(dataList.size());
-        for (int i = 0; i < dataList.size(); i++)
-            finalDataList.add((Log) dataList.get(i));
-        return finalDataList;
-    }
-
-    public ArrayList<Log> findPropertiesAtField(Coordinate minCoordinate, Coordinate maxCoordinate) {
-        ArrayList<IData> dataList = this.allPropertiesQuadTree.find(minCoordinate, maxCoordinate);
-        if (dataList == null)
-            return null;
-        ArrayList<Log> finalDataList = new ArrayList<Log>(dataList.size());
-        for (int i = 0; i < dataList.size(); i++)
-            finalDataList.add((Log) dataList.get(i));
-        return finalDataList;
-    }*/
-
-    /*public ArrayList<Log> findAllProperties() {
-        ArrayList<IData> dataList = this.allPropertiesQuadTree.getAllData();
-        if (dataList == null)
-            return null;
-        ArrayList<Log> finalDataList = new ArrayList<Log>(dataList.size());
-        for (int i = 0; i < dataList.size(); i++)
-            finalDataList.add((Log) dataList.get(i));
-        return finalDataList;
-    }*/
 
     public void remove(Log data) {
         if (data == null)

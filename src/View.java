@@ -21,7 +21,6 @@ public class View extends JFrame {
     private JTextField maxWidthPositionField;
     private JTextField maxLengthPositionField;
     private JButton findBuildingsButton;
-    private JButton findAllPropertiesButton;
     private JButton findParcelsButton;
     private JButton generateBuildingsButton;
     private JPanel Buttons;
@@ -50,7 +49,6 @@ public class View extends JFrame {
     private JButton pointFindButton;
     private JButton fileBackupButton;
     private JLabel hlbkaOrFile;
-//    private JButton findAllPropertiesInButton;
     private JLabel pocetPrvkovTextField;
     private JTextArea buildingFileTextArea;
     private JTextArea parcelFileTextArea;
@@ -58,7 +56,7 @@ public class View extends JFrame {
     private JScrollPane ParcelFile;
     private DefaultListModel<String> model = new DefaultListModel<>();
     private ActionListener buildingCreator, parcelCreator, treeCreator,
-            pointFindParcel, pointFindBuilding, intervalFindParcel, intervalFindBuilding, intervalFindAll;
+            pointFindParcel, pointFindBuilding, intervalFindParcel, intervalFindBuilding;
     private ArrayList<Log> currentLogs;
     int currentIndex;
 
@@ -85,8 +83,6 @@ public class View extends JFrame {
         showFindButtons(false);
         showGenerateButtons(false);
         createButton.setText("Open the file");
-//        buildingFileTextArea.setEnabled(false);
-//        parcelFileTextArea.setEnabled(false);
 
         currentIndex = -1;
         resultList.setModel(model);
@@ -205,22 +201,6 @@ public class View extends JFrame {
             }
         };
 
-        findAllPropertiesButton.addActionListener(intervalFindAll = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (!bothCoordinatesFilledUp()) {
-                    errorNieSuVyplneneVsetkyPolia();
-                    return;
-                }
-                errorOutOfBorders();
-                /*controller.findProperties(
-                        (String) minWidthComboBox.getSelectedItem(), Double.parseDouble(minWidthPositionField.getText()),
-                        (String) minLengthComboBox.getSelectedItem(), Double.parseDouble(minLengthPositionField.getText()),
-                        (String) maxWidthComboBox.getSelectedItem(), Double.parseDouble(maxWidthPositionField.getText()),
-                        (String) maxLengthComboBox.getSelectedItem(), Double.parseDouble(maxLengthPositionField.getText()));*/
-            }
-        });
-
         pointFindBuilding = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -258,8 +238,6 @@ public class View extends JFrame {
                 findBuildingsButton.addActionListener(intervalFindBuilding);
                 findParcelsButton.removeActionListener(pointFindParcel);
                 findParcelsButton.addActionListener(intervalFindParcel);
-//                findAllPropertiesButton.removeActionListener(pointFindAll);
-//                findAllPropertiesButton.addActionListener(intervalFindAll);
             }
         });
 
@@ -281,8 +259,6 @@ public class View extends JFrame {
                 findBuildingsButton.addActionListener(pointFindBuilding);
                 findParcelsButton.removeActionListener(intervalFindParcel);
                 findParcelsButton.addActionListener(pointFindParcel);
-//                findAllPropertiesButton.removeActionListener(intervalFindAll);
-//                findAllPropertiesButton.addActionListener(pointFindAll);
             }
         });
 
@@ -448,20 +424,6 @@ public class View extends JFrame {
                 treeDepthTextField.setEnabled(false);
             }
         });
-
-        /*findAllPropertiesInButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                controller.findAllProperties();
-                clearFieldsAfterEditing();
-                disablePropertyAttributes();
-                pocetGenerovanychPrvkovTextField.setEnabled(false);
-                treeDepthTextField.setEnabled(false);
-                showEditButtons(false);
-                showFindButtons(false);
-                showGenerateButtons(false);
-            }
-        });*/
     }
 
     public void showResults() {
@@ -553,7 +515,6 @@ public class View extends JFrame {
         pointFindButton.setEnabled(true);
         generateButton.setEnabled(true);
         fileBackupButton.setEnabled(true);
-//        findAllPropertiesInButton.setEnabled(true);
         treeDepthTextField.setEnabled(false);
         treeDepthTextField.setText("");
         pocetGenerovanychPrvkovTextField.setEnabled(false);
@@ -662,7 +623,6 @@ public class View extends JFrame {
     public void showFindButtons(boolean show) {
         findBuildingsButton.setVisible(show);
         findParcelsButton.setVisible(show);
-        findAllPropertiesButton.setVisible(show);
     }
 
     public void showGenerateButtons(boolean show) {

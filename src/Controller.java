@@ -124,33 +124,6 @@ public class Controller {
         this.view.showResults(foundList);
     }
 
-    /*public void findProperties(String width, double widthPosition, String length, double lengthPosition) {
-        ArrayList<Log> foundList = this.model.findPropertiesAtCoordinate(
-                new Coordinate(this.stringToWidth(width), widthPosition, this.stringToLength(length), lengthPosition));
-        if (foundList == null) {
-            this.view.errorOutOfBorders();
-            return;
-        }
-        this.view.showResults(foundList);
-    }
-
-    public void findProperties(String minWidth, double minWidthPosition, String minLength, double minLengthPosition,
-                              String maxWidth, double maxWidthPosition, String maxLength, double maxLengthPosition) {
-        ArrayList<Log> foundList = this.model.findPropertiesAtField(
-                new Coordinate(this.stringToWidth(minWidth), minWidthPosition, this.stringToLength(minLength), minLengthPosition),
-                new Coordinate(this.stringToWidth(maxWidth), maxWidthPosition, this.stringToLength(maxLength), maxLengthPosition));
-        if (foundList == null) {
-            this.view.errorOutOfBorders();
-            return;
-        }
-        this.view.showResults(foundList);
-    }
-
-    public void findAllProperties() {
-//        ArrayList<Log> foundList = this.model.findAllProperties();
-//        this.view.showResults(foundList);
-    }*/
-
     public Log edit(Log oldLog, long id, int cislo, String description,
                      String minWidth, double minWidthPosition, String minLength, double minLengthPosition,
                      String maxWidth, double maxWidthPosition, String maxLength, double maxLengthPosition) {
@@ -161,33 +134,11 @@ public class Controller {
                     new Coordinate(this.stringToWidth(maxWidth), maxWidthPosition, this.stringToLength(maxLength), maxLengthPosition));
             logToReturn = this.model.editBuilding((Building) oldLog, newLog);
 
-            /*if (oldLog.equals((IData) newLog)) {
-                oldLog.edit(newLog);
-            } else {
-                if (model.insertBuilding(newLog)) {
-                    this.model.remove(oldLog);
-                } else {
-                    this.view.errorOutOfBorders();
-                    return oldLog;
-                }
-            }
-            return newLog;*/
         } else if (oldLog instanceof Parcel) {
             Parcel newLog = new Parcel(id, description,
                     new Coordinate(this.stringToWidth(minWidth), minWidthPosition, this.stringToLength(minLength), minLengthPosition),
                     new Coordinate(this.stringToWidth(maxWidth), maxWidthPosition, this.stringToLength(maxLength), maxLengthPosition));
             logToReturn = this.model.editParcel((Parcel) oldLog, newLog);
-            /*if (oldLog.equals((IData) newLog)) {
-                oldLog.edit(newLog);
-            } else {
-                if (this.model.insertParcel(newLog)) {
-                    this.model.remove(oldLog);
-                } else {
-                    this.view.errorOutOfBorders();
-                    return oldLog;
-                }
-            }
-            return logToReturn;*/
         }
         return logToReturn;
     }
@@ -212,14 +163,6 @@ public class Controller {
     public String getParcelFileAsString() {
         return this.model.getParcelFileAsString();
     }
-
-    /*public void loadFromFile(String fileName) {
-        if (this.model.loadFromFile(fileName)) {
-            this.view.infoSuborSaNacital();
-        } else {
-            this.view.errorSuborSaNenacital();
-        }
-    }*/
 
     private Width stringToWidth(String width) {
         if (width.equals("North")) {
