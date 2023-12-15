@@ -98,10 +98,26 @@ public class Model {
 
         // Nasledne sa pridaju vsetky prislusne parcely
         ArrayList<IData> parcely = this.parcelsQuadTree.find(newBuilding.getCoordinates()[0], newBuilding.getCoordinates()[1]);
-        for (IData data : parcely) {
-            if (!newBuilding.addProperty(this.convertQTParcel((QuadTreeParcel) data)))
-                break;
+        boolean writeCollision = true;
+        if (parcely.size() > newBuilding.getParcels().length) {
+            writeCollision = false;
+        } else {
+            for (IData data : parcely) {
+                Parcel foundParcel = this.convertQTParcel((QuadTreeParcel) data);
+                foundParcel = this.parcelFile.find(foundParcel);
+                if (foundParcel.getBuildings().length == foundParcel.getValidBuildings()) {
+                    writeCollision = false;
+                    break;
+                }
+            }
+        }
 
+        if (writeCollision) {
+            for (IData data : parcely) {
+                if (!newBuilding.addProperty(this.convertQTParcel((QuadTreeParcel) data)))
+                    break;
+
+            }
         }
 
         // Zaznam sa ulozi do suboru
@@ -111,11 +127,13 @@ public class Model {
         }
 
         // Budova sa ulozi do prislusnych parcelov, pokial je to mozne
-        for (IData data : parcely) {
-            Parcel foundParcel = this.convertQTParcel((QuadTreeParcel) data);
-            foundParcel = this.parcelFile.find(foundParcel);
-            if (foundParcel.addProperty(newBuilding))
-                this.parcelFile.edit(foundParcel);
+        if (writeCollision) {
+            for (IData data : parcely) {
+                Parcel foundParcel = this.convertQTParcel((QuadTreeParcel) data);
+                foundParcel = this.parcelFile.find(foundParcel);
+                if (foundParcel.addProperty(newBuilding))
+                    this.parcelFile.edit(foundParcel);
+            }
         }
 
         return true;
@@ -138,9 +156,25 @@ public class Model {
         }
 
         ArrayList<IData> budovy = this.buildingsQuadTree.find(newParcel.getCoordinates()[0], newParcel.getCoordinates()[1]);
-        for (IData data : budovy) {
-            if (!newParcel.addProperty(this.convertQTBuilding((QuadTreeBuilding) data)))
-                break;
+        boolean writeCollision = true;
+        if (budovy.size() > newParcel.getBuildings().length) {
+            writeCollision = false;
+        } else {
+            for (IData data : budovy) {
+                Building foundBuilding = this.convertQTBuilding((QuadTreeBuilding) data);
+                foundBuilding = this.buildingFile.find(foundBuilding);
+                if (foundBuilding.getParcels().length == foundBuilding.getValidParcels()) {
+                    writeCollision = false;
+                    break;
+                }
+            }
+        }
+
+        if (writeCollision) {
+            for (IData data : budovy) {
+                if (!newParcel.addProperty(this.convertQTBuilding((QuadTreeBuilding) data)))
+                    break;
+            }
         }
 
         if (!this.parcelFile.insert(newParcel)) {
@@ -148,11 +182,13 @@ public class Model {
             return false;
         }
 
-        for (IData data : budovy) {
-            Building foundBuilding = this.convertQTBuilding((QuadTreeBuilding) data);
-            foundBuilding = this.buildingFile.find(foundBuilding);
-            if (foundBuilding.addProperty(newParcel))
-                this.buildingFile.edit(foundBuilding);
+        if (writeCollision) {
+            for (IData data : budovy) {
+                Building foundBuilding = this.convertQTBuilding((QuadTreeBuilding) data);
+                foundBuilding = this.buildingFile.find(foundBuilding);
+                if (foundBuilding.addProperty(newParcel))
+                    this.buildingFile.edit(foundBuilding);
+            }
         }
 
         return true;
@@ -188,8 +224,11 @@ public class Model {
 
         // Potom vlozi prislusne prvky zo suboru do ArrayListu, ktory nasledne vrati
         ArrayList<Log> finalDataList = new ArrayList<Log>();
-        for (int i = 0; i < dataList.size(); i++)
-            finalDataList.add(this.buildingFile.find(this.convertQTBuilding((QuadTreeBuilding) dataList.get(i))));
+        for (int i = 0; i < dataList.size(); i++) {
+            Building building = this.buildingFile.find(this.convertQTBuilding((QuadTreeBuilding) dataList.get(i)));
+            if (building != null)
+                finalDataList.add(building);
+        }
         return finalDataList;
     }
 
@@ -217,8 +256,11 @@ public class Model {
 
         // Potom vlozi prislusne prvky zo suboru do ArrayListu, ktory nasledne vrati
         ArrayList<Log> finalDataList = new ArrayList<Log>();
-        for (int i = 0; i < dataList.size(); i++)
-            finalDataList.add(this.parcelFile.find(this.convertQTParcel((QuadTreeParcel) dataList.get(i))));
+        for (int i = 0; i < dataList.size(); i++) {
+            Parcel parcel = this.parcelFile.find(this.convertQTParcel((QuadTreeParcel) dataList.get(i)));
+            if (parcel != null)
+                finalDataList.add(parcel);
+        }
         return finalDataList;
     }
 
@@ -296,6 +338,13 @@ public class Model {
                 this.buildingsQuadTree.insert(newqtBuilding);
                 this.buildingsQuadTree.delete(oldqtBuilding);
 
+                long[] originalParcelIndexes = oldBuilding.getParcels();
+                for (int i = 0; i < oldBuilding.getValidParcels(); i++) {
+                    Parcel contacted = this.parcelFile.find(new Parcel(originalParcelIndexes[i], "", new Coordinate(), new Coordinate()));
+                    contacted.removeProperty(oldBuilding);
+                    this.parcelFile.edit(contacted);
+                }
+
                 ArrayList<IData> parcely = this.parcelsQuadTree.find(newBuilding.getCoordinates()[0], newBuilding.getCoordinates()[1]);
                 for (IData data : parcely) {
                     if (!newBuilding.addProperty(this.convertQTParcel((QuadTreeParcel) data)))
@@ -335,6 +384,13 @@ public class Model {
                 this.allPropertiesQuadTree.delete(oldqtParcel);
                 this.parcelsQuadTree.insert(newqtParcel);
                 this.parcelsQuadTree.delete(oldqtParcel);
+
+                long[] originalBuildingIndexes = oldParcel.getBuildings();
+                for (int i = 0; i < oldParcel.getValidBuildings(); i++) {
+                    Parcel contacted = this.parcelFile.find(new Parcel(originalBuildingIndexes[i], "", new Coordinate(), new Coordinate()));
+                    contacted.removeProperty(oldParcel);
+                    this.parcelFile.edit(contacted);
+                }
 
                 ArrayList<IData> budovy = this.buildingsQuadTree.find(newParcel.getCoordinates()[0], newParcel.getCoordinates()[1]);
                 for (IData data : budovy) {

@@ -95,8 +95,9 @@ public class DynamicHashFile <T extends IRecord> {
                         this.regularFile.freeTheBlock(external.getAddress());
                         IRecord[] originalArray = originalBlock.getRecords();
 
-                        for (IRecord currentRecord : originalArray) {
-                            DynamicHashFileNodeExternal nextNode = (DynamicHashFileNodeExternal) newInternal.getNextNode(currentRecord.getHash());
+                        for (int i = 0; i < originalBlock.getValidCount(); i++) {
+//                        for (IRecord currentRecord : originalArray) {
+                            DynamicHashFileNodeExternal nextNode = (DynamicHashFileNodeExternal) newInternal.getNextNode(originalArray[i].getHash());
                             if (nextNode.getAddress() == -1) {
                                 // Vetva ak node este nema alokovany block
                                 int freeBlock = this.regularFile.getRemovedFreeBlock();
@@ -108,9 +109,9 @@ public class DynamicHashFile <T extends IRecord> {
 
                             // Vlozenie aktualne triedeneho zaznamu do spravneho blocku
                             if (nextNode == leftSon) {
-                                leftSonBlock.insert((T) currentRecord);
+                                leftSonBlock.insert((T) originalArray[i]);
                             } else {
-                                rigthSonBlock.insert((T) currentRecord);
+                                rigthSonBlock.insert((T) originalArray[i]);
                             }
                             nextNode.increaseCountBy(1);
                         }

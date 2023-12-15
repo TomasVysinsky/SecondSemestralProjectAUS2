@@ -4,11 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="df963b7d-2346-4567-b4d9-bdccb337eaa4" name="Changes" comment="Vypis suborov do GUI">
+    <list default="true" id="df963b7d-2346-4567-b4d9-bdccb337eaa4" name="Changes" comment="Debug a vyhladavanie podla id">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Data/Building.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Data/Building.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Data/Parcel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Data/Parcel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/DynamicHashFile/BinaryFileManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/DynamicHashFile/BinaryFileManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFile.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Model/Model.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Model.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/View.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/View.form" afterDir="false" />
@@ -97,7 +95,7 @@
       <workItem from="1700860000180" duration="322000" />
       <workItem from="1700860378472" duration="79769000" />
       <workItem from="1701388650728" duration="340000" />
-      <workItem from="1701388999126" duration="150524000" />
+      <workItem from="1701388999126" duration="159952000" />
     </task>
     <task id="LOCAL-00001" summary="Proper find finished">
       <option name="closed" value="true" />
@@ -475,7 +473,15 @@
       <option name="project" value="LOCAL" />
       <updated>1702588278348</updated>
     </task>
-    <option name="localTasksCounter" value="48" />
+    <task id="LOCAL-00048" summary="Debug a vyhladavanie podla id">
+      <option name="closed" value="true" />
+      <created>1702594602987</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1702594602988</updated>
+    </task>
+    <option name="localTasksCounter" value="49" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -496,7 +502,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$" />
     </ignored-roots>
-    <MESSAGE value="IRecord ready" />
     <MESSAGE value="Insert buildnuty neotestovany" />
     <MESSAGE value="Find buildnuty neotestovany" />
     <MESSAGE value="Test struktury buildnuty neotestovany" />
@@ -521,7 +526,8 @@
     <MESSAGE value="Edit done, Bugy opravene" />
     <MESSAGE value="Edit done: ukladanie parcelov do budov a naopak" />
     <MESSAGE value="Vypis suborov do GUI" />
-    <option name="LAST_COMMIT_MESSAGE" value="Vypis suborov do GUI" />
+    <MESSAGE value="Debug a vyhladavanie podla id" />
+    <option name="LAST_COMMIT_MESSAGE" value="Debug a vyhladavanie podla id" />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>

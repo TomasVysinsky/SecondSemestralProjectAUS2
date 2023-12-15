@@ -87,6 +87,8 @@ public class BinaryFileManager<T extends IRecord> {
      * @param address
      */
     public void freeTheBlock(int address) {
+        if (address < 0)
+            return;
         Block<T> blockToSetFree = this.readBlock(address);
         int lastBlockAddress = this.getLastBlockAddress();
 

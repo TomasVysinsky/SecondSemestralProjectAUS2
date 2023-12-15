@@ -84,7 +84,7 @@ public class View extends JFrame {
         showEditButtons(false);
         showFindButtons(false);
         showGenerateButtons(false);
-        createButton.setText("Create new tree");
+        createButton.setText("Open the file");
 //        buildingFileTextArea.setEnabled(false);
 //        parcelFileTextArea.setEnabled(false);
 
@@ -423,6 +423,10 @@ public class View extends JFrame {
                 showEditButtons(false);
                 infoDataBoliZmazane();
                 showFiles();
+                findBuildingsButton.removeActionListener(intervalFindBuilding);
+                findBuildingsButton.removeActionListener(pointFindBuilding);
+                findParcelsButton.removeActionListener(intervalFindParcel);
+                findParcelsButton.removeActionListener(pointFindParcel);
             }
         });
         fileBackupButton.addActionListener(new ActionListener() {
@@ -537,7 +541,7 @@ public class View extends JFrame {
 
     private void createController() {
         controller = new Controller(this, Integer.parseInt(treeDepthTextField.getText()),
-                10, 3, 4, pocetGenerovanychPrvkovTextField.getText(),
+                3, 3, 4, pocetGenerovanychPrvkovTextField.getText(),
                 (String) minWidthComboBox.getSelectedItem(), Double.parseDouble(minWidthPositionField.getText()),
                 (String) minLengthComboBox.getSelectedItem(), Double.parseDouble(minLengthPositionField.getText()),
                 (String) maxWidthComboBox.getSelectedItem(), Double.parseDouble(maxWidthPositionField.getText()),
