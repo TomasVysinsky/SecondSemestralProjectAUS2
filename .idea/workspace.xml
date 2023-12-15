@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="df963b7d-2346-4567-b4d9-bdccb337eaa4" name="Changes" comment="Bug na Edite opraveny">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Model.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Model.java" afterDir="false" />
+    <list default="true" id="df963b7d-2346-4567-b4d9-bdccb337eaa4" name="Changes" comment="Bug na Edite a Inserte opraveny">
+      <change beforePath="$PROJECT_DIR$/src/View.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,15 +90,7 @@
       <workItem from="1700860000180" duration="322000" />
       <workItem from="1700860378472" duration="79769000" />
       <workItem from="1701388650728" duration="340000" />
-      <workItem from="1701388999126" duration="174624000" />
-    </task>
-    <task id="LOCAL-00004" summary="New working GUI">
-      <option name="closed" value="true" />
-      <created>1699410528035</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1699410528036</updated>
+      <workItem from="1701388999126" duration="175382000" />
     </task>
     <task id="LOCAL-00005" summary="Choosing a property when found finished">
       <option name="closed" value="true" />
@@ -485,7 +476,15 @@
       <option name="project" value="LOCAL" />
       <updated>1702614714097</updated>
     </task>
-    <option name="localTasksCounter" value="53" />
+    <task id="LOCAL-00053" summary="Bug na Edite a Inserte opraveny">
+      <option name="closed" value="true" />
+      <created>1702628143804</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1702628143804</updated>
+    </task>
+    <option name="localTasksCounter" value="54" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -506,7 +505,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$" />
     </ignored-roots>
-    <MESSAGE value="File manager hotovy naimplementovany a otestovany" />
     <MESSAGE value="V inserte je implementovany preplnovaci block" />
     <MESSAGE value="Find naimplementovany aj otestovany. Delete rozrobeny." />
     <MESSAGE value="Delete naimplementovany, neotestovany" />
@@ -531,7 +529,8 @@
     <MESSAGE value="Oprava vypisu blockov" />
     <MESSAGE value="Drobna oprava v inserte a edite" />
     <MESSAGE value="Bug na Edite opraveny" />
-    <option name="LAST_COMMIT_MESSAGE" value="Bug na Edite opraveny" />
+    <MESSAGE value="Bug na Edite a Inserte opraveny" />
+    <option name="LAST_COMMIT_MESSAGE" value="Bug na Edite a Inserte opraveny" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

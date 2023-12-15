@@ -59,6 +59,7 @@ public class View extends JFrame {
             pointFindParcel, pointFindBuilding, intervalFindParcel, intervalFindBuilding;
     private ArrayList<Log> currentLogs;
     int currentIndex;
+    boolean homogeneList;
 
     public View () {
         setContentPane(databaseManipulator);
@@ -83,6 +84,7 @@ public class View extends JFrame {
         showFindButtons(false);
         showGenerateButtons(false);
         createButton.setText("Open the file");
+        homogeneList = true;
 
         currentIndex = -1;
         resultList.setModel(model);
@@ -238,6 +240,7 @@ public class View extends JFrame {
                 findBuildingsButton.addActionListener(intervalFindBuilding);
                 findParcelsButton.removeActionListener(pointFindParcel);
                 findParcelsButton.addActionListener(intervalFindParcel);
+                homogeneList = true;
             }
         });
 
@@ -259,6 +262,7 @@ public class View extends JFrame {
                 findBuildingsButton.addActionListener(pointFindBuilding);
                 findParcelsButton.removeActionListener(intervalFindParcel);
                 findParcelsButton.addActionListener(pointFindParcel);
+                homogeneList = false;
             }
         });
 
@@ -381,6 +385,10 @@ public class View extends JFrame {
                 resultList.setSelectedIndex(currentIndex);
                 infoDataBoliUpravene();
                 showFiles();
+                if (currentLogs != null && !homogeneList) {
+                    currentLogs.clear();
+                    showResults();
+                }
             }
         });
 
@@ -403,6 +411,10 @@ public class View extends JFrame {
                 findBuildingsButton.removeActionListener(pointFindBuilding);
                 findParcelsButton.removeActionListener(intervalFindParcel);
                 findParcelsButton.removeActionListener(pointFindParcel);
+                if (currentLogs != null && !homogeneList) {
+                    currentLogs.clear();
+                    showResults();
+                }
             }
         });
         fileBackupButton.addActionListener(new ActionListener() {
