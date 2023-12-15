@@ -4,12 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="df963b7d-2346-4567-b4d9-bdccb337eaa4" name="Changes" comment="Cosi porobene a otestovane. Dajak to funguje ale su zvlastne pripady kedy sa to sprava divne">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Model.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Model.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/View.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/View.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/View.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View.java" afterDir="false" />
+    <list default="true" id="df963b7d-2346-4567-b4d9-bdccb337eaa4" name="Changes" comment="Oprava vypisu blockov">
+      <change beforePath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/DynamicHashFile/DynamicHashFile.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -94,23 +90,7 @@
       <workItem from="1700860000180" duration="322000" />
       <workItem from="1700860378472" duration="79769000" />
       <workItem from="1701388650728" duration="340000" />
-      <workItem from="1701388999126" duration="163657000" />
-    </task>
-    <task id="LOCAL-00001" summary="Proper find finished">
-      <option name="closed" value="true" />
-      <created>1699311102426</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1699311102426</updated>
-    </task>
-    <task id="LOCAL-00002" summary="It warns user when he tries to search properties out of borders">
-      <option name="closed" value="true" />
-      <created>1699393094194</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1699393094194</updated>
+      <workItem from="1701388999126" duration="170752000" />
     </task>
     <task id="LOCAL-00003" summary="Preparation of List in view for the edit and delete">
       <option name="closed" value="true" />
@@ -488,7 +468,23 @@
       <option name="project" value="LOCAL" />
       <updated>1702603541694</updated>
     </task>
-    <option name="localTasksCounter" value="50" />
+    <task id="LOCAL-00050" summary="Bug pri ukladani parciel do budov a naopak fixnuty. Z Modelu, Controlleru a Viewu su poodstranovane zbytocnosti">
+      <option name="closed" value="true" />
+      <created>1702607142180</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1702607142182</updated>
+    </task>
+    <task id="LOCAL-00051" summary="Oprava vypisu blockov">
+      <option name="closed" value="true" />
+      <created>1702607777273</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1702607777273</updated>
+    </task>
+    <option name="localTasksCounter" value="52" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -509,8 +505,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$" />
     </ignored-roots>
-    <MESSAGE value="Find buildnuty neotestovany" />
-    <MESSAGE value="Test struktury buildnuty neotestovany" />
     <MESSAGE value="Test struktury buildnuty otestovany, struktura oddebuggovana" />
     <MESSAGE value="File manager hotovy ale neotestovany ani nenaimplementovany v strukture" />
     <MESSAGE value="File manager hotovy naimplementovany a otestovany" />
@@ -534,23 +528,11 @@
     <MESSAGE value="Vypis suborov do GUI" />
     <MESSAGE value="Debug a vyhladavanie podla id" />
     <MESSAGE value="Cosi porobene a otestovane. Dajak to funguje ale su zvlastne pripady kedy sa to sprava divne" />
-    <option name="LAST_COMMIT_MESSAGE" value="Cosi porobene a otestovane. Dajak to funguje ale su zvlastne pripady kedy sa to sprava divne" />
+    <MESSAGE value="Bug pri ukladani parciel do budov a naopak fixnuty. Z Modelu, Controlleru a Viewu su poodstranovane zbytocnosti" />
+    <MESSAGE value="Oprava vypisu blockov" />
+    <option name="LAST_COMMIT_MESSAGE" value="Oprava vypisu blockov" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/Model/Model.java</url>
-          <line>163</line>
-          <option name="timeStamp" value="61" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/Model/Model.java</url>
-          <line>112</line>
-          <option name="timeStamp" value="67" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="Model.DynamicHashFile.Data.Block" memberName="validCount" />

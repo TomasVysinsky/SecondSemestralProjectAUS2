@@ -141,7 +141,7 @@ public class DynamicHashFile <T extends IRecord> {
                     } else {
                         // Vlozenie do aktualneho nodu
                         Block<T> currentBlock = this.regularFile.readBlock(external.getAddress());
-                        if (external.getCount() < this.regularFile.getBlockFactor()) {
+                        if (currentBlock.getValidCount() < this.regularFile.getBlockFactor()) {
                             // Vetva ak je v blocku regularneho suboru miesto
                             if (currentBlock == null) {
                                 System.out.println("Chyba pri nacitani blocku v inserte");
@@ -415,6 +415,8 @@ public class DynamicHashFile <T extends IRecord> {
     public boolean edit(T record) {
         // Najprv sa najde prislusny node a prezrie prislusny block v hlavnom subore
         DynamicHashFileNodeExternal external = this.findExternalNode(record);
+        if (external.getAddress() == -1)
+            return false;
         Block<T> blockFound = this.regularFile.readBlock(external.getAddress());
         int blocksFromRegular = 0;
         int currentAddress = external.getAddress();
