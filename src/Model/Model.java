@@ -533,6 +533,9 @@ public class Model {
     private String appendBuildingBlocksToString(ArrayList<Block<Building>> blocks, String text) {
         for (int i = 0; i < blocks.size(); i++) {
             text += "Block " + i + " Valid Count: " + blocks.get(i).getValidCount() + " Next Block: " + blocks.get(i).getNextBlock() + " Active: " + blocks.get(i).isActive() + "\n";
+            if (!blocks.get(i).isActive()) {
+                text += " Previous block: " + blocks.get(i).getPreviousBlockIfInactive();
+            }
             IRecord[] records = blocks.get(i).getRecords();
             for (int j = 0; j < blocks.get(i).getValidCount(); j++) {
                 text += ((Log)records[j]).getFullDescription() + "\n";
@@ -544,6 +547,9 @@ public class Model {
     private String appendParcelBlocksToString(ArrayList<Block<Parcel>> blocks, String text) {
         for (int i = 0; i < blocks.size(); i++) {
             text += "Block " + i + " Valid Count: " + blocks.get(i).getValidCount() + " Next Block: " + blocks.get(i).getNextBlock() + " Active: " + blocks.get(i).isActive() + "\n";
+            if (!blocks.get(i).isActive()) {
+                text += " Previous block: " + blocks.get(i).getPreviousBlockIfInactive();
+            }
             IRecord[] records = blocks.get(i).getRecords();
             for (int j = 0; j < blocks.get(i).getValidCount(); j++) {
                 text += ((Log)records[j]).getFullDescription() + "\n";
