@@ -110,16 +110,15 @@ public class Model {
             parcely.remove(data);
         }
         if (parcely.size() > newBuilding.getParcels().length) {
-            int len = newBuilding.getParcels().length;
-            for (int i = 0; i <= parcely.size() - len; i++) {
+            int len = parcely.size() - newBuilding.getParcels().length;
+            for (int i = 0; i < len; i++) {
                 parcely.remove(0);
             }
         }
 
         for (IData data : parcely) {
             if (!newBuilding.addProperty(this.convertQTParcel((QuadTreeParcel) data)))
-                break;
-
+                System.out.println("Pri Inserte budovy doslo k chybe");
         }
 
         // Zaznam sa ulozi do suboru
@@ -168,15 +167,15 @@ public class Model {
             budovy.remove(data);
         }
         if (budovy.size() > newParcel.getBuildings().length) {
-            int len = newParcel.getBuildings().length;
-            for (int i = 0; i <= budovy.size() - len; i++) {
+            int len = budovy.size() - newParcel.getBuildings().length;
+            for (int i = 0; i <= len; i++) {
                 budovy.remove(0);
             }
         }
 
         for (IData data : budovy) {
             if (!newParcel.addProperty(this.convertQTBuilding((QuadTreeBuilding) data)))
-                break;
+                System.out.println("Pri Inserte parcely doslo k chybe");
         }
 
         if (!this.parcelFile.insert(newParcel)) {
@@ -316,9 +315,27 @@ public class Model {
                 }
 
                 ArrayList<IData> parcely = this.parcelsQuadTree.find(newBuilding.getCoordinates()[0], newBuilding.getCoordinates()[1]);
+                ArrayList<IData> neplatne = new ArrayList<IData>();
+                for (IData data : parcely) {
+                    Parcel foundParcel = this.convertQTParcel((QuadTreeParcel) data);
+                    foundParcel = this.parcelFile.find(foundParcel);
+                    if (foundParcel.getBuildings().length == foundParcel.getValidBuildings()) {
+                        neplatne.add(data);
+                    }
+                }
+                for (IData data : neplatne) {
+                    parcely.remove(data);
+                }
+                if (parcely.size() > newBuilding.getParcels().length) {
+                    int len = parcely.size() - newBuilding.getParcels().length;
+                    for (int i = 0; i <= len; i++) {
+                        parcely.remove(0);
+                    }
+                }
+
                 for (IData data : parcely) {
                     if (!newBuilding.addProperty(this.convertQTParcel((QuadTreeParcel) data)))
-                        break;
+                        System.out.println("Pri Edite budovy doslo k chybe");
                 }
 
                 for (IData data : parcely) {
@@ -363,9 +380,27 @@ public class Model {
                 }
 
                 ArrayList<IData> budovy = this.buildingsQuadTree.find(newParcel.getCoordinates()[0], newParcel.getCoordinates()[1]);
+                ArrayList<IData> neplatne = new ArrayList<IData>();
+                for (IData data : budovy) {
+                    Building foundBuilding = this.convertQTBuilding((QuadTreeBuilding) data);
+                    foundBuilding = this.buildingFile.find(foundBuilding);
+                    if (foundBuilding.getParcels().length == foundBuilding.getValidParcels()) {
+                        neplatne.add(data);
+                    }
+                }
+                for (IData data : neplatne) {
+                    budovy.remove(data);
+                }
+                if (budovy.size() > newParcel.getBuildings().length) {
+                    int len = budovy.size() - newParcel.getBuildings().length;
+                    for (int i = 0; i <= len; i++) {
+                        budovy.remove(0);
+                    }
+                }
+
                 for (IData data : budovy) {
                     if (!newParcel.addProperty(this.convertQTBuilding((QuadTreeBuilding) data)))
-                        break;
+                        System.out.println("Pri Edite parcely doslo k chybe");
                 }
 
                 for (IData data : budovy) {
